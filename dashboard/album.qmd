@@ -21,12 +21,12 @@ display(album)
 if len(album):
     album_id = int(album.iloc[0]["album_id"])
     tracks = con.execute("""
-    SELECT at.track_number, at.track_title,
+    SELECT t.track_number, t.track_title,
            r.spotify_url, r.spotify_verified
-    FROM album_tracks at
+    FROM album_tracks t
     JOIN recordings r USING (recording_id)
-    WHERE at.album_id=?
-    ORDER BY at.disc_number, at.track_number
+    WHERE t.album_id=?
+    ORDER BY t.disc_number, t.track_number
     """, [album_id]).df()
     display(tracks)
 ```
