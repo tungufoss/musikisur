@@ -1,0 +1,38 @@
+---
+title: "Focus album"
+---
+
+```{python}
+import duckdb
+from IPython.display import display
+
+con = duckdb.connect("../data/processed/music_life.duckdb", read_only=True)
+album = con.execute("""
+SELECT a.album_id, a.title, ar.name AS artist, a.original_release_date,
+       a.spotify_url
+FROM albums a
+LEFT JOIN artists ar USING (artist_id)
+WHERE a.is_focus_album
+ORDER BY a.original_release_date
+LIMIT 1
+""").df()
+display(album)
+
+if len(album):
+    album_id = int(album.iloc[0]["album_id"])
+    tracks = con.execute("""
+    SELECT at.track_number, at.track_title,
+           r.spotify_url, r.spotify_verified
+    FROM album_tracks at
+    JOIN recordings r USING (recording_id)
+    WHERE at.album_id=?
+    ORDER BY at.disc_number, at.track_number
+    """, [album_id]).df()
+    display(tracks)
+```
+
+## Research questions
+
+Who wrote, played on and produced this record? Which recording is represented by each track? Which underlying works are involved? Which people recur elsewhere in the artist's career? Which current Spotify album/track best represents each historical entity?
+
+Spotify is an enrichment; it does not define historical identity.

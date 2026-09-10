@@ -1,0 +1,22 @@
+---
+title: "Sources & method"
+---
+
+| Layer | Preferred sources | Purpose |
+|---|---|---|
+| Music identity | MusicBrainz | artists, groups, release groups, releases, recordings, works, relationships |
+| Biography | Wikidata + publications | dates, people, places, relationships and narrative events |
+| Release detail | Discogs | editions, personnel and production credits |
+| Charts | Billboard / Official Charts / archives | historical weekly chart observations |
+| Listening | Spotify | current album/track IDs, URIs and links |
+| Screen identity | TMDB + IMDb cross-IDs | movies, series, episodes, dates and stable screen IDs |
+| Screen music | source-backed soundtrack/sync observations | links from works/recordings to films and TV episodes |
+| Analysis | project code / manual / LLM-assisted | themes, candidate claims, networks, derived metrics |
+
+## Provenance
+
+Conflicting source observations should be preserved rather than silently flattened.
+
+## Interpretation
+
+The project distinguishes source-backed fact, published interpretation, manually curated research, LLM-extracted candidate claims, and project-derived analysis. Temporal or thematic overlap does not itself establish causality.

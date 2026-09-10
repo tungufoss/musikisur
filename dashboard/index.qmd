@@ -1,0 +1,34 @@
+---
+title: "Gerry Rafferty"
+subtitle: "Life, music and historical context"
+---
+
+```{python}
+import duckdb
+from IPython.display import display
+
+con = duckdb.connect("../data/processed/music_life.duckdb", read_only=True)
+
+artist = con.execute("""
+SELECT name, birth_date, death_date, birth_place
+FROM artists WHERE slug='gerry-rafferty'
+""").df()
+
+focus = con.execute("""
+SELECT title, original_release_date, spotify_url
+FROM albums
+WHERE is_focus_album
+ORDER BY original_release_date
+""").df()
+
+display(artist)
+display(focus)
+```
+
+## Research lens
+
+This pilot follows **Gerry Rafferty**, with **City to City** as the first focus album.
+
+The production dashboard is intended to combine documented life events, collaborators, external credits, focus-album personnel and songs, historical chart trajectories, contemporary chart context, Spotify links, and clearly labelled sourced versus project-derived interpretation.
+
+> Starter rows are build-test data only, not the final source-backed dataset.

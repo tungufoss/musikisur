@@ -1,0 +1,31 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Music Life"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Overview
+      - href: album.qmd
+        text: Focus album
+      - href: charts.qmd
+        text: Chart context
+      - href: screen.qmd
+        text: Film & TV
+      - href: methodology.qmd
+        text: Sources & method
+  page-footer:
+    left: "Music Life Dashboard — sourced research prototype"
+
+format:
+  html:
+    toc: true
+    theme: cosmo
+    code-fold: true
+
+execute:
+  echo: false
+  warning: false
+  freeze: false

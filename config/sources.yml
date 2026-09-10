@@ -1,0 +1,37 @@
+sources:
+  musicbrainz:
+    enabled: true
+    purpose: "music entities, works, recordings, releases, credits, relationships"
+    cache: true
+  wikidata:
+    enabled: true
+    purpose: "structured biographical identifiers, family, places, dates"
+    cache: true
+  discogs:
+    enabled: false
+    purpose: "release editions, personnel and production credits"
+    requires_secret: DISCOGS_TOKEN
+    cache: true
+  spotify:
+    enabled: false
+    purpose: "current album/track streaming identifiers and links"
+    requires_secrets: [SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET]
+    cache: true
+  billboard_archive:
+    enabled: true
+    purpose: "historical weekly US chart observations"
+    cache: true
+  official_uk:
+    enabled: false
+    purpose: "historical UK chart observations"
+    cache: true
+
+  tmdb:
+    enabled: false
+    purpose: "canonical film/TV/episode identity, dates, metadata and IMDb cross-IDs"
+    requires_secret: TMDB_API_TOKEN
+    cache: true
+  screen_music:
+    enabled: false
+    purpose: "source-backed observations linking recordings/works to films and TV episodes"
+    cache: true
