@@ -1046,50 +1046,62 @@ def tracklist(slug: str) -> str:
     return interactive_table(tracks, headers, paging=len(tracks) > 25, order=[[0, "asc"]]) + note
 
 
+def chart_neighbours(
+    con: duckdb.DuckDBPyConnection, slug: str, window: int = 5
+) -> tuple[pd.DataFrame, pd.Series, pd.DataFrame] | None:
+    """The album's chart entries, its best week, and the chart around it that week (None if uncharted)."""
+    hits = con.execute(
+        """
+        WITH album AS (
+            SELECT a.album_id, a.title, ar.name AS artist
+            FROM albums a LEFT JOIN artists ar USING (artist_id)
+            WHERE a.slug = $slug
+        ), tracks AS (
+            SELECT t.recording_id, lower(t.track_title) AS title
+            FROM album_tracks t JOIN album USING (album_id)
+        )
+        SELECT ce.chart_id, c.name AS chart, c.chart_type, ce.chart_date, ce.position, ce.title,
+               ce.album_id IS NULL AND ce.recording_id IS NULL AS text_match
+        FROM chart_entries ce
+        JOIN charts c USING (chart_id)
+        CROSS JOIN album
+        WHERE ce.album_id = album.album_id
+           OR ce.recording_id IN (SELECT recording_id FROM tracks)
+           OR (lower(ce.artist_name) = lower(album.artist)
+               AND (lower(ce.title) IN (SELECT title FROM tracks)
+                    OR (c.chart_type = 'albums' AND lower(ce.title) = lower(album.title))))
+        """,
+        {"slug": slug},
+    ).df()
+    if hits.empty:
+        return None
+
+    peak = hits.sort_values(["position", "chart_date"]).iloc[0]
+    week = con.execute(
+        """
+        SELECT ce.position, ce.artist_name, ce.title, l.spotify_url
+        FROM chart_entries ce
+        LEFT JOIN chart_links l USING (chart_id, artist_name, title)
+        WHERE ce.chart_id = ? AND ce.chart_date = ? AND ce.position BETWEEN ? AND ?
+        ORDER BY ce.position
+        """,
+        [
+            int(peak["chart_id"]),
+            peak["chart_date"].date(),
+            max(1, int(peak["position"]) - window),
+            int(peak["position"]) + window,
+        ],
+    ).df()
+    return hits, peak, week
+
+
 def chart_context(slug: str, window: int = 5) -> str:
     """Chart runs for the album's tracks plus the full chart around their best week."""
     with connect_ro() as con:
-        hits = con.execute(
-            """
-            WITH album AS (
-                SELECT a.album_id, a.title, ar.name AS artist
-                FROM albums a LEFT JOIN artists ar USING (artist_id)
-                WHERE a.slug = $slug
-            ), tracks AS (
-                SELECT t.recording_id, lower(t.track_title) AS title
-                FROM album_tracks t JOIN album USING (album_id)
-            )
-            SELECT ce.chart_id, c.name AS chart, ce.chart_date, ce.position, ce.title,
-                   ce.album_id IS NULL AND ce.recording_id IS NULL AS text_match
-            FROM chart_entries ce
-            JOIN charts c USING (chart_id)
-            CROSS JOIN album
-            WHERE ce.album_id = album.album_id
-               OR ce.recording_id IN (SELECT recording_id FROM tracks)
-               OR (lower(ce.artist_name) = lower(album.artist)
-                   AND (lower(ce.title) IN (SELECT title FROM tracks)
-                        OR (c.chart_type = 'albums' AND lower(ce.title) = lower(album.title))))
-            """,
-            {"slug": slug},
-        ).df()
-        if hits.empty:
-            return "*Engar færslur á vinsældalistum enn.*\n"
-
-        peak = hits.sort_values(["position", "chart_date"]).iloc[0]
-        week = con.execute(
-            """
-            SELECT position, artist_name, title
-            FROM chart_entries
-            WHERE chart_id = ? AND chart_date = ? AND position BETWEEN ? AND ?
-            ORDER BY position
-            """,
-            [
-                int(peak["chart_id"]),
-                peak["chart_date"].date(),
-                max(1, int(peak["position"]) - window),
-                int(peak["position"]) + window,
-            ],
-        ).df()
+        found = chart_neighbours(con, slug, window)
+    if found is None:
+        return "*Engar færslur á vinsældalistum enn.*\n"
+    hits, peak, week = found
 
     runs = (
         hits.groupby(["chart", "title"])
@@ -1098,6 +1110,20 @@ def chart_context(slug: str, window: int = 5) -> str:
         .sort_values(["best", "first"])
     )
     runs["first"] = runs["first"].map(format_date)
+
+    def comebacks(weeks: pd.DataFrame) -> str:
+        """Later runs (after more than four weeks off the list): start, length, best position."""
+        weeks = weeks.sort_values("chart_date")
+        run_number = weeks["chart_date"].diff().dt.days.gt(28).cumsum()
+        later = [
+            f"{format_date(run['chart_date'].min())} ({_weeks(run['chart_date'].nunique())}, "
+            f"besta sæti {int(run['position'].min())})"
+            for number, run in weeks.groupby(run_number) if number > 0
+        ]
+        return "; ".join(later) or "—"
+
+    returns = {key: comebacks(group) for key, group in hits.groupby(["chart", "title"])}
+    runs["comeback"] = [returns[(chart, title)] for chart, title in zip(runs["chart"], runs["title"])]
 
     own = set(
         hits.loc[
@@ -1110,18 +1136,22 @@ def chart_context(slug: str, window: int = 5) -> str:
             f"**{value}**" if pos in own else value
             for pos, value in zip(week["position"], week[col])
         ]
+    week["title"] = [
+        f"{title} {spotify_link(url)}" if isinstance(url, str) else title
+        for title, url in zip(week["title"], week["spotify_url"])
+    ]
 
     parts = [
         "### Gengi á listum\n",
-        md_table(runs, {"chart": "Listi", "title": "Lag", "best": "Besta sæti",
-                        "weeks": "Vikur", "first": "Fyrsta vika"}),
+        md_table(runs, {"chart": "Listi", "title": "Titill", "best": "Besta sæti",
+                        "weeks": "Vikur", "first": "Fyrsta vika", "comeback": "Endurkoma"}),
         "\n*Vikur = vikur sem eru skráðar í gagnagrunninn, ekki endilega allur ferillinn.*\n",
         "\n### Hvað annað var vinsælt?\n",
         (
             f"{peak['chart']}, vikuna {format_date(peak['chart_date'])}, þegar "
             f"*{peak['title']}* var í {int(peak['position'])}. sæti:\n\n"
         ),
-        md_table(week, {"position": "Sæti", "artist_name": "Flytjandi", "title": "Lag"}),
+        md_table(week, {"position": "Sæti", "artist_name": "Flytjandi", "title": "Titill"}),
     ]
     if hits["text_match"].any():
         parts.append(

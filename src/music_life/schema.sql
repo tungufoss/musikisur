@@ -242,6 +242,17 @@ CREATE TABLE IF NOT EXISTS timeline_events (
     PRIMARY KEY (artist_id, kind, event_date, label)
 );
 
+-- Spotify links for chart entries outside the book's own albums (scripts/chart_links.py).
+CREATE TABLE IF NOT EXISTS chart_links (
+    chart_id BIGINT NOT NULL,
+    artist_name VARCHAR NOT NULL,       -- as printed on the chart
+    title VARCHAR NOT NULL,
+    spotify_url VARCHAR NOT NULL,
+    spotify_name VARCHAR,
+    retrieved_at TIMESTAMP,
+    PRIMARY KEY (chart_id, artist_name, title)
+);
+
 CREATE OR REPLACE VIEW focus_albums AS
 SELECT * FROM albums WHERE is_focus_album = TRUE;
 

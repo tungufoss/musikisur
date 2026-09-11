@@ -101,6 +101,27 @@ def test_spotify_verifies_by_isrc_and_keeps_title_matches_unverified():
     assert t["artist"].loc[0, "spotify_id"] == "sp-artist"
 
 
+def test_chart_entries_match_the_earliest_spotify_release_by_title_and_artist():
+    def album(name, artist, released):
+        return {"name": name, "artists": [{"name": artist}], "release_date": released}
+
+    items = [
+        album("Stranger In Town (Remastered 2011)", "Bob Seger", "2011-03-01"),
+        album("Stranger In Town", "Bob Seger & The Silver Bullet Band", "1978-05-05"),
+        album("Stranger In Town", "Someone Else", "1970-01-01"),
+        None,
+    ]
+    match = spotify.best_match(items, "Bob Seger & The Silver Bullet Band", "Stranger In Town")
+    assert match["release_date"] == "1978-05-05"
+
+    fever = [
+        album("Saturday Night Fever", "Cornell Dupree", "1977-01-01"),  # a cover album
+        album("Saturday Night Fever (The Original Movie Sound Track)", "Bee Gees", "1977-11-15"),
+    ]
+    assert spotify.best_match(fever, "Soundtrack", "Saturday Night Fever") is fever[1]
+    assert spotify.best_match(items, "Bob Seger", "Night Moves") is None
+
+
 def test_wikidata_publication_date_uses_earliest_full_date():
     def claim(time, precision):
         return {"mainsnak": {"datavalue": {"value": {"time": time, "precision": precision}}}}
