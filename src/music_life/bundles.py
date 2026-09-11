@@ -89,6 +89,8 @@ TABLES: dict[str, TableSpec] = {
             # NULL disc/track means the credit applies to the whole album.
             "disc_number": "INTEGER",
             "track_number": "INTEGER",
+            # album / recording / work; NULL means album without a track, else recording.
+            "applies_to": "VARCHAR",
             "person_name": "VARCHAR",
             "role": "VARCHAR",
             "instrument": "VARCHAR",
@@ -197,6 +199,18 @@ def validate_bundle(path: Path) -> list[str]:
         ]
         if orphans:
             errors.append(f"credits.parquet references unknown tracks {sorted(set(orphans))}")
+        unknown_levels = set(credits["applies_to"].dropna()) - {"album", "recording", "work"}
+        if unknown_levels:
+            errors.append(f"credits.parquet has unknown applies_to values {sorted(unknown_levels)}")
+        with_work = tracks.dropna(subset=["musicbrainz_work_id"])
+        work_tracks = set(zip(with_work["disc_number"], with_work["track_number"]))
+        work_credits = credits[credits["applies_to"] == "work"]
+        workless = [
+            (d, t) for d, t in zip(work_credits["disc_number"], work_credits["track_number"])
+            if (d, t) not in work_tracks
+        ]
+        if workless:
+            errors.append(f"credits.parquet has work credits for tracks without a work {sorted(set(workless))}")
     return errors
 
 
@@ -277,7 +291,7 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
     ).fetchone()[0]
     release_year = album["original_release_date"].year if _value(album, "original_release_date") else None
 
-    recording_ids = {}
+    recording_ids, work_ids = {}, {}
     for _, track in frames["tracks"].iterrows():
         recording_id = _find_or_insert(
             con, "recordings", "recording_id",
@@ -305,6 +319,7 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
             )
         key = (int(track["disc_number"]), int(track["track_number"]))
         recording_ids[key] = recording_id
+        work_ids[key] = work_id
         con.execute(
             "INSERT INTO album_tracks VALUES (?, ?, ?, ?, ?, ?)",
             [album_id, recording_id, work_id, *key, track["track_title"]],
@@ -321,11 +336,14 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
                  "musicbrainz_id": _value(credit, "musicbrainz_artist_id"),
                  "discogs_id": _value(credit, "discogs_artist_id")},
             )
-            if _value(credit, "track_number") is None:
-                entity_type, entity_id = "album", album_id
+            entity_type = _value(credit, "applies_to") or (
+                "album" if _value(credit, "track_number") is None else "recording"
+            )
+            if entity_type == "album":
+                entity_id = album_id
             else:
-                entity_type = "recording"
-                entity_id = recording_ids[(int(credit["disc_number"]), int(credit["track_number"]))]
+                key = (int(credit["disc_number"]), int(credit["track_number"]))
+                entity_id = recording_ids[key] if entity_type == "recording" else work_ids[key]
             con.execute(
                 """
                 INSERT INTO credits

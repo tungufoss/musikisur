@@ -4,6 +4,23 @@
   vertical-align: middle;
 }
 
+.album-cover {
+  float: right;
+  width: 220px;
+  max-width: 40%;
+  margin: 0 0 1rem 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+}
+
+.spotify-icon {
+  color: #1db954;
+}
+
+.spotify-link {
+  text-decoration: none;
+}
+
 .provider-logo {
   height: 2.5em;
   margin: 0.25em 0;

@@ -1,8 +1,10 @@
-<!-- Shared chapter body. Each albums/<slug>.qmd sets ALBUM_SLUG, then includes this file. -->
+<!-- Shared chapter body: each chapter in albums/ sets ALBUM_SLUG, then includes this file. -->
 
 ```{python}
 #| output: asis
-from music_life.dashboard import album_facts, chart_context, demo_notice, screen_use, tracklist
+from music_life.dashboard import (
+    album_facts, chart_context, credits_summary, demo_notice, screen_use, tracklist,
+)
 
 print(demo_notice())
 print(album_facts(ALBUM_SLUG))
@@ -13,6 +15,13 @@ print(album_facts(ALBUM_SLUG))
 ```{python}
 #| output: asis
 print(tracklist(ALBUM_SLUG))
+```
+
+## Hver gerði plötuna?
+
+```{python}
+#| output: asis
+print(credits_summary(ALBUM_SLUG))
 ```
 
 ## Á vinsældalistum
