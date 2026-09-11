@@ -37,6 +37,46 @@ def test_song_events_count_each_song_once_at_its_first_release():
     assert rows == [("Baker Street", "1978-01-20"), ("Night Owl", "1979-01-01")]
 
 
+def test_songs_count_once_across_bands_sessions_remixes_and_apostrophes():
+    recordings = [
+        {"id": "1", "title": "Rick Rack", "first-release-date": "1969"},
+        {"id": "2", "title": "Rick Rack (radio one session)", "first-release-date": "2005"},
+        {"id": "3", "title": "Baker Street (DJ Vojo remix)", "first-release-date": "2018"},
+        {"id": "4", "title": "Your Heart’s Desire", "first-release-date": "2009"},
+        {"id": "5", "title": "Your Hearts Desire", "first-release-date": "1988"},
+    ]
+    assert sorted(r["label"] for r in musicbrainz.song_events(recordings, "solo", "mb")) == [
+        "Baker Street", "Rick Rack", "Your Hearts Desire",
+    ]
+
+    band = musicbrainz.song_events([
+        {"id": "6", "title": "Stuck in the Middle With You", "first-release-date": "1972-10"},
+        {"id": "7", "title": "Stuck in the Middle With You (Rerecorded)", "first-release-date": "2009"},
+    ], "Stealers Wheel", "mb")
+    solo = musicbrainz.song_events(
+        [{"id": "8", "title": "Stuck in the Middle with You", "first-release-date": "2011"}], "solo", "mb"
+    )
+    songs = musicbrainz.first_songs(band + solo + [{"kind": "album", "label": "City to City", "event_date": "1978"}])
+    assert sorted((r["kind"], r["event_date"][:4]) for r in songs) == [("album", "1978"), ("song", "1972")]
+
+
+def test_later_line_ups_and_work_for_others_are_not_counted_as_songs():
+    band = musicbrainz.song_events([
+        {"id": "1", "title": "Stuck in the Middle With You", "first-release-date": "1972-10"},
+        {"id": "2", "title": "Arms of Mary", "first-release-date": "2019"},  # re-formed band, without him
+        {"id": "3", "title": "Right or Wrong", "first-release-date": "1976"},  # within a year of leaving
+    ], "Stealers Wheel", "mb")
+    solo = musicbrainz.song_events(
+        [{"id": "4", "title": "The Way It Always Starts", "first-release-date": "2011"}], "solo", "mb"
+    )
+    others = [
+        {"kind": "guest", "label": "Mark Knopfler – The Way It Always Starts", "event_date": "1983-01-01"},
+        {"kind": "band_leave", "label": "Stealers Wheel", "event_date": "1975-01-01"},
+    ]
+    songs = [r["label"] for r in musicbrainz.first_songs(band + solo + others) if r["kind"] == "song"]
+    assert sorted(songs) == ["Right or Wrong", "Stuck in the Middle With You"]
+
+
 def test_work_for_others_counts_each_song_once():
     def row(date, kind, label):
         return {"event_date": date, "kind": kind, "label": label}

@@ -142,9 +142,42 @@ def bands(relations: dict[str, Any]) -> list[dict[str, Any]]:
 
 # Parenthetical notes that mark another take of the same song, e.g. "(original demo)".
 VERSION_NOTE = re.compile(
-    r"\s*[(\[][^)\]]*\b(demo|live|remaster\w*|mix|version|edit|mono|stereo|take|instrumental)\b[^)\]]*[)\]]",
+    r"\s*[(\[][^)\]]*\b(demo|live|remaster\w*|re-?mix\w*|mix|version|edit|mono|stereo|take|instrumental"
+    r"|session|re-?recorded|backing track|master)\b[^)\]]*[)\]]",
     re.IGNORECASE,
 )
+
+
+def song_key(title: str) -> str:
+    """Comparison key for a song: version notes and apostrophes dropped ("Heart's" = "Hearts")."""
+    return normalize_text(VERSION_NOTE.sub("", title).replace("’", "").replace("'", ""))
+
+
+def first_songs(events: list[dict[str, Any]], grace_years: int = 1) -> list[dict[str, Any]]:
+    """Keep each song event once across solo work, bands and work for others, at its earliest release.
+
+    Band songs first released more than ``grace_years`` after the artist left the band (its
+    band_leave event) are dropped: they belong to later line-ups, such as a band re-formed
+    without the artist. Archival releases of old band songs go with them; add those by hand
+    in manual.yml. A song already counted as work for others is not counted again as a song.
+    """
+    left = {normalize_text(r["label"]): int(str(r["event_date"])[:4]) for r in events if r["kind"] == "band_leave"}
+    for_others = {song_key(r["label"].split(" – ", 1)[-1]) for r in events if r["kind"] in ("production", "guest")}
+    best: dict[str, dict[str, Any]] = {}
+    rest = []
+    for row in events:
+        if row["kind"] != "song":
+            rest.append(row)
+            continue
+        leave = left.get(normalize_text(row.get("detail") or ""))
+        if leave is not None and int(str(row["event_date"])[:4]) > leave + grace_years:
+            continue
+        key = song_key(row["label"])
+        if key in for_others:
+            continue
+        if key not in best or str(row["event_date"]) < str(best[key]["event_date"]):
+            best[key] = row
+    return rest + list(best.values())
 
 
 def fetch_recordings(artist_mbid: str, c: CachedClient) -> list[dict[str, Any]]:
@@ -170,7 +203,7 @@ def song_events(recordings: list[dict[str, Any]], group: str, source_key: str) -
         date = recording.get("first-release-date") or ""
         if not date or recording.get("video"):
             continue
-        key = normalize_text(VERSION_NOTE.sub("", recording["title"]))
+        key = song_key(recording["title"])
         if key and (key not in first or date < first[key][0]):
             first[key] = (date, recording)
     rows = []
@@ -220,7 +253,7 @@ def unique_songs(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     preferring production."""
     best: dict[str, dict[str, Any]] = {}
     for row in rows:
-        title = normalize_text(VERSION_NOTE.sub("", row["label"].split(" – ", 1)[-1]))
+        title = song_key(row["label"].split(" – ", 1)[-1])
         rank = (row["event_date"], row["kind"] != "production")
         if title not in best or rank < (best[title]["event_date"], best[title]["kind"] != "production"):
             best[title] = row
