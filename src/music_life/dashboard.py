@@ -1314,7 +1314,7 @@ def _screen_tables(
                "other": "Annað", "total": "Alls", "first": "Fyrst", "last": "Síðast"}
     return (
         (f"IMDb skráir {n_songs} {noun} af plötunni" if songs is not None else f"IMDb skráir {n_songs} {which} {noun}")
-        + f" í {len(titles)} myndum og þáttum: {split}. Smelltu á dálkheiti til að raða.\n\n"
+        + f" í {len(titles)} myndum og þáttum: {split}.\n\n"
         + interactive_table(counts, headers, paging=len(counts) > 25, searching=False,
                             order=[[list(headers).index("total"), "desc"]])
         + '\n:::: {layout-ncol="2"}\n::: {}\n**Vinsælustu þáttaraðirnar**\n\n' + top("tv")
