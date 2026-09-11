@@ -14,6 +14,14 @@ ALBUM_SLUG = "city-to-city"
 
 ## Punktar fyrir þáttinn
 
+::: {.callout-note}
+## TL;DR: lögin tvö
+- **„Baker Street“ er ekki Sherlock Holmes-lag**, þótt nafnið kalli óhjákvæmilega á 221B Baker Street. Heimilisfang Holmes var skáldskapur: þegar sögurnar komu út náðu húsnúmerin í götunni ekki upp í 221. Lagið sprettur úr lífi Raffertys sjálfs. Á meðan lagadeilurnar stóðu yfir ferðaðist hann reglulega á milli fjölskyldunnar í Paisley og London, þar sem hann gisti oft í íbúð vinar síns við Baker Street í Marylebone. Gatan varð þannig tákn fyrir biðina, einmanaleikann og óánægju hans með stjörnukerfið.
+- **„Right Down the Line“ horfir heim**, til Cörlu, eiginkonu hans, sem stóð með honum í gegnum þennan tíma ([nánar hér fyrir neðan](#oedur-til-corlu)).
+
+*Heimild: greinarnar [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [221B Baker Street](https://en.wikipedia.org/wiki/221B_Baker_Street) á ensku Wikipediu (CC BY-SA 4.0).*
+:::
+
 ### Aðdragandinn: þrjú ár í banni
 
 - Eftir að Stealers Wheel hætti árið 1975 lenti Rafferty í lagadeilum sem komu í veg fyrir að hann mætti gefa út nokkuð efni í þrjú ár. Hljómsveitin hafði lengi glímt við lagaþras, vaxandi spennu milli Raffertys og Joe Egan og vandræði í umboðsmálum, og upptökustjórarnir Leiber og Stoller áttu sjálfir í rekstrarvanda. Heimildirnar segja þó ekki beinlínis um hvað deilurnar snerust, aðeins að þær leystust árið 1978 ([Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) og [Stealers Wheel](https://en.wikipedia.org/wiki/Stealers_Wheel) á ensku Wikipediu).
@@ -25,6 +33,14 @@ ALBUM_SLUG = "city-to-city"
 ## Úr gögnunum
 Þagnarárin sjást í gögnunum. Á [tímalínunni um Gerry Rafferty](../artists/gerry-rafferty.qmd#tímalína) eru engin ný lög árin 1976 og 1977, og á Billboard-listunum sést hvorki hann né Stealers Wheel frá vorinu 1974 þar til „Baker Street“ fer inn á Hot 100 í apríl 1978. Vikuna 8. júlí 1978, þegar platan var í 1. sæti, var *Saturday Night Fever* komin niður í 2. sæti (sjá vinsældalistana hér að ofan).
 :::
+
+### Umslagið: John Patrick Byrne
+
+- Umslagsmálverkið er eftir John Patrick Byrne, listmálara og leikskáld frá Paisley og vin Raffertys til áratuga. Hann myndskreytti allar plötur Raffertys og Stealers Wheel fram að *Sleepwalking* (1982), sem fékk í staðinn einfalda ljósmynd af auðum vegi, og síðar líka *Another World*.
+- Byrne málaði líka Martin-kassagítar með andlitsmynd af Rafferty og nafninu hans. Gítarinn var ein dýrmætasta eign Raffertys og sést á mörgum ljósmyndum af honum.
+- Byrne flutti líkræðuna þegar sálumessa var sungin yfir Rafferty í St Mirin's-dómkirkjunni í Paisley 21. janúar 2011.
+
+*Heimild: greinarnar [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) og [John Byrne (playwright)](https://en.wikipedia.org/wiki/John_Byrne_%28playwright%29) á ensku Wikipediu (CC BY-SA 4.0).*
 
 ### Hver á saxófónriffið í „Baker Street“?
 
@@ -64,7 +80,7 @@ MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“.
 
 ### „Right Down the Line“: óður til Cörlu? {#oedur-til-corlu}
 
-- „Right Down the Line“ er sagt vera óður til Cörlu Ventilla, eiginkonu hans. Samkvæmt [Genius](https://genius.com/Gerry-rafferty-right-down-the-line-lyrics) er lagið mildara en „Baker Street“ og fjallar um ástina í lífi hans, en þegar það kom út var hann giftur Cörlu. Í laginu þakkar hann henni fyrir að hafa stutt sig í gegnum erfiða tíma, og Genius tengir það við áfengissýkina sem hann glímdi við mestan hluta ævinnar. [Songfacts](https://www.songfacts.com/facts/gerry-rafferty/right-down-the-line) segir það sama, en hvorug síðan vísar í orð hans sjálfs. Í ljósi þess að þau voru gift þegar lagið kom út er þó varla vafi á því við hverja er átt.
+- „Right Down the Line“ er oft lesið sem óður til Cörlu Ventilla, eiginkonu Raffertys, sem stóð með honum í gegnum erfiða tíma. [Genius](https://genius.com/Gerry-rafferty-right-down-the-line-lyrics) og [Songfacts](https://www.songfacts.com/facts/gerry-rafferty/right-down-the-line) tengja lagið við Cörlu, þó hvorug síðan vísi í beina yfirlýsingu Raffertys sjálfs.
 - Genius nefnir að lagið gæti sótt innblástur í „Maybe I'm Amazed“ eftir Paul McCartney, sem fjallar um svipað efni. Mér finnst það reyndar minna meira á „Your Song“ með Elton John.
 
 :::: {layout-ncol="3"}
