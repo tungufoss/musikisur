@@ -43,7 +43,7 @@ Gerry Rafferty (1947–2011) var skoskur söngvari og lagahöfundur, fæddur inn
 
 Smellirnir hafa reynst Rafferty einstaklega gjöfulir, þótt hann hafi aldrei viljað spila leikinn sem fylgdi frægðinni (sjá [Frægð, áfengi og veikindi](#fraegd-afengi-og-veikindi)).
 
-- Í október 2010 viðurkenndi BMI að „Baker Street“ hefði verið spilað oftar en 5 milljón sinnum í útvarpi og sjónvarpi um allan heim. „Stuck in the Middle With You“ með Stealers Wheel hafði verið spilað yfir 4 milljón sinnum og „Right Down the Line“ af *City to City* yfir 3 milljón sinnum.
+- Í október 2010 tilkynnti BMI að „Baker Street“ hefði verið spilað oftar en 5 milljón sinnum í útvarpi og sjónvarpi um allan heim. „Stuck in the Middle With You“ með Stealers Wheel hafði verið spilað yfir 4 milljón sinnum og „Right Down the Line“ af *City to City* yfir 3 milljón sinnum.
 - Í viðtali við *The Sun* í Skotlandi árið 2003 sagði Rafferty að „Baker Street“ skilaði honum enn um 80.000 pundum á ári (um 24,7 milljónum króna á ári á núvirði^[Núvirt með breskri vísitölu neysluverðs (ONS, D7BT) frá ársmeðaltali 2003 til júlí 2026 (×1,89) og umreiknað á viðmiðunargengi Seðlabanka Evrópu 10. september 2026, 162,95 kr. á pundið. Reiknað með `scripts/value_today.py`.]): „I could live off that song alone.“
 - Danslagaútgáfa Undercover af „Baker Street“ árið 1992 færði honum 1,5 milljónir punda til viðbótar (um 558 milljónir króna á núvirði^[Sama aðferð, frá ársmeðaltali 1992 (×2,28).]); sjá [kaflann um City to City](../albums/city-to-city.qmd#áhrif-og-ábreiður).
 - Hann leyfði aldrei að „Baker Street“ væri notað í auglýsingum, þrátt fyrir rausnarleg tilboð.
