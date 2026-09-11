@@ -273,6 +273,16 @@ CREATE TABLE IF NOT EXISTS screen_credits (
     PRIMARY KEY (artist_id, imdb_id)
 );
 
+-- A Spotify link per song named in screen_credits (scripts/screen_credits.py).
+CREATE TABLE IF NOT EXISTS song_links (
+    artist_id BIGINT NOT NULL,
+    song VARCHAR NOT NULL,
+    spotify_url VARCHAR NOT NULL,
+    spotify_name VARCHAR,
+    retrieved_at TIMESTAMP,
+    PRIMARY KEY (artist_id, song)
+);
+
 -- Spotify links for chart entries outside the book's own albums (scripts/chart_links.py).
 CREATE TABLE IF NOT EXISTS chart_links (
     chart_id BIGINT NOT NULL,

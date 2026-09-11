@@ -9,6 +9,21 @@ def test_imdb_songs_take_the_artists_spelling():
     assert screen.canonical_song("Mary Skeffington", known) == "Mary Skeffington"
 
 
+def test_song_links_start_with_whoever_released_the_song_first():
+    def search(performer, song):
+        hit = {"name": song, "artists": [{"name": performer}], "album": {"release_date": "1972"},
+               "external_urls": {"spotify": f"https://open.spotify.com/track/{performer}"}}
+        return (hit if song != "Unrecorded" else None), f"key-{performer}"
+
+    rows = screen.song_links(
+        ["Stuck in the Middle With You", "Baker Street", "Unrecorded"], ["Gerry Rafferty", "Stealers Wheel"],
+        search, owners={"Stuck in the Middle with You": "Stealers Wheel"},
+    )
+    assert [(r["song"], r["cache_key"]) for r in rows] == [
+        ("Stuck in the Middle With You", "key-Stealers Wheel"), ("Baker Street", "key-Gerry Rafferty"),
+    ]
+
+
 def test_credit_rows_split_kinds_and_years_and_rank_with_tmdb():
     export = {"retrieved_at": "2026-09-11T22:50:00", "credits": [
         {"id": "tt1", "title": "Show", "type": "TV Series", "years": "1997–2015", "episodes": 3,

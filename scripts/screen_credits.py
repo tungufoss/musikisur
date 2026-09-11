@@ -18,7 +18,7 @@ import pandas as pd
 
 from music_life.bundles import TABLES, write_bundle
 from music_life.dashboard import connect_ro
-from music_life.sources import screen
+from music_life.sources import screen, spotify
 
 
 def main() -> None:
@@ -30,20 +30,48 @@ def main() -> None:
 
     export = json.loads(Path(args.export).read_text(encoding="utf-8"))
     with connect_ro() as con:
-        known = [label for (label,) in con.execute(
+        # Each song once, with who released it first ("solo" or a band's name).
+        firsts = con.execute(
             """
-            SELECT DISTINCT e.label FROM timeline_events e JOIN artists a USING (artist_id)
+            SELECT e.label, e.detail FROM timeline_events e JOIN artists a USING (artist_id)
             WHERE a.slug = ? AND e.kind = 'song'
             """,
             [args.artist],
+        ).fetchall()
+        name = con.execute("SELECT name FROM artists WHERE slug = ?", [args.artist]).fetchone()[0]
+        bands = [label for (label,) in con.execute(
+            """
+            SELECT e.label FROM timeline_events e JOIN artists a USING (artist_id)
+            WHERE a.slug = ? AND e.kind = 'band_join' ORDER BY e.event_date
+            """,
+            [args.artist],
         ).fetchall()]
+    known = [label for label, _ in firsts]
+    owners = {label: name if detail == "solo" else detail for label, detail in firsts}
     c = screen.tmdb_client()
     rows = screen.credit_rows(export, known, lambda imdb_id: screen.find_by_imdb_id(imdb_id, c))
     frame = pd.DataFrame(rows, columns=list(TABLES["screen_credits"].columns))
-    path = write_bundle(args.artist, args.album, {"screen_credits": frame})
+
+    # A Spotify link per song: the artist's recording, else a band's.
+    sp = spotify.client()
+    songs = sorted({song for row in rows for song in row["songs"].split("; ")}, key=str.lower)
+    links = screen.song_links(
+        songs, [name, *bands], lambda performer, song: spotify.search(sp, performer, song, "track"), owners
+    )
+    for link in links:
+        link["retrieved_at"] = sp.retrieved_at(link.pop("cache_key"))
+    missing = sorted(set(songs) - {link["song"] for link in links})
+
+    path = write_bundle(args.artist, args.album, {
+        "screen_credits": frame,
+        "song_links": pd.DataFrame(links, columns=list(TABLES["song_links"].columns)),
+    })
     kinds = frame["kind"].value_counts().to_dict()
     print(f"wrote {len(frame)} titles {kinds} to {path.as_posix()}/screen_credits.parquet; "
           f"{frame['tmdb_votes'].notna().sum()} found on TMDB")
+    for link in links:
+        print(f"spotify: {link['song']} -> {link['spotify_name']}")
+    print(f"spotify: {len(links)}/{len(songs)} songs linked" + (f"; no match for {missing}" if missing else ""))
 
 
 if __name__ == "__main__":

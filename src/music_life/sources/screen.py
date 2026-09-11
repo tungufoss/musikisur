@@ -57,6 +57,30 @@ def canonical_song(title: str, known: list[str]) -> str:
     return keys[longer[0]] if longer else title
 
 
+def song_links(
+    songs: list[str], performers: list[str],
+    search: Callable[[str, str], tuple[dict[str, Any] | None, str]],
+    owners: dict[str, str] | None = None,
+) -> list[dict[str, Any]]:
+    """A Spotify link per song, from the first performer with a match. ``owners`` (song -> who
+    released it first) puts that performer first, so a band's original beats a later solo
+    re-recording; otherwise the order of ``performers``. ``search(performer, song)`` returns
+    (match, cache key), like spotify.search."""
+    owner_of = {song_key(song): who for song, who in (owners or {}).items()}
+    rows = []
+    for song in songs:
+        first = owner_of.get(song_key(song))
+        for performer in [first, *(p for p in performers if p != first)] if first else performers:
+            match, key = search(performer, song)
+            if match:
+                artists = ", ".join(a["name"] for a in match["artists"])
+                released = (match.get("album") or match)["release_date"]
+                rows.append({"song": song, "spotify_url": match["external_urls"]["spotify"],
+                             "spotify_name": f"{artists} – {match['name']} ({released})", "cache_key": key})
+                break
+    return rows
+
+
 def credit_rows(
     export: dict[str, Any], known_songs: list[str], lookup: Callable[[str], dict[str, Any] | None]
 ) -> list[dict[str, Any]]:
