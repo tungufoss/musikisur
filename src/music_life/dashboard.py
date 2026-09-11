@@ -592,7 +592,8 @@ def artist_timeline(artist_slug: str) -> str:
                                   url, -10 if flip else 0, color=band_colors[detail]))
                 continue
             posthumous = died is not None and when > died
-            css = "fa-compact-disc " + ("tl-focus" if detail in focus else "tl-posthumous" if posthumous else "tl-album")
+            # Albums after death need no colour of their own: the dove already marks the death.
+            css = "fa-compact-disc " + ("tl-focus" if detail in focus else "tl-album")
             age = f"{_years_between(died, when)} ár eftir andlát" if posthumous else f"{_age_text(born, when)} ára"
             # Albums with a chapter link to it; the others to MusicBrainz.
             link = f"../albums/{focus[detail]}.html" if detail in focus else url
@@ -658,7 +659,6 @@ def artist_timeline(artist_slug: str) -> str:
         '<i class="fa-solid fa-baby tl-child"></i> barn fæðist · '
         '<i class="fa-solid fa-compact-disc tl-album"></i> hljóðversplata · '
         '<i class="fa-solid fa-compact-disc tl-focus"></i> fókusplata · '
-        '<i class="fa-solid fa-compact-disc tl-posthumous"></i> eftir andlát · '
         '<i class="fa-solid fa-rug tl-cover"></i> ábreiða · '
         f"{band_legend}"
         '<i class="fa-solid fa-award tl-award"></i> tilnefning. '
