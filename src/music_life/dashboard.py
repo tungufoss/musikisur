@@ -344,8 +344,29 @@ def _age_text(born: date, value: date) -> str:
     return str(age_at_release(born, value, value.year))
 
 
-def artist_tldr(artist_slug: str) -> str:
-    """Photo, then birth, death, active years, studio albums and nominations as a fact list."""
+def artist_photo(artist_slug: str) -> str:
+    """The artist's photo with its credit, floated to the right of the page's opening summary."""
+    with connect_ro() as con:
+        found = _artist(con, artist_slug)
+        photo = _artist_photo(con, artist_slug) if found else None
+    if not photo or not (ARTISTS_DIR / f"{artist_slug}.jpg").exists():
+        return ""
+    # Artist pages live in artists/, so assets are one directory up.
+    return ("```{=html}\n"
+            f'<figure class="artist-photo"><img src="../assets/artists/{artist_slug}.jpg" alt="{html.escape(found[1])}">'
+            f'<figcaption>Mynd: <a href="{html.escape(photo[0])}">{html.escape(photo[1])}</a>, '
+            "Wikimedia Commons</figcaption></figure>\n```\n")
+
+
+def _fact_box(label: str, value: object, sub: str = "", css: str = "", title: str = "") -> str:
+    tip = f' title="{html.escape(title)}"' if title else ""
+    return (f'<div class="fact-box {css}"{tip}><div class="fact-label">{label}</div>'
+            f'<div class="fact-value">{html.escape(str(value))}</div>'
+            f'<div class="fact-sub">{html.escape(sub)}</div></div>')
+
+
+def artist_facts(artist_slug: str) -> str:
+    """Birth, death, career, albums, songs and nominations as dashboard-style boxes."""
     with connect_ro() as con:
         found = _artist(con, artist_slug)
         if not found:
@@ -355,47 +376,45 @@ def artist_tldr(artist_slug: str) -> str:
             [found[0]],
         ).fetchall())
         events = _events(con, found[0])
-        photo = _artist_photo(con, artist_slug)
-    figure = ""
-    if photo and (ARTISTS_DIR / f"{artist_slug}.jpg").exists():
-        # Artist pages live in artists/, so assets are one directory up.
-        figure = ("```{=html}\n"
-                  f'<figure class="artist-photo"><img src="../assets/artists/{artist_slug}.jpg" alt="{html.escape(found[1])}">'
-                  f'<figcaption>Mynd: <a href="{html.escape(photo[0])}">{html.escape(photo[1])}</a>, '
-                  "Wikimedia Commons</figcaption></figure>\n```\n\n")
     first = {}
     for kind, when, precision, *_ in events:
         first.setdefault(kind, (when, precision))
-    lines = []
     born = first.get("birth", (None,))[0]
     died = first.get("death", (None,))[0]
+
+    boxes = []
     if born:
-        lines.append(f"- **Fæddur:** {format_date(born)}" + (f" í {places['birth']}" if "birth" in places else ""))
+        boxes.append(_fact_box("Fæðing", format_date(born), places.get("birth", "")))
     if died:
-        where = f" í {places['death']}" if "death" in places else ""
-        age = f", {int(age_at_release(born, died, died.year))} ára" if born else ""
-        lines.append(f"- **Lést:** {format_date(died)}{where}{age}")
+        age = f", {age_at_release(born, died, died.year)} ára" if born else ""
+        boxes.append(_fact_box("Andlát", format_date(died), f"{places.get('death', '')}{age}", "fact-death"))
     if "career_start" in first:
         start = first["career_start"][0]
-        span, ages = f"{start.year}–", [_age_text(born, start)] if born else []
-        if "career_end" in first:
-            end = first["career_end"][0]
-            span += str(end.year)
-            if born:
-                # A career that ends in the year of death ends at the age of death.
-                ages.append(_age_text(born, died if died and died.year == end.year else end))
-        age_text = f" (frá {ages[0]} ára til {ages[1]} ára)" if len(ages) == 2 else f" (frá {ages[0]} ára)" if ages else ""
-        lines.append(f"- **Ferill:** {span}{age_text}")
+        end = first["career_end"][0] if "career_end" in first else None
+        ages = ""
+        if born:
+            # A career that ends in the year of death ends at the age of death.
+            last = (died if died and end and died.year == end.year else end)
+            ages = f"frá {_age_text(born, start)} ára" + (f" til {_age_text(born, last)} ára" if last else "")
+        boxes.append(_fact_box("Ferill", f"{start.year}–{end.year if end else ''}", ages))
     albums = [when for kind, when, *_ in events if kind == "album"]
     if albums:
         posthumous = sum(1 for when in albums if died and when > died)
-        after = f", þar af {posthumous} eftir andlát" if posthumous else ""
-        lines.append(f"- **Hljóðversplötur:** {len(albums)} ({albums[0].year}–{albums[-1].year}){after}")
+        sub = f"{albums[0].year}–{albums[-1].year}" + (f", {posthumous} eftir andlát" if posthumous else "")
+        boxes.append(_fact_box("Hljóðversplötur", len(albums), sub))
+    songs = sum(1 for kind, *_ in events if kind == "song")
+    for_others = sum(1 for kind, *_ in events if kind in ("production", "guest"))
+    if songs or for_others:
+        boxes.append(_fact_box("Lög sem hann kom að", songs + for_others,
+                               f"þar af {for_others} fyrir aðra" if for_others else "", "fact-songs",
+                               "Hvert lag talið einu sinni, árið sem það kom fyrst út (MusicBrainz)"))
     nominations = [(when, label) for kind, when, _, label, *_ in events if kind == "nomination"]
     if nominations:
         years = ", ".join(str(y) for y in sorted({when.year for when, _ in nominations}))
-        lines.append(f"- **Tilnefningar:** {len(nominations)} ({years}): " + "; ".join(label for _, label in nominations))
-    return figure + "\n".join(lines) + "\n"
+        awards = ", ".join(sorted({label.split(":")[0] for _, label in nominations}))
+        boxes.append(_fact_box("Tilnefningar", len(nominations), f"{awards} {years}", "fact-award",
+                               "; ".join(label for _, label in nominations)))
+    return '```{=html}\n<div class="fact-boxes">' + "".join(boxes) + "</div>\n```\n" if boxes else ""
 
 
 def artist_pills(artist_slug: str) -> str:

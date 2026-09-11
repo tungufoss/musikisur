@@ -53,9 +53,22 @@ title: "{name}"
 ARTIST_SLUG = "{slug}"
 ```
 
+```{{python}}
+#| output: asis
+from music_life.dashboard import artist_photo
+
+print(artist_photo(ARTIST_SLUG))
+```
+
 *Hér kemur stutt samantekt um flytjandann.*
 
 {{{{< include ../_artist.qmd >}}}}
+
+### Helstu smellir
+
+*Hér koma spilarar fyrir helstu smellina: {{{{< spotify-player TRACK_ID >}}}}.*
+
+{{{{< include ../_artist_life.qmd >}}}}
 """
 
 

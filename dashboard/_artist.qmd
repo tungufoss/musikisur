@@ -1,30 +1,14 @@
-<!-- Shared artist page body: facts, photo, tags, map and timeline. Pages in artists/ set ARTIST_SLUG. -->
+<!-- Shared artist facts: dashboard-style boxes, then tag pills. Pages in artists/ set ARTIST_SLUG. -->
+
+::: {style="clear: both"}
+:::
 
 ### Í stuttu máli
 
 ```{python}
 #| output: asis
-from music_life.dashboard import artist_pills, artist_tldr
+from music_life.dashboard import artist_facts, artist_pills
 
-print(artist_tldr(ARTIST_SLUG))
+print(artist_facts(ARTIST_SLUG))
 print(artist_pills(ARTIST_SLUG))
-```
-
-### Kort
-
-```{python}
-from music_life.dashboard import artist_map
-
-artist_map(ARTIST_SLUG)
-```
-
-*Grænt: fæðingarstaður. Svart: dánarstaður. Appelsínugult: búseta. Bláir punktar: staðir sem Wikipedia-greinin um hann nefnir; smelltu á punkt til að sjá setninguna (enska Wikipedia, CC BY-SA 4.0).*
-
-### Tímalína
-
-```{python}
-#| output: asis
-from music_life.dashboard import artist_timeline
-
-print(artist_timeline(ARTIST_SLUG))
 ```
