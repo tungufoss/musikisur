@@ -17,9 +17,11 @@ Hér kemur texti Birnu um uppruna listans.
 
 Plötulistinn er fjársjóður af áhugaverðum gögnum: hver samdi lögin og hver spilaði á plötunni, hvernig henni gekk á vinsældalistum, hvað annað var vinsælt á sama tíma og í hvaða kvikmyndir og sjónvarpsþætti lögin hafa ratað. Hver kafli hér er undirbúningurinn minn fyrir viðkomandi þátt.
 
-Ég er ekki tónlistarsérfræðingur, heldur lektor við Háskóla Íslands þar sem ég kenni upplýsingaverkfræði ([IDN302G](https://github.com/HI-IDN/IDN302G)). Þetta verkefni tengir saman allt sem ég kenni í námskeiðinu, svo ég slæ tvær flugur í einu höggi: byggi upp massíft gagnasafn og get sýnt nemendum hvernig ég fann gögnin. Og með almennilegu gagnakafi kemst maður ansi langt með að þykjast vera tónlistarsérfræðingur.
+Ég er ekki tónlistarsérfræðingur, heldur lektor við Háskóla Íslands þar sem ég kenni upplýsingaverkfræði ([IÐN302G](https://github.com/HI-IDN/IDN302G)). Þetta verkefni tengir saman allt sem ég kenni í námskeiðinu, svo ég slæ tvær flugur í einu höggi: byggi upp massíft gagnasafn og get sýnt nemendum hvernig ég fann gögnin. Og með almennilegu gagnakafi kemst maður ansi langt með að þykjast vera tónlistarsérfræðingur.
 
+::: {.text-end}
 *— Helga Ingimundardóttir, 11. september 2026*
+:::
 
 ## Hvernig bókin er uppbyggð
 
