@@ -1,0 +1,14 @@
+---
+title: "1970–1979 · Áttundi áratugurinn"
+---
+
+```{python}
+#| output: asis
+from music_life.dashboard import decade_overview
+
+print(decade_overview(1970))
+```
+
+## Samhengi áratugarins
+
+*Hér kemur stutt yfirlit yfir áratuginn.*

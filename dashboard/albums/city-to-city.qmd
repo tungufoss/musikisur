@@ -1,0 +1,13 @@
+---
+title: "Gerry Rafferty – *City to City* (1978)"
+---
+
+```{python}
+ALBUM_SLUG = "city-to-city"
+```
+
+{{< include ../_chapter.qmd >}}
+
+## Punktar fyrir þáttinn
+
+*Hér koma umræðupunktarnir fyrir þáttinn.*

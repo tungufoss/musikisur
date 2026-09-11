@@ -1,2 +1,17 @@
 # Each focus album is added on its own branch, <artist-slug>/<album-slug>, and squash-merged (see AGENTS.md).
-focus_albums: []
+focus_albums:
+  - slug: city-to-city
+    artist: gerry-rafferty
+    title: City to City
+    original_year: 1978
+    priority: 1
+    identifiers:
+      musicbrainz_release_group: null
+      discogs_master: null
+      spotify_album: null
+    research_questions:
+      - "Who wrote, performed on and produced the album?"
+      - "How did its singles and album chart over time?"
+      - "What else was popular during the same chart windows?"
+      - "Which documented life/career events overlap the album period?"
+      - "Which themes are sourced vs project-derived?"
