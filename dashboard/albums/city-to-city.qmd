@@ -10,6 +10,18 @@ ALBUM_SLUG = "city-to-city"
 
 ## Punktar fyrir þáttinn
 
+### Aðdragandinn: þrjú ár í banni
+
+- Eftir að Stealers Wheel hætti árið 1975 lenti Rafferty í lagadeilum sem komu í veg fyrir að hann mætti gefa út nokkuð efni í þrjú ár.
+- *City to City* kom út 20. janúar 1978. Hún var fyrsta sólóplata hans í sex ár og fyrsta útgáfa hans af nokkru tagi síðan 1975.
+- Útgáfufyrirtækið United Artists vildi hafa titillagið sem fyrstu smáskífu, en Rafferty taldi „Baker Street“ betri kost. Upptökustjórinn Hugh Murphy sagði síðar að þeir hefðu þurft að grátbiðja fyrirtækið um að gefa lagið út sem smáskífu: „They actually said it was too good for the public.“
+- Platan velti *Saturday Night Fever* úr 1. sæti Billboard 200 hinn 8. júlí 1978 og náði platínusölu.
+
+::: {.callout-tip}
+## Úr gögnunum
+Þagnarárin sjást í gögnunum. Á [tímalínunni um Gerry Rafferty](../artists/gerry-rafferty.qmd#tímalína) eru engin ný lög árin 1976 og 1977, og á Billboard-listunum sést hvorki hann né Stealers Wheel frá vorinu 1974 þar til „Baker Street“ fer inn á Hot 100 í apríl 1978. Vikuna 8. júlí 1978, þegar platan var í 1. sæti, var *Saturday Night Fever* komin niður í 2. sæti (sjá vinsældalistana hér að ofan).
+:::
+
 ### Hver á saxófónriffið í „Baker Street“?
 
 :::: {layout-ncol="2"}
@@ -133,15 +145,6 @@ Samkvæmt MusicBrainz er Lily Allen fædd 2. maí 1985 og Elly Jackson 12. mars 
 Þegar ég var í háskóla hlustaði ég mjög mikið á La Roux og Lily Allen og þess háttar stelpulega popp-raftónlist. Og viti menn: þær héldu upp á „Right Down the Line“, sem er frábært lag. Sjálf hefði ég ekki haft hugmynd um hver Gerry Rafferty var þegar ég var 25 ára, þótt ég hafi örugglega þekkt lagið. Það er gaman að sjá hvaðan áhrifavaldar manns fá sín áhrif, sem skila sér síðan áfram til manns sjálfs. Þetta er dæmi um hvernig tónlist hefur óbein áhrif í gegnum tímann.
 :::
 
-### Peningarnir
+Um peningana sem smellirnir skiluðu: sjá [síðuna um Gerry Rafferty](../artists/gerry-rafferty.qmd#smellirnir-borga-sig).
 
-- Í október 2010 viðurkenndi BMI að „Baker Street“ hefði verið spilað oftar en 5 milljón sinnum í útvarpi og sjónvarpi um allan heim. „Stuck in the Middle With You“ með Stealers Wheel, hljómsveit Raffertys, hafði verið spilað yfir 4 milljón sinnum og „Right Down the Line“ af þessari plötu yfir 3 milljón sinnum.
-- Í viðtali við *The Sun* í Skotlandi árið 2003 sagði Rafferty að „Baker Street“ skilaði honum enn um 80.000 pundum á ári (um 24,7 milljónum króna á ári á núvirði^[Sama aðferð: vísitala neysluverðs frá 2003 til júlí 2026 (×1,89) og gengi 10. september 2026.]): „I could live off that song alone.“
-- Hann leyfði aldrei að „Baker Street“ væri notað í auglýsingum, þrátt fyrir rausnarleg tilboð.
-
-::: {.callout-tip}
-## Reiknað úr gögnunum
-5 milljón spilanir × 6:11 mínútur (lengd lagsins á plötunni) eru um 515.000 klukkustundir, eða **58,8 ár** af samfelldri spilun. „Right Down the Line“: 3 milljón spilanir × 4:32 eru **25,9 ár**. Þetta er okkar eigin útreikningur og efri mörk, því útvarp spilar oft styttri smáskífuútgáfu.
-:::
-
-*Heimild: samantekt og þýðing úr greinunum [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0), sem vísa í frumheimildir.*
+*Heimild: samantekt og þýðing úr greinunum [City to City](https://en.wikipedia.org/wiki/City_to_City), [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0), sem vísa í frumheimildir.*

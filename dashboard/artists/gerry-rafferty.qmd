@@ -39,6 +39,24 @@ Gerry Rafferty (1947–2011) var skoskur söngvari og lagahöfundur, fæddur inn
 :::
 ::::
 
+#### Smellirnir borga sig {#smellirnir-borga-sig}
+
+Smellirnir hafa reynst Rafferty einstaklega gjöfulir, þótt hann hafi aldrei viljað spila leikinn sem fylgdi frægðinni (sjá [Frægð, áfengi og veikindi](#fraegd-afengi-og-veikindi)).
+
+- Í október 2010 viðurkenndi BMI að „Baker Street“ hefði verið spilað oftar en 5 milljón sinnum í útvarpi og sjónvarpi um allan heim. „Stuck in the Middle With You“ með Stealers Wheel hafði verið spilað yfir 4 milljón sinnum og „Right Down the Line“ af *City to City* yfir 3 milljón sinnum.
+- Í viðtali við *The Sun* í Skotlandi árið 2003 sagði Rafferty að „Baker Street“ skilaði honum enn um 80.000 pundum á ári (um 24,7 milljónum króna á ári á núvirði^[Núvirt með breskri vísitölu neysluverðs (ONS, D7BT) frá ársmeðaltali 2003 til júlí 2026 (×1,89) og umreiknað á viðmiðunargengi Seðlabanka Evrópu 10. september 2026, 162,95 kr. á pundið. Reiknað með `scripts/value_today.py`.]): „I could live off that song alone.“
+- Danslagaútgáfa Undercover af „Baker Street“ árið 1992 færði honum 1,5 milljónir punda til viðbótar (um 558 milljónir króna á núvirði^[Sama aðferð, frá ársmeðaltali 1992 (×2,28).]); sjá [kaflann um City to City](../albums/city-to-city.qmd#áhrif-og-ábreiður).
+- Hann leyfði aldrei að „Baker Street“ væri notað í auglýsingum, þrátt fyrir rausnarleg tilboð.
+
+::: {.callout-tip}
+## Reiknað úr gögnunum
+5 milljón spilanir × 6:11 mínútur (lengd lagsins á plötunni) eru um 515.000 klukkustundir, eða **58,8 ár** af samfelldri spilun. „Right Down the Line“: 3 milljón spilanir × 4:32 eru **25,9 ár**. Þetta er okkar eigin útreikningur og efri mörk, því útvarp spilar oft styttri smáskífuútgáfu.
+:::
+
+*Heimild: greinarnar [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0).*
+
+{{< include ../_artist_timeline.qmd >}}
+
 ### Fjölskylda og ástir
 
 - Gerry kynntist Cörlu Ventilla á dansleik árið 1965, hann 18 ára og hún 15 ára. Hún var lærlingur í hárgreiðslu, af ítalskri fjölskyldu í Clydebank. Söguna sagði hann síðar í laginu „Shipyard Town“ á plötunni *North and South* (1988).
@@ -60,5 +78,22 @@ Carla af ítalskri fjölskyldu, Enzina ítölsk listakona: greinilega með týpu
 :::
 
 *Heimild: samantekt úr greininni [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0), nema annað sé tekið fram.*
+
+### Frægð, áfengi og veikindi {#fraegd-afengi-og-veikindi}
+
+- Rafferty kunni illa við frægðina. Hann greindi skýrt á milli listræns heiðarleika tónlistarmanns og þarfar tónlistariðnaðarins fyrir stjörnur og söluvöru. Charlie Reid úr The Proclaimers sagði eftir útförina: „He was not entirely comfortable with fame.“
+- Textinn við „Baker Street“ endurspeglar óánægju hans með stjörnukerfið. Kaldhæðni örlaganna: lagið um hve illa honum leið í sviðsljósinu varð risasmellur um allan heim og gerði hann enn frægari.
+- Hann neitaði staðfastlega að túra um Bandaríkin og að taka þátt í leik tónlistarbransans. Árið 1983 tilkynnti hann að hann ætlaði að taka sér hlé og verja meiri tíma með fjölskyldunni, og um aldamótin fór hann að gefa út tónlist á netinu, algjörlega á eigin forsendum.
+- Hann hafði gaman af áfengi frá unga aldri og snemmbúin lög á borð við „One Drink Down“, „Baker Street“ og „Night Owl“ nefna það berum orðum. Michael Gray, umboðsmaður hans snemma á níunda áratugnum, sagðist aldrei hafa grunað að hann stefndi í alkóhólisma. Drykkjan jókst eftir því sem leið á áratuginn og Carla skildi við hann árið 1990.
+- Síðasta áratuginn rataði hann aftur í fréttirnar, nú vegna alkóhólisma, þunglyndis og óútreiknanlegrar hegðunar. Árið 2008 flutti hann frá Kaliforníu til Írlands, þar sem drykkjan varð fljótt vandamál á ný.
+- Í júlí 2008 gisti hann á fimm stjörnu Westbury-hótelinu í Mayfair í London og fór á fjögurra daga fyllerí þar sem hann skemmdi herbergið mikið. Honum var vísað af hótelinu og hann lagðist inn á St Thomas'-sjúkrahúsið með langvinnan lifrarsjúkdóm. Hinn 1. ágúst hvarf hann af sjúkrahúsinu og skildi eigur sínar eftir, og sjúkrahúsið tilkynnti hann týndan. Eftir það flakkaði hann á milli hótela í London, á meðan hann sagðist vera í Toskana.
+- Í nóvember 2010 var hann lagður inn á Royal Bournemouth-sjúkrahúsið, settur í öndunarvél og meðhöndlaður við fjöllíffærabilun. Hann lést úr lifrarbilun á heimili Mörthu dóttur sinnar í Stroud 4. janúar 2011.
+
+::: {.callout-note}
+## Punktur
+Hótelstjórinn á Westbury lýsti honum sem einstaklega indælum manni sem hélt sig út af fyrir sig og truflaði enga aðra gesti. Hann leit alls ekki út fyrir að vera týpan sem rústar hótelherbergjum, sem gerir söguna enn ótrúlegri. Staðirnir, frá Westbury til sjúkrahúsanna, eru á kortinu hér fyrir neðan.
+:::
+
+*Heimild: samantekt úr greininni [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0).*
 
 {{< include ../_artist_life.qmd >}}
