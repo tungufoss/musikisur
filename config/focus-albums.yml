@@ -6,9 +6,11 @@ focus_albums:
     original_year: 1978
     priority: 1
     identifiers:
-      musicbrainz_release_group: null
-      discogs_master: null
-      spotify_album: null
+      musicbrainz_release_group: 238c3fb4-5792-342b-b217-02f66298b424
+      # Edition used for the track list: original 1978 GB LP, United Artists UAS 30104.
+      musicbrainz_release: bc5ab3ea-d4d8-49ae-ba97-e7eee6aec751
+      discogs_master: 54294
+      spotify_album: 35yZZTWeSrszSKjRlFETwf
     research_questions:
       - "Who wrote, performed on and produced the album?"
       - "How did its singles and album chart over time?"
