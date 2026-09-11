@@ -103,7 +103,7 @@ def main() -> None:
         own_ids.add(band["id"])
         key = f"musicbrainz-band-{band['id'][:8]}"
         groups = musicbrainz.fetch_release_groups_of_type(band["id"], "album|single", mb)
-        context["events"] += musicbrainz.release_events(groups, "band_release", key, detail=band["name"])
+        context["events"] += musicbrainz.release_events(groups, "band_album", key, detail=band["name"], primary_type="Album")
         context["events"] += musicbrainz.song_events(musicbrainz.fetch_recordings(band["id"], mb), band["name"], key)
         sources.append(musicbrainz.cached_source_row(
             mb, f"release-groups-album-single-{band['id']}", key,
