@@ -122,6 +122,14 @@ def main() -> None:
         f"https://musicbrainz.org/artist/{artist['id']}/relationships", f"MusicBrainz relationships of {artist['name']}",
     ))
     manual = curation.load_manual(bundle_dir(args.artist, args.album) / "manual.yml", wd)
+    # Sharpen year-only album and single dates from their releases; the focus album keeps the
+    # original release date found above (Wikidata), which an early edition could otherwise move.
+    context["events"] = musicbrainz.refine_release_dates(context["events"], mb)
+    focus_date = tables["album"].loc[0, "original_release_date"]
+    for row in context["events"]:
+        if row["kind"] == "album" and row["detail"] == release_group["id"] and focus_date:
+            row["event_date"], row["date_precision"] = str(focus_date), 11
+
     # A place curated as a home (or birth/death place) is not also a plain "mentioned" point.
     curated = {p["qid"] for p in manual["places"]}
     context["places"] = [p for p in context["places"] if not (p["role"] == "mentioned" and p["qid"] in curated)]

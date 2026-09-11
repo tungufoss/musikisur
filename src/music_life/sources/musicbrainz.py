@@ -100,6 +100,28 @@ def release_events(
     return rows
 
 
+def fetch_group_releases(group_id: str, c: CachedClient) -> dict[str, Any]:
+    return c.get_json(f"release-group/{group_id}", f"release-group-releases-{group_id}", {"inc": "releases", "fmt": "json"})
+
+
+def refine_release_dates(rows: list[dict[str, Any]], c: CachedClient) -> list[dict[str, Any]]:
+    """Sharpen year- or month-only release-group dates with the earliest more precise date among
+    the group's releases in that same year, so time between albums can be counted in months."""
+    for row in rows:
+        url = row.get("url") or ""
+        if row["date_precision"] >= 11 or "/release-group/" not in url:
+            continue
+        year = row["event_date"][:4]
+        releases = fetch_group_releases(url.rsplit("/", 1)[-1], c).get("releases", [])
+        dates = [r["date"] for r in releases if (r.get("date") or "").startswith(year)]
+        best = max((len(d) for d in dates), default=0)
+        candidates = sorted(d for d in dates if len(d) == best)
+        when = _dated(candidates[0]) if candidates else None
+        if when and when[1] > row["date_precision"]:
+            row["event_date"], row["date_precision"] = when
+    return rows
+
+
 def album_events(release_groups: dict[str, Any]) -> list[dict[str, Any]]:
     """Studio albums as timeline events; detail holds the release group ID."""
     return release_events(release_groups, "album", "musicbrainz-release-groups")
