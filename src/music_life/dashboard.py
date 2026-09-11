@@ -287,6 +287,8 @@ HIST_BOTTOM, HIST_HEIGHT = 216, 50
 # recordings for other artists.
 HIST_GROUPS = {"song": "song", "production": "others", "guest": "others"}
 HIST_COLORS = {"solo": "#2780e3", "others": "#fd7e14"}
+# Billboard year cells: one blue hue, light to dark by the year's best position.
+CHART_SHADES = [(10, "#1b4f9c"), (40, "#4a86d0"), (100, "#9dc0ea"), (200, "#d6e6f8")]
 # One colour per band, in order of the band's first release.
 BAND_PALETTE = ["#6f42c1", "#198754", "#d63384", "#0dcaf0", "#795548", "#6c757d"]
 
@@ -336,6 +338,33 @@ def _chart_runs(con: duckdb.DuckDBPyConnection, performers: list[str]) -> list[t
         """,
         [p.lower() for p in performers],
     ).fetchall()
+
+
+def _chart_weeks(con: duckdb.DuckDBPyConnection, performers: list[str]) -> pd.DataFrame:
+    """Every charting week for the performers: chart, performer, title, date, position, run number
+    (a new run after more than four weeks off the chart) and week number within the run."""
+    if not performers:
+        return pd.DataFrame()
+    marks = ", ".join("?" for _ in performers)
+    return con.execute(
+        f"""
+        WITH weeks AS (
+            SELECT c.name AS chart, c.chart_type, ce.artist_name AS performer, ce.title,
+                   ce.chart_date, ce.position,
+                   CASE WHEN ce.chart_date - lag(ce.chart_date) OVER w > 28 THEN 1 ELSE 0 END AS new_run
+            FROM chart_entries ce JOIN charts c USING (chart_id)
+            WHERE lower(ce.artist_name) IN ({marks})
+            WINDOW w AS (PARTITION BY c.name, ce.artist_name, ce.title ORDER BY ce.chart_date)
+        ), runs AS (
+            SELECT *, sum(new_run) OVER (PARTITION BY chart, performer, title ORDER BY chart_date) AS run
+            FROM weeks
+        )
+        SELECT chart, chart_type, performer, title, chart_date, position, run,
+               row_number() OVER (PARTITION BY chart, performer, title, run ORDER BY chart_date) AS week
+        FROM runs ORDER BY chart_date
+        """,
+        [p.lower() for p in performers],
+    ).df()
 
 
 def _performers(name: str, events: list[tuple]) -> list[str]:
@@ -567,7 +596,7 @@ def artist_timeline(artist_slug: str) -> str:
         found = _artist(con, artist_slug)
         events = _events(con, found[0]) if found else []
         focus = _focus_groups(con, found[0]) if found else {}
-        chart_runs = _chart_runs(con, _performers(found[1], events)) if found else []
+        chart_weeks = _chart_weeks(con, _performers(found[1], events)) if found else pd.DataFrame()
     by_kind: dict[str, list[tuple]] = {}
     for kind, when, precision, label, detail, url in events:
         by_kind.setdefault(kind, []).append((when, precision, label, detail, url))
@@ -662,23 +691,25 @@ def artist_timeline(artist_slug: str) -> str:
             # Albums with a chapter link to it; the others to MusicBrainz.
             link = f"../albums/{focus[detail]}.html" if detail in focus else url
             parts.append(icon(css, "album", at, f"{_when(when, precision)}: {label} ({age})", link, -10 if flip else 0))
-    # Billboard runs: a bar per song (Hot 100) or album (Billboard 200, thinner) from its first
-    # to its last charting week, in the performer's colour.
-    if chart_runs:
+    # Billboard, merged per year: one cell per year on a list, shaded by the best position that
+    # year (one hue, darker = higher); the tooltip lists what charted. Details: the Billboard section.
+    if not chart_weeks.empty:
         lanes.append("chart")
-        colours = {band.lower(): colour for band, colour in band_colors.items()}
-        previous, flip = None, False
-        for chart, chart_type, performer, title, first, last, peak, weeks, run in chart_runs:
-            begin, finish = _position(first, 11), _position(last, 11) + 7 / 366
-            flip = (not flip) if previous is not None and pct(begin) - pct(previous) < 1.5 else False
-            previous = begin
-            css = "tl-chart" + (" tl-chart-album" if chart_type == "albums" else "")
-            tip = (f"{chart}: {title} ({performer}), besta sæti {peak}, {_weeks(weeks)} "
-                   f"({format_date(first)} – {format_date(last)})" + (", endurkoma" if run else ""))
+        per_year = (chart_weeks.assign(year=chart_weeks["chart_date"].dt.year)
+                    .groupby(["year", "chart", "title"])
+                    .agg(best=("position", "min"), weeks=("chart_date", "nunique"))
+                    .reset_index())
+        for year, rows in per_year.groupby("year"):
+            best = int(rows["best"].min())
+            shade = next(colour for limit, colour in CHART_SHADES if best <= limit)
+            lines = "; ".join(
+                f"{r.title} ({r.chart.replace('Billboard ', '')}, {r.best}. sæti, {_weeks(r.weeks)})"
+                for r in rows.sort_values("best").itertuples()
+            )
             parts.append(
-                f'<div class="tl-bar {css}" style="top:{TIMELINE_LANES["chart"] + (-8 if flip else 0)}px;'
-                f'left:{pct(begin):.2f}%;width:{max(pct(finish) - pct(begin), 0.4):.2f}%;'
-                f'background:{colours.get(performer.lower(), HIST_COLORS["solo"])}" title="{html.escape(tip)}"></div>'
+                f'<div class="tl-bar tl-chart-year" style="top:{TIMELINE_LANES["chart"]}px;left:{pct(year):.2f}%;'
+                f'width:{max(pct(year + 1) - pct(year) - 0.15, 0.3):.2f}%;background:{shade}" '
+                f'title="{html.escape(f"{year}: {lines}")}"></div>'
             )
 
     covers = by_kind.get("cover", [])
@@ -739,7 +770,9 @@ def artist_timeline(artist_slug: str) -> str:
         '<p class="tl-legend"><i class="fa-solid fa-egg"></i> fæðing · <i class="fa-solid fa-dove"></i> andlát · '
         '<span class="tl-key tl-marriage"></span> hjónaband · <span class="tl-key tl-partner"></span> samband · '
         '<span class="tl-key tl-career"></span> ferill · '
-        '<span class="tl-key tl-chart"></span> Billboard: lag á Hot 100 (þykk lína), plata á Billboard 200 (þunn) · '
+        'Billboard: <span class="tl-key" style="background:#d6e6f8"></span><span class="tl-key" style="background:#9dc0ea"></span>'
+        '<span class="tl-key" style="background:#4a86d0"></span><span class="tl-key" style="background:#1b4f9c"></span> '
+        'besta sæti ársins (dekkra = ofar; nánar í Billboard-hlutanum) · '
         '<i class="fa-solid fa-baby tl-child"></i> barn fæðist · '
         '<i class="fa-solid fa-compact-disc tl-album"></i> hljóðversplata · '
         '<i class="fa-solid fa-compact-disc tl-focus"></i> fókusplata · '
@@ -773,6 +806,75 @@ def artist_timeline(artist_slug: str) -> str:
             "year": "Útgáfuár", "performer": "Flytjandi", "title": "Plata", "age": "Aldur", "gap": "Frá síðustu plötu",
         }) + "\n*Bil í mánuðum þar sem útgáfumánuður er þekktur; ~ merkir að aðeins árið er þekkt.*\n"
     return "```{=html}\n" + timeline + "\n```\n" + table
+
+
+def _performer_colours(artist_name: str, events: list[tuple]) -> dict[str, str]:
+    """Lower-case performer name -> colour: the artist in the solo blue, bands as on the timeline."""
+    joins = sorted((when, label) for kind, when, _, label, *_ in events if kind == "band_join")
+    colours = {artist_name.lower(): HIST_COLORS["solo"]}
+    for i, (_, band) in enumerate(joins):
+        colours[band.lower()] = BAND_PALETTE[i % len(BAND_PALETTE)]
+    return colours
+
+
+def chart_table(artist_slug: str) -> str:
+    """Raw Billboard data per song and album: first and last week, weeks, best position, re-entries."""
+    with connect_ro() as con:
+        found = _artist(con, artist_slug)
+        runs = _chart_runs(con, _performers(found[1], _events(con, found[0]))) if found else []
+    if not runs:
+        return "*Engar færslur á Billboard-listum.*\n"
+    frame = pd.DataFrame(runs, columns=["chart", "type", "performer", "title", "first", "last", "best", "weeks", "run"])
+    table = (frame.groupby(["chart", "type", "performer", "title"])
+             .agg(first=("first", "min"), last=("last", "max"), weeks=("weeks", "sum"),
+                  best=("best", "min"), reentries=("run", "max"))
+             .reset_index().sort_values("first"))
+    table["kind"] = table["type"].map({"singles": "lag", "albums": "plata"})
+    table["first_text"] = table["first"].map(format_date)
+    table["last_text"] = table["last"].map(format_date)
+    return interactive_table(table, {
+        "chart": "Listi", "performer": "Flytjandi", "title": "Titill", "kind": "Tegund",
+        "first_text": "Fyrsta vika", "last_text": "Síðasta vika", "weeks": "Vikur",
+        "best": "Besta sæti", "reentries": "Endurkomur",
+    }, paging=len(table) > 25)
+
+
+def chart_plot(artist_slug: str) -> Any:
+    """Position week by week while on each list (1 at the top), runs aligned at their first week;
+    one panel per chart, lines coloured by performer, song or album in the legend and tooltip."""
+    import plotly.graph_objects as go
+    import plotly.io as pio
+    from plotly.subplots import make_subplots
+
+    pio.renderers.default = "notebook_connected"
+    with connect_ro() as con:
+        found = _artist(con, artist_slug)
+        events = _events(con, found[0]) if found else []
+        weeks = _chart_weeks(con, _performers(found[1], events)) if found else pd.DataFrame()
+    if weeks.empty:
+        return None
+    colours = _performer_colours(found[1], events)
+    charts = [c for c in ("Billboard Hot 100", "Billboard 200") if c in set(weeks["chart"])]
+    fig = make_subplots(rows=1, cols=len(charts), subplot_titles=charts, horizontal_spacing=0.08)
+    for col, chart in enumerate(charts, start=1):
+        for (performer, title, run), trace in weeks[weeks["chart"] == chart].groupby(["performer", "title", "run"], sort=False):
+            name = f"{title} ({trace['chart_date'].min().year})" + (" – endurkoma" if run else "")
+            fig.add_trace(go.Scatter(
+                x=trace["week"], y=trace["position"], mode="lines+markers", name=name,
+                line={"width": 2, "color": colours.get(performer.lower(), "#6c757d")},
+                marker={"size": 6}, legendgroup=chart, legendgrouptitle_text=chart,
+                customdata=list(zip(trace["chart_date"].map(format_date), [performer] * len(trace))),
+                hovertemplate=f"<b>{html.escape(title)}</b> (%{{customdata[1]}})<br>%{{customdata[0]}}: "
+                              "%{y}. sæti, vika %{x}<extra></extra>",
+            ), row=1, col=col)
+        limit = 100 if chart == "Billboard Hot 100" else 200
+        fig.update_yaxes(range=[limit + 2, 0], title_text="Sæti" if col == 1 else None,
+                         gridcolor="#e9ecef", zeroline=False, row=1, col=col)
+        fig.update_xaxes(title_text="Vika á lista", gridcolor="#f1f3f5", zeroline=False, row=1, col=col)
+    fig.update_layout(template="plotly_white", height=480, margin={"l": 50, "r": 20, "t": 40, "b": 40},
+                      hovermode="closest", legend={"groupclick": "toggleitem", "font": {"size": 11}},
+                      font={"family": "system-ui, -apple-system, Segoe UI, sans-serif", "color": "#343a40"})
+    return fig
 
 
 ROLE_LABELS = {
