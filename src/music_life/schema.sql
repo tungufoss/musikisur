@@ -95,6 +95,8 @@ CREATE TABLE IF NOT EXISTS album_tracks (
     disc_number INTEGER,
     track_number INTEGER,
     track_title VARCHAR,
+    sample_url VARCHAR,
+    sample_page VARCHAR,
     PRIMARY KEY (album_id, disc_number, track_number)
 );
 
@@ -201,6 +203,42 @@ CREATE TABLE IF NOT EXISTS research_targets (
     priority INTEGER,
     status VARCHAR,
     notes VARCHAR
+);
+
+-- Artist context: tags, places and a timeline, loaded from album bundles.
+CREATE TABLE IF NOT EXISTS artist_tags (
+    artist_id BIGINT NOT NULL,
+    kind VARCHAR NOT NULL,              -- genre / instrument / occupation
+    qid VARCHAR NOT NULL,
+    label_is VARCHAR,
+    label_en VARCHAR,
+    source_id BIGINT,
+    PRIMARY KEY (artist_id, kind, qid)
+);
+
+CREATE TABLE IF NOT EXISTS artist_places (
+    artist_id BIGINT NOT NULL,
+    role VARCHAR NOT NULL,              -- birth / death / residence / mentioned
+    qid VARCHAR,
+    title VARCHAR NOT NULL,
+    label_is VARCHAR,
+    latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL,
+    context VARCHAR,
+    source_id BIGINT,
+    PRIMARY KEY (artist_id, role, title)
+);
+
+CREATE TABLE IF NOT EXISTS timeline_events (
+    artist_id BIGINT NOT NULL,
+    event_date DATE NOT NULL,
+    date_precision INTEGER,             -- 9 year, 10 month, 11 day
+    kind VARCHAR NOT NULL,              -- birth / death / career_start / career_end / album / cover / event
+    label VARCHAR NOT NULL,
+    detail VARCHAR,
+    url VARCHAR,
+    source_id BIGINT,
+    PRIMARY KEY (artist_id, kind, event_date, label)
 );
 
 CREATE OR REPLACE VIEW focus_albums AS

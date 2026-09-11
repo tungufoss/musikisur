@@ -9,7 +9,30 @@ local function text(value)
   return pandoc.utils.stringify(value)
 end
 
+-- {{< spotify-player ID >}} embeds Spotify's compact player (height="152" for the large one).
+
 return {
+  ["spotify-player"] = function(args, kwargs)
+    local id = text(args[1])
+    if id == "" then
+      error("spotify-player shortcode needs a Spotify ID")
+    end
+    local kind = text(kwargs["type"])
+    if kind == "" then
+      kind = "track"
+    end
+    local height = text(kwargs["height"])
+    if height == "" then
+      height = "80"
+    end
+    return pandoc.RawInline(
+      "html",
+      '<iframe class="spotify-player" src="https://open.spotify.com/embed/' .. kind .. "/" .. id
+        .. '" width="100%" height="' .. height .. '" frameborder="0" loading="lazy" title="Spotify"'
+        .. ' allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>'
+    )
+  end,
+
   ["spotify"] = function(args, kwargs)
     local id = text(args[1])
     if id == "" then

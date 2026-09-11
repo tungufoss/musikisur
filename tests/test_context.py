@@ -1,0 +1,36 @@
+"""Offline tests for the artist context: Wikipedia places, dates with precision, album events."""
+from datetime import date
+
+from music_life import curation
+from music_life.sources import musicbrainz, wikidata, wikipedia
+
+
+def test_context_sentence_finds_first_mention_outside_headings():
+    text = (
+        "Intro line.\n== Early life ==\nHe was born in Paisley, Renfrewshire. "
+        "Later he lived in Paisley again.\nIn 2008 he moved away from California."
+    )
+    sentences = wikipedia.sentences(text)
+    assert wikipedia.context_sentence(sentences, "Paisley, Renfrewshire") == "He was born in Paisley, Renfrewshire."
+    assert wikipedia.context_sentence(sentences, "California") == "In 2008 he moved away from California."
+    assert wikipedia.context_sentence(sentences, "Highland (council area)") is None
+
+
+def test_dates_keep_their_precision():
+    assert curation.parse_date(date(1992, 9, 18)) == ("1992-09-18", 11)
+    assert curation.parse_date(1998) == ("1998-01-01", 9)
+    assert curation.parse_date("1988-06") == ("1988-06-01", 10)
+
+    career = {"claims": {"P2031": [{"mainsnak": {"datavalue": {"value": {"time": "+1966-00-00T00:00:00Z", "precision": 9}}}}]}}
+    assert wikidata.claim_time(career, "P2031") == ("1966-01-01", 9)
+
+
+def test_album_events_keep_dated_studio_albums_only():
+    groups = {"release-groups": [
+        {"id": "a", "title": "Studio", "first-release-date": "1978", "secondary-types": []},
+        {"id": "b", "title": "Best Of", "first-release-date": "1989", "secondary-types": ["Compilation"]},
+        {"id": "c", "title": "Undated", "first-release-date": "", "secondary-types": []},
+        {"id": "d", "title": "Late", "first-release-date": "2021-09-01", "secondary-types": []},
+    ]}
+    rows = [(r["label"], r["event_date"], r["date_precision"]) for r in musicbrainz.album_events(groups)]
+    assert rows == [("Studio", "1978-01-01", 9), ("Late", "2021-09-01", 11)]

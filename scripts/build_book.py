@@ -45,6 +45,25 @@ ALBUM_SLUG = "{slug}"
 """
 
 
+ARTIST_TEMPLATE = """---
+title: "{name}"
+---
+
+```{{python}}
+ARTIST_SLUG = "{slug}"
+```
+
+*Hér kemur stutt samantekt um flytjandann.*
+
+{{{{< include ../_artist.qmd >}}}}
+"""
+
+
+def artists_of(chapters: list[Chapter]) -> list[tuple[str, str]]:
+    """(name, slug) of every artist with a chapter, alphabetically."""
+    return sorted({(c.artist_name, c.artist_slug) for c in chapters})
+
+
 def write_if_missing(path: Path, text: str) -> bool:
     if path.exists():
         return False
@@ -59,6 +78,11 @@ def chapter_lines(chapters: list[Chapter]) -> list[str]:
         lines.append(f"    - part: decades/{decade}s.qmd")
         lines.append("      chapters:")
         lines.extend(f"        - {c.path}" for c in group)
+    artists = artists_of(chapters)
+    if artists:
+        lines.append('    - part: "Flytjendur"')
+        lines.append("      chapters:")
+        lines.extend(f"        - artists/{slug}.qmd" for _, slug in artists)
     return lines
 
 
@@ -84,6 +108,10 @@ def main() -> None:
         heading = chapter.heading.replace('"', '\\"')
         if write_if_missing(DASHBOARD / chapter.path, CHAPTER_TEMPLATE.format(heading=heading, slug=chapter.slug)):
             created.append(DASHBOARD / chapter.path)
+    for name, slug in artists_of(chapters):
+        path = DASHBOARD / "artists" / f"{slug}.qmd"
+        if write_if_missing(path, ARTIST_TEMPLATE.format(name=name.replace('"', '\\"'), slug=slug)):
+            created.append(path)
 
     for path in created:
         print(f"created {path.relative_to(REPO_ROOT).as_posix()}")
@@ -94,6 +122,10 @@ def main() -> None:
     for path in sorted((DASHBOARD / "albums").glob("*.qmd")):
         if path.stem not in configured:
             print(f"warning: {path.relative_to(REPO_ROOT).as_posix()} is not in config/focus-albums.yml")
+    artist_slugs = {slug for _, slug in artists_of(chapters)}
+    for path in sorted((DASHBOARD / "artists").glob("*.qmd")):
+        if path.stem not in artist_slugs:
+            print(f"warning: {path.relative_to(REPO_ROOT).as_posix()} has no focus album in config")
     print(f"book: {len(chapters)} chapters in {len({c.decade for c in chapters})} decades")
 
 

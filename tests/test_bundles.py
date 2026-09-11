@@ -71,7 +71,7 @@ def test_bundle_loads_into_duckdb(tmp_path):
 def test_rewriting_unchanged_data_gives_identical_files(tmp_path):
     first = write_bundle(ARTIST, ALBUM, fixture_tables(), root=tmp_path / "a")
     second = write_bundle(ARTIST, ALBUM, fixture_tables(), root=tmp_path / "b")
-    for name in TABLES:
+    for name in fixture_tables():
         assert (first / f"{name}.parquet").read_bytes() == (second / f"{name}.parquet").read_bytes()
 
 
