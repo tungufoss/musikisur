@@ -46,13 +46,24 @@ def year_span(years: str) -> tuple[int, int]:
     return found[0], found[-1]
 
 
+FILLER_WORDS = {"of", "the", "a", "an"}
+
+
+def _loose(key: str) -> str:
+    """A song key without filler words: "inside of me" = "inside me"."""
+    return " ".join(word for word in key.split() if word not in FILLER_WORDS)
+
+
 def canonical_song(title: str, known: list[str]) -> str:
-    """The artist's own spelling of a song IMDb names; IMDb often shortens titles
-    ("Stuck in the Middle" for "Stuck in the Middle With You")."""
+    """The artist's own spelling of a song IMDb names. IMDb often shortens titles ("Stuck in the
+    Middle" for "Stuck in the Middle With You") or adds a filler word ("Inside of Me")."""
     keys = {song_key(k): k for k in known}
     key = song_key(title)
     if key in keys:
         return keys[key]
+    loose = {_loose(k): name for k, name in keys.items()}
+    if _loose(key) in loose:
+        return loose[_loose(key)]
     longer = sorted(k for k in keys if k.startswith(key + " "))
     return keys[longer[0]] if longer else title
 

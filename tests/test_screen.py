@@ -7,6 +7,8 @@ def test_imdb_songs_take_the_artists_spelling():
     assert screen.canonical_song("Stuck in the Middle", known) == "Stuck in the Middle With You"
     assert screen.canonical_song("stuck in the middle with you", known) == "Stuck in the Middle With You"
     assert screen.canonical_song("Mary Skeffington", known) == "Mary Skeffington"
+    better = ["You Put Something Better Inside Me"]
+    assert screen.canonical_song("You Put Something Better Inside of Me", better) == better[0]
 
 
 def test_song_links_start_with_whoever_released_the_song_first():
