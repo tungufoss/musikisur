@@ -39,4 +39,26 @@ Gerry Rafferty (1947–2011) var skoskur söngvari og lagahöfundur, fæddur inn
 :::
 ::::
 
+### Fjölskylda og ástir
+
+- Gerry kynntist Cörlu Ventilla á dansleik árið 1965, hann 18 ára og hún 15 ára. Hún var lærlingur í hárgreiðslu, af ítalskri fjölskyldu í Clydebank. Söguna sagði hann síðar í laginu „Shipyard Town“ á plötunni *North and South* (1988).
+
+  {{< spotify-player 09PFxrSJ37blQEzjKFLkjo >}}
+
+- Þau giftust árið 1970 og bjuggu í Skotlandi með dótturinni Mörthu Mary, áður en þau fluttu suður til Englands seint á áttunda áratugnum. Þar skiptu þau tímanum á milli sveitabæjar við mörk Kent og Sussex og heimilis í Hampstead í London.
+- Langar ferðir á milli London og Skotlands urðu kveikjan að lögum á *City to City*, meðal annars titillaginu og „Mattie's Rag“, sem fjallar um gleðina við að hitta dótturina aftur.
+
+  {{< spotify-player 6OG8fTcc7S5HWuFYVc5WgR >}}
+
+- „Right Down the Line“ er sagt vera óður til Cörlu, sem stóð með honum í gegnum erfiðleikana. Sú fullyrðing kemur frá [Songfacts](https://www.songfacts.com/facts/gerry-rafferty/right-down-the-line), sem vísar ekki í heimild.
+- Vaxandi drykkja lagði mikið álag á hjónabandið og Carla skildi við hann árið 1990, en þau héldu góðu sambandi.
+- Síðustu árin var hann með Enzinu Fuschini, ítalskri listakonu sem bjó í Dorset. Hún segir að hann hafi beðið hennar á Ritz-hótelinu í París á aðfangadagskvöld 2009.
+
+::: {.callout-note}
+## Punktur
+Carla af ítalskri fjölskyldu, Enzina ítölsk listakona: greinilega með týpu.
+:::
+
+*Heimild: samantekt úr greininni [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0), nema annað sé tekið fram.*
+
 {{< include ../_artist_life.qmd >}}
