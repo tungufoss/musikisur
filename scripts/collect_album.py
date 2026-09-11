@@ -122,6 +122,9 @@ def main() -> None:
         f"https://musicbrainz.org/artist/{artist['id']}/relationships", f"MusicBrainz relationships of {artist['name']}",
     ))
     manual = curation.load_manual(bundle_dir(args.artist, args.album) / "manual.yml", wd)
+    # A place curated as a home (or birth/death place) is not also a plain "mentioned" point.
+    curated = {p["qid"] for p in manual["places"]}
+    context["places"] = [p for p in context["places"] if not (p["role"] == "mentioned" and p["qid"] in curated)]
     context["places"] += manual["places"]
     context["events"] += manual["events"]
     sources += manual["sources"]
