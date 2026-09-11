@@ -122,8 +122,25 @@ def main() -> None:
         f"https://musicbrainz.org/artist/{artist['id']}/relationships", f"MusicBrainz relationships of {artist['name']}",
     ))
     manual = curation.load_manual(bundle_dir(args.artist, args.album) / "manual.yml", wd)
-    # Sharpen year-only album and single dates from their releases; the focus album keeps the
-    # original release date found above (Wikidata), which an early edition could otherwise move.
+    # Sharpen year-only album and single dates: first Wikidata's publication date (P577) of the
+    # release group's item, then the earliest precise release date in MusicBrainz. The focus
+    # album keeps the original release date found above, which an early edition could move.
+    refined_by_wikidata = False
+    for row in context["events"]:
+        url = row.get("url") or ""
+        if row["kind"] in ("album", "band_album", "single") and row["date_precision"] < 11 and "/release-group/" in url:
+            qid = musicbrainz.wikidata_id(musicbrainz.fetch_release_group(url.rsplit("/", 1)[-1], mb))
+            published = wikidata.publication_date(wikidata.fetch_entity(qid, wd)) if qid else None
+            if published and published[:4] == row["event_date"][:4]:
+                row["event_date"], row["date_precision"] = published, 11
+                row["source_key"] = "wikidata-release-dates"
+                refined_by_wikidata = True
+    if refined_by_wikidata:
+        sources.append({
+            "source_key": "wikidata-release-dates", "source_name": "Wikidata", "source_type": "database",
+            "source_url": "https://www.wikidata.org/wiki/Property:P577", "retrieved_at": None,
+            "citation_text": "Wikidata publication dates (P577) of albums and singles",
+        })
     context["events"] = musicbrainz.refine_release_dates(context["events"], mb)
     focus_date = tables["album"].loc[0, "original_release_date"]
     for row in context["events"]:

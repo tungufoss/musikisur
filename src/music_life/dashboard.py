@@ -554,8 +554,10 @@ def artist_timeline(artist_slug: str) -> str:
         ends = {name: (when, precision) for when, precision, name, _, _ in by_kind.get(end_kind, [])}
         for when, precision, name, _, _ in by_kind.get(start_kind, []):
             ended = ends.get(name)
+            # Without a recorded end it lasts until death (or today).
+            last = ended[0].year if ended else died.year if died else ""
             parts.append(bar(css, "life", _position(when, precision), _position(*ended) if ended else life_end,
-                             f"{what}: {name}, {when.year}–{ended[0].year if ended else ''}"))
+                             f"{what}: {name}, {when.year}–{last}"))
     for when, precision, child, detail, _ in by_kind.get("child", []):
         # A detail (such as "áætlað: fædd 1970–1977") marks an estimated date: paler icon, range in the tooltip.
         css = "fa-baby tl-child" + (" tl-approx" if detail else "")
