@@ -6,6 +6,10 @@ title: "Gerry Rafferty – *City to City* (1978)"
 ALBUM_SLUG = "city-to-city"
 ```
 
+*City to City* er önnur sólóplata Gerrys Rafferty, sjö árum á eftir *Can I Have My Money Back?* (1971), og sú fyrsta eftir þriggja ára lagabaráttu í kjölfar þess að Stealers Wheel hætti. Hún kom út hjá United Artists 20. janúar 1978, tekin upp í Chipping Norton Recording Studios undir stjórn Hughs Murphy og Raffertys sjálfs, með umslagsmálverki eftir John Patrick Byrne. Platan fór í 1. sæti Billboard 200 sumarið 1978, seldist í platínuupplagi í Bandaríkjunum og gaf af sér smellina „Baker Street“, „Right Down the Line“ og „Home and Dry“.
+
+*Heimildir: greinin [City to City](https://en.wikipedia.org/wiki/City_to_City) á ensku Wikipediu (CC BY-SA 4.0), Wikidata (upptökustaður), MusicBrainz (upptökustjórn) og Discogs (umslag).*
+
 {{< include ../_chapter.qmd >}}
 
 ## Punktar fyrir þáttinn
