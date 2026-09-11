@@ -122,6 +122,7 @@ TABLES: dict[str, TableSpec] = {
             "qid": "VARCHAR",
             "title": "VARCHAR",
             "label_is": "VARCHAR",
+            "country": "VARCHAR",  # country or UK constituent country, from Wikidata
             "latitude": "DOUBLE",
             "longitude": "DOUBLE",
             "context": "VARCHAR",
@@ -145,7 +146,7 @@ TABLES: dict[str, TableSpec] = {
     ),
 }
 EVENT_KINDS = {
-    "birth", "death", "career_start", "career_end",
+    "birth", "death", "career_start", "career_end", "marriage", "divorce", "child",
     "album", "single", "band_release", "song", "production", "guest",
     "cover", "nomination", "award", "event",
 }
@@ -417,7 +418,7 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
     # Artist context; several bundles may carry the same artist, so duplicates are skipped.
     artist_context = {
         "artist_tags": ("artist_tags", ["kind", "qid", "label_is", "label_en"]),
-        "places": ("artist_places", ["role", "qid", "title", "label_is", "latitude", "longitude", "context"]),
+        "places": ("artist_places", ["role", "qid", "title", "label_is", "country", "latitude", "longitude", "context"]),
         "events": ("timeline_events", ["event_date", "date_precision", "kind", "label", "detail", "url"]),
     }
     for name, (table, columns) in artist_context.items():

@@ -77,7 +77,7 @@ def place_rows(title: str, c: CachedClient, skip_qids: set[str]) -> list[dict[st
         context = context_sentence(article, place["title"])
         if context:
             rows.append({
-                "role": "mentioned", "qid": place["qid"], "title": place["title"], "label_is": None,
+                "role": "mentioned", "qid": place["qid"], "title": place["title"], "label_is": None, "country": None,
                 "latitude": place["latitude"], "longitude": place["longitude"],
                 "context": context[:400], "source_key": "wikipedia-article",
             })

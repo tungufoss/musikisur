@@ -264,10 +264,11 @@ def _image_source(con: duckdb.DuckDBPyConnection, slug: str, source_key: str) ->
 
 TAG_TITLES = {"genre": "Stefna", "instrument": "Hljóðfæri", "occupation": "Störf"}
 # Icelandic for common Wikidata labels that lack an Icelandic label.
-LABEL_FALLBACK_IS = {"voice": "rödd", "recording artist": "hljóðritunarlistamaður"}
-PLACE_STYLES = {  # role: (marker colour, Font Awesome icon, description)
-    "birth": ("green", "star", "Fæðingarstaður"),
-    "death": ("black", "circle", "Dánarstaður"),
+LABEL_FALLBACK_IS = {"voice": "rödd", "recording artist": "hljóðritunarlistamaður", "liver failure": "lifrarbilun"}
+AGE_WORD = {"Q6581097": "gamall", "Q6581072": "gömul"}  # Wikidata sex: male, female
+PLACE_STYLES = {  # role: (marker colour, Font Awesome icon, description); egg and dove as on the timeline
+    "birth": ("green", "egg", "Fæðingarstaður"),
+    "death": ("black", "dove", "Dánarstaður"),
     "residence": ("orange", "home", "Búseta"),
     "mentioned": ("#2780e3", None, "Nefndur í Wikipedia-greininni"),
 }
@@ -371,14 +372,23 @@ def artist_facts(artist_slug: str) -> str:
         found = _artist(con, artist_slug)
         if not found:
             return ""
-        places = dict(con.execute(
-            "SELECT role, coalesce(label_is, title) FROM artist_places WHERE artist_id = ? AND role IN ('birth', 'death')",
-            [found[0]],
-        ).fetchall())
+        places = {
+            role: ", ".join(filter(None, (name, country)))
+            for role, name, country in con.execute(
+                """
+                SELECT role, coalesce(label_is, title), country FROM artist_places
+                WHERE artist_id = ? AND role IN ('birth', 'death')
+                """,
+                [found[0]],
+            ).fetchall()
+        }
         events = _events(con, found[0])
+        sex = con.execute(
+            "SELECT qid FROM artist_tags WHERE artist_id = ? AND kind = 'sex'", [found[0]]
+        ).fetchone()
     first = {}
-    for kind, when, precision, *_ in events:
-        first.setdefault(kind, (when, precision))
+    for kind, when, precision, _, detail, _ in events:
+        first.setdefault(kind, (when, precision, detail))
     born = first.get("birth", (None,))[0]
     died = first.get("death", (None,))[0]
 
@@ -386,8 +396,18 @@ def artist_facts(artist_slug: str) -> str:
     if born:
         boxes.append(_fact_box("Fæðing", format_date(born), places.get("birth", "")))
     if died:
-        age = f", {age_at_release(born, died, died.year)} ára" if born else ""
-        boxes.append(_fact_box("Andlát", format_date(died), f"{places.get('death', '')}{age}", "fact-death"))
+        age = f"{age_at_release(born, died, died.year)} ára {AGE_WORD.get(sex[0] if sex else '', '')}".strip() if born else ""
+        cause = first["death"][2]
+        cause = LABEL_FALLBACK_IS.get(cause, cause) if cause else ""
+        details = ", ".join(filter(None, (age, cause)))
+        sub = " · ".join(filter(None, (places.get("death", ""), details)))
+        boxes.append(_fact_box("Andlát", format_date(died), sub, "fact-death"))
+    divorces = {label: when for kind, when, _, label, *_ in events if kind == "divorce"}
+    marriages = [(when, label) for kind, when, _, label, *_ in events if kind == "marriage"]
+    for when, spouse in marriages:
+        end = divorces.get(spouse)
+        span = f"{when.year}–{end.year}" + (", skilnaður" if end else "")
+        boxes.append(_fact_box("Hjónaband", spouse, span, "fact-marriage"))
     if "career_start" in first:
         start = first["career_start"][0]
         end = first["career_end"][0] if "career_end" in first else None
@@ -446,7 +466,8 @@ def artist_map(artist_slug: str) -> Any:
     with connect_ro() as con:
         places = con.execute(
             """
-            SELECT p.role, coalesce(p.label_is, p.title), p.latitude, p.longitude, p.context
+            SELECT p.role, concat_ws(', ', coalesce(p.label_is, p.title), p.country),
+                   p.latitude, p.longitude, p.context
             FROM artist_places p JOIN artists ar USING (artist_id)
             WHERE ar.slug = ? ORDER BY p.role, p.title
             """,
@@ -525,9 +546,27 @@ def artist_timeline(artist_slug: str) -> str:
     lanes = ["life"]
     life_end = _position(died, 11) if died else end - 2
     parts.append(bar("tl-life", "life", born_at, life_end, "Ævi"))
-    parts.append(icon("fa-baby", "life", born_at, f"Fæddur {format_date(born)}"))
+    parts.append(icon("fa-egg", "life", born_at, f"Fæðing {format_date(born)}"))
     if died:
-        parts.append(icon("fa-dove", "life", life_end, f"Lést {format_date(died)}, {int(age_at_release(born, died, died.year))} ára"))
+        cause = by_kind["death"][0][3]
+        cause = f", {LABEL_FALLBACK_IS.get(cause, cause)}" if cause else ""
+        parts.append(icon("fa-dove", "life", life_end,
+                          f"Andlát {format_date(died)}, {age_at_release(born, died, died.year)} ára{cause}"))
+    # Family on the life line: marriages as a pink bar with a ring, divorces, children.
+    divorces = {spouse: (when, precision) for when, precision, spouse, _, _ in by_kind.get("divorce", [])}
+    for when, precision, spouse, _, _ in by_kind.get("marriage", []):
+        begin = _position(when, precision)
+        divorced = divorces.get(spouse)
+        finish = _position(*divorced) if divorced else life_end
+        parts.append(bar("tl-marriage", "life", begin, finish,
+                         f"Hjónaband: {spouse}, {when.year}–{divorced[0].year if divorced else ''}"))
+        parts.append(icon("fa-ring tl-family", "life", begin, f"{_when(when, precision)}: gifting, {spouse}", offset=-13))
+    for spouse, (when, precision) in divorces.items():
+        parts.append(icon("fa-heart-crack tl-family", "life", _position(when, precision),
+                          f"{_when(when, precision)}: skilnaður, {spouse}", offset=-13))
+    for when, precision, child, _, _ in by_kind.get("child", []):
+        parts.append(icon("fa-baby tl-child", "life", _position(when, precision),
+                          f"{_when(when, precision)}: {child} fæðist", offset=-13))
     if "career_start" in by_kind:
         lanes.append("career")
         first_year = by_kind["career_start"][0][0].year
@@ -614,7 +653,9 @@ def artist_timeline(artist_slug: str) -> str:
 
     labels = "".join(f'<div style="top:{TIMELINE_LANES[lane]}px">{LANE_TITLES[lane]}</div>' for lane in lanes)
     legend = (
-        '<p class="tl-legend"><i class="fa-solid fa-baby"></i> fæðing · <i class="fa-solid fa-dove"></i> andlát · '
+        '<p class="tl-legend"><i class="fa-solid fa-egg"></i> fæðing · <i class="fa-solid fa-dove"></i> andlát · '
+        '<i class="fa-solid fa-ring tl-family"></i> gifting · <i class="fa-solid fa-heart-crack tl-family"></i> skilnaður · '
+        '<i class="fa-solid fa-baby tl-child"></i> barn fæðist · '
         '<i class="fa-solid fa-compact-disc tl-album"></i> hljóðversplata · '
         '<i class="fa-solid fa-compact-disc tl-focus"></i> fókusplata · '
         '<i class="fa-solid fa-compact-disc tl-posthumous"></i> eftir andlát · '

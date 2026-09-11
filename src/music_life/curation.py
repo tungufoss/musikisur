@@ -75,6 +75,7 @@ def load_manual(path: Path, wd: CachedClient) -> dict[str, list[dict[str, Any]]]
         places.append({
             "role": entry.get("role", "mentioned"), "qid": entry["qid"],
             "title": wikidata.label(item, "en") or entry["qid"], "label_is": wikidata.label(item, "is"),
+            "country": wikidata.best_label(wikidata.country_of(entry["qid"], wd)),
             "latitude": point[0], "longitude": point[1], "context": entry.get("context"),
             "source_key": source_key(entry["source"]),
         })
