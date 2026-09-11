@@ -272,9 +272,12 @@ PLACE_STYLES = {  # role: (marker colour, Font Awesome icon, description); egg a
     "residence": ("orange", "home", "Búseta"),
     "mentioned": ("#2780e3", None, "Nefndur í Wikipedia-greininni"),
 }
-TIMELINE_LANES = {"life": 18, "career": 46, "album": 76, "cover": 106, "hist": 161}  # px from the top
-LANE_TITLES = {"life": "Ævi", "career": "Ferill", "album": "Plötur", "cover": "Ábreiður", "hist": "Ný lög á ári"}
-HIST_BOTTOM, HIST_HEIGHT = 186, 50
+TIMELINE_LANES = {"life": 18, "career": 46, "album": 76, "chart": 106, "cover": 136, "hist": 191}  # px from top
+LANE_TITLES = {
+    "life": "Ævi", "career": "Ferill", "album": "Plötur", "chart": "Billboard",
+    "cover": "Ábreiður", "hist": "Ný lög á ári",
+}
+HIST_BOTTOM, HIST_HEIGHT = 216, 50
 # The yearly columns count songs: new songs in the artist's own name or a band's, and
 # recordings for other artists.
 HIST_GROUPS = {"song": "song", "production": "others", "guest": "others"}
@@ -297,6 +300,29 @@ def _focus_groups(con: duckdb.DuckDBPyConnection, artist_id: int) -> dict[str, s
         """,
         [artist_id],
     ).fetchall())
+
+
+def _chart_runs(con: duckdb.DuckDBPyConnection, performers: list[str]) -> list[tuple]:
+    """(chart, chart type, performer, title, first week, last week, best position, weeks) for every
+    song or album credited to one of the performers (exact chart credit, case-insensitive)."""
+    if not performers:
+        return []
+    marks = ", ".join("?" for _ in performers)
+    return con.execute(
+        f"""
+        SELECT c.name, c.chart_type, ce.artist_name, ce.title, min(ce.chart_date), max(ce.chart_date),
+               min(ce.position), count(DISTINCT ce.chart_date)
+        FROM chart_entries ce JOIN charts c USING (chart_id)
+        WHERE lower(ce.artist_name) IN ({marks})
+        GROUP BY ALL ORDER BY min(ce.chart_date)
+        """,
+        [p.lower() for p in performers],
+    ).fetchall()
+
+
+def _performers(name: str, events: list[tuple]) -> list[str]:
+    """The artist's own name plus every band they joined."""
+    return [name, *sorted({label for kind, _, _, label, *_ in events if kind == "band_join"})]
 
 
 def _artist_photo(con: duckdb.DuckDBPyConnection, artist_slug: str) -> tuple[str, str] | None:
@@ -385,6 +411,7 @@ def artist_facts(artist_slug: str) -> str:
             ).fetchall()
         }
         events = _events(con, found[0])
+        chart_runs = _chart_runs(con, _performers(found[1], events))
         sex = con.execute(
             "SELECT qid FROM artist_tags WHERE artist_id = ? AND kind = 'sex'", [found[0]]
         ).fetchone()
@@ -424,6 +451,11 @@ def artist_facts(artist_slug: str) -> str:
         boxes.append(_fact_box("Lög sem hann kom að", songs + for_others,
                                f"þar af {for_others} fyrir aðra" if for_others else "", "fact-songs",
                                "Hvert lag talið einu sinni, árið sem það kom fyrst út (MusicBrainz)"))
+    hot100 = [run for run in chart_runs if run[0] == "Billboard Hot 100"]
+    if hot100:
+        best = min(hot100, key=lambda run: run[6])
+        boxes.append(_fact_box("Billboard Hot 100", f"{len(hot100)} lög", f"besta sæti {best[6]} ({best[3]})",
+                               "fact-chart", "; ".join(f"{run[3]}: {run[6]}. sæti, {run[7]} vikur" for run in hot100)))
     nominations = [(when, label) for kind, when, _, label, *_ in events if kind == "nomination"]
     if nominations:
         years = ", ".join(str(y) for y in sorted({when.year for when, _ in nominations}))
@@ -510,6 +542,7 @@ def artist_timeline(artist_slug: str) -> str:
         found = _artist(con, artist_slug)
         events = _events(con, found[0]) if found else []
         focus = _focus_groups(con, found[0]) if found else {}
+        chart_runs = _chart_runs(con, _performers(found[1], events)) if found else []
     by_kind: dict[str, list[tuple]] = {}
     for kind, when, precision, label, detail, url in events:
         by_kind.setdefault(kind, []).append((when, precision, label, detail, url))
@@ -604,6 +637,25 @@ def artist_timeline(artist_slug: str) -> str:
             # Albums with a chapter link to it; the others to MusicBrainz.
             link = f"../albums/{focus[detail]}.html" if detail in focus else url
             parts.append(icon(css, "album", at, f"{_when(when, precision)}: {label} ({age})", link, -10 if flip else 0))
+    # Billboard runs: a bar per song (Hot 100) or album (Billboard 200, thinner) from its first
+    # to its last charting week, in the performer's colour.
+    if chart_runs:
+        lanes.append("chart")
+        colours = {band.lower(): colour for band, colour in band_colors.items()}
+        previous, flip = None, False
+        for chart, chart_type, performer, title, first, last, peak, weeks in chart_runs:
+            begin, finish = _position(first, 11), _position(last, 11) + 7 / 366
+            flip = (not flip) if previous is not None and pct(begin) - pct(previous) < 1.5 else False
+            previous = begin
+            css = "tl-chart" + (" tl-chart-album" if chart_type == "albums" else "")
+            tip = (f"{chart}: {title} ({performer}), besta sæti {peak}, {weeks} vikur "
+                   f"({format_date(first)} – {format_date(last)})")
+            parts.append(
+                f'<div class="tl-bar {css}" style="top:{TIMELINE_LANES["chart"] + (-8 if flip else 0)}px;'
+                f'left:{pct(begin):.2f}%;width:{max(pct(finish) - pct(begin), 0.4):.2f}%;'
+                f'background:{colours.get(performer.lower(), HIST_COLORS["solo"])}" title="{html.escape(tip)}"></div>'
+            )
+
     covers = by_kind.get("cover", [])
     if covers:
         lanes.append("cover")
@@ -662,6 +714,7 @@ def artist_timeline(artist_slug: str) -> str:
         '<p class="tl-legend"><i class="fa-solid fa-egg"></i> fæðing · <i class="fa-solid fa-dove"></i> andlát · '
         '<span class="tl-key tl-marriage"></span> hjónaband · <span class="tl-key tl-partner"></span> samband · '
         '<span class="tl-key tl-career"></span> ferill · '
+        '<span class="tl-key tl-chart"></span> Billboard: lag á Hot 100 (þykk lína), plata á Billboard 200 (þunn) · '
         '<i class="fa-solid fa-baby tl-child"></i> barn fæðist · '
         '<i class="fa-solid fa-compact-disc tl-album"></i> hljóðversplata · '
         '<i class="fa-solid fa-compact-disc tl-focus"></i> fókusplata · '

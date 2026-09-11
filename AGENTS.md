@@ -108,6 +108,7 @@ Every source adapter must document:
 - Research each focus album on its own branch named `<artist-slug>/<album-slug>` (for example `gerry-rafferty/city-to-city`). Commit that album's bundle, chapter and config entries there.
 - Merge data branches into `main` with **squash merge only**, then delete the branch, so each bundle lands on `main` as one version instead of every intermediate re-write from the data digging.
 - Never commit bundle Parquet files directly on `main`.
+- Billboard charts are not in bundles: they come from the `vendor/rwd-billboard-data` submodule (utdata/rwd-billboard-data, MIT), pinned to one commit. Fetch only the two chart files with `bash scripts/fetch_charts.sh`; move the pin deliberately.
 
 ## Dashboard (Quarto book)
 
