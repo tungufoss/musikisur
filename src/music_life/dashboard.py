@@ -327,13 +327,18 @@ def _years_between(start: date, end: date) -> int:
     return end.year - start.year - ((end.month, end.day) < (start.month, start.day))
 
 
-def _gap(previous: date | None, current: date) -> str:
-    """Time since the previous release: months under two years, whole years after that."""
+def _gap(previous: tuple[date, int] | None, current: tuple[date, int]) -> str:
+    """Time since the previous release, from (date, precision) pairs: months when both dates
+    know the month (whole years from two years on), otherwise whole years marked with "~"."""
     if previous is None:
         return "—"
-    months = (current.year - previous.year) * 12 + current.month - previous.month
+    (before, before_precision), (after, after_precision) = previous, current
+    if min(before_precision, after_precision) < 10:
+        years = after.year - before.year
+        return "sama ár" if years == 0 else f"~{years} ár"
+    months = (after.year - before.year) * 12 + after.month - before.month
     if months == 0:
-        return "sama ár" if current.year == previous.year and current.month == 1 else "sama mánuð"
+        return "sama mánuð"
     return f"{months} mán." if months < 24 else f"{round(months / 12)} ár"
 
 
@@ -573,7 +578,8 @@ def artist_timeline(artist_slug: str) -> str:
     # Band albums released while he was in the band sit with his own albums, in the band's colour.
     band_albums = [
         ("band", item) for item in by_kind.get("band_album", [])
-        if item[3] not in leaves or item[0].year <= leaves[item[3]].year
+        if (item[3] not in joins or item[0] >= joins[item[3]])
+        and (item[3] not in leaves or item[0].year <= leaves[item[3]].year)
     ]
 
     albums = by_kind.get("album", [])
@@ -674,7 +680,7 @@ def artist_timeline(artist_slug: str) -> str:
     table = ""
     if albums or band_albums:
         rows, previous = [], None
-        for source, (when, _, label, detail, _) in sorted(
+        for source, (when, precision, label, detail, _) in sorted(
             [("solo", item) for item in albums] + band_albums, key=lambda pair: pair[1][0]
         ):
             rows.append({
@@ -682,12 +688,12 @@ def artist_timeline(artist_slug: str) -> str:
                 "performer": "Sóló" if source == "solo" else detail,
                 "title": f"**[{label}](../albums/{focus[detail]}.qmd)**" if source == "solo" and detail in focus else label,
                 "age": f"{_years_between(died, when)} ár eftir andlát" if died and when > died else _age_text(born, when),
-                "gap": _gap(previous, when),
+                "gap": _gap(previous, (when, precision)),
             })
-            previous = when
+            previous = (when, precision)
         table = "\n**Plötur og aldur við útgáfu**\n\n" + md_table(pd.DataFrame(rows), {
             "year": "Útgáfuár", "performer": "Flytjandi", "title": "Plata", "age": "Aldur", "gap": "Frá síðustu plötu",
-        })
+        }) + "\n*Bil í mánuðum þar sem útgáfumánuður er þekktur; ~ merkir að aðeins árið er þekkt.*\n"
     return "```{=html}\n" + timeline + "\n```\n" + table
 
 
