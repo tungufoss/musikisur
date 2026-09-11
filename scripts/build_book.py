@@ -68,6 +68,12 @@ print(artist_photo(ARTIST_SLUG))
 
 *Hér koma spilarar fyrir helstu smellina: {{{{< spotify-player TRACK_ID >}}}}.*
 
+{{{{< include ../_artist_timeline.qmd >}}}}
+
+### Fjölskylda og ástir
+
+*Hér kemur umfjöllun um fjölskylduna.*
+
 {{{{< include ../_artist_life.qmd >}}}}
 """
 

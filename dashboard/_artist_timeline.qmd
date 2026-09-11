@@ -1,0 +1,10 @@
+<!-- Shared artist timeline. Pages in artists/ set ARTIST_SLUG. -->
+
+### Tímalína
+
+```{python}
+#| output: asis
+from music_life.dashboard import artist_timeline
+
+print(artist_timeline(ARTIST_SLUG))
+```
