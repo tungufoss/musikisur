@@ -57,6 +57,51 @@ def clean_title(title: str) -> str:
     return normalize_text(VERSION_SUFFIX.sub("", title))
 
 
+BRACKETS = re.compile(r"\s*[\(\[][^\)\]]*[\)\]]")
+ARTIST_SEPARATORS = re.compile(r"\s+(?:featuring|feat\.|with|&|and|x)\s+", re.IGNORECASE)
+# Chart performers that name no artist; any Spotify artist is accepted for them.
+COMPILATION_ARTISTS = {"soundtrack", "original soundtrack", "original cast", "original cast recording", "various artists"}
+
+
+def core_title(title: str) -> str:
+    """Title without version notes: 'Some Girls (Remastered 2009)' and 'Some Girls' agree."""
+    return clean_title(BRACKETS.sub("", title))
+
+
+def best_match(items: list[dict[str, Any] | None], artist: str, title: str) -> dict[str, Any] | None:
+    """The earliest Spotify album or track whose title and artist match a chart entry, or None.
+
+    Chart performers often add a band ("Bob Seger & The Silver Bullet Band"), so an artist
+    matches when either name contains the other.
+    """
+    wanted = core_title(title)
+    performer = normalize_text(artist)
+
+    def artist_matches(item: dict[str, Any]) -> bool:
+        if performer in COMPILATION_ARTISTS:
+            # Any artist, but the release must present itself as a soundtrack or compilation,
+            # otherwise a cover album with the same title wins.
+            name = normalize_text(item["name"])
+            return item.get("album_type") == "compilation" or any(
+                word in name for word in ("soundtrack", "sound track", "motion picture", "original cast")
+            )
+        names = (normalize_text(a["name"]) for a in item["artists"])
+        return any(name and (name in performer or performer in name) for name in names)
+
+    matches = [item for item in items if item and core_title(item["name"]) == wanted and artist_matches(item)]
+    return min(matches, key=lambda item: (item.get("album") or item)["release_date"], default=None)
+
+
+def search(c: CachedClient, artist: str, title: str, kind: str) -> tuple[dict[str, Any] | None, str]:
+    """Search Spotify for a chart entry (kind 'album' or 'track'); returns the match and its cache key."""
+    query = f'{kind}:"{title}"'
+    if normalize_text(artist) not in COMPILATION_ARTISTS:
+        query += f' artist:"{ARTIST_SEPARATORS.split(artist)[0]}"'
+    key = f"search-{kind}-" + re.sub(r"[^a-z0-9]+", "-", f"{artist} {title}".lower()).strip("-")
+    result = c.get_json("search", key, {"q": query, "type": kind, "limit": 10})
+    return best_match(result[f"{kind}s"]["items"], artist, title), key
+
+
 def enrich(
     tables: dict[str, pd.DataFrame],
     album: dict[str, Any],

@@ -144,6 +144,20 @@ TABLES: dict[str, TableSpec] = {
         ("event_date", "kind", "label"),
         required=False,
     ),
+    # Spotify links for the other entries on the album's best chart week (scripts/chart_links.py).
+    # Each row carries its own provenance, so re-collecting the album leaves them valid.
+    "chart_links": TableSpec(
+        {
+            "chart": "VARCHAR",
+            "artist_name": "VARCHAR",  # as printed on the chart
+            "title": "VARCHAR",
+            "spotify_url": "VARCHAR",
+            "spotify_name": "VARCHAR",  # what Spotify calls the match, for checking by hand
+            "retrieved_at": "TIMESTAMP",
+        },
+        ("chart", "artist_name", "title"),
+        required=False,
+    ),
 }
 EVENT_KINDS = {
     "birth", "death", "career_start", "career_end", "marriage", "divorce", "relationship", "relationship_end", "child",
@@ -231,7 +245,7 @@ def validate_bundle(path: Path) -> list[str]:
 
     source_keys = set(frames["sources"]["source_key"])
     for name, frame in frames.items():
-        if name != "sources":
+        if "source_key" in frame.columns and name != "sources":
             unknown = set(frame["source_key"].dropna()) - source_keys
             if unknown:
                 errors.append(f"{name}.parquet references unknown source_key {sorted(unknown)}")
@@ -431,3 +445,15 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
                 f"VALUES (?, {marks}, ?) ON CONFLICT DO NOTHING",
                 [artist_id, *(_value(row, c) for c in columns), source_ids.get(_value(row, "source_key"))],
             )
+
+    # Skipped when the charts themselves are not loaded (submodule not checked out).
+    for _, row in frames.get("chart_links", pd.DataFrame()).iterrows():
+        con.execute(
+            """
+            INSERT INTO chart_links (chart_id, artist_name, title, spotify_url, spotify_name, retrieved_at)
+            SELECT chart_id, ?, ?, ?, ?, ? FROM charts WHERE name = ?
+            ON CONFLICT DO NOTHING
+            """,
+            [row["artist_name"], row["title"], row["spotify_url"], _value(row, "spotify_name"),
+             _value(row, "retrieved_at"), row["chart"]],
+        )

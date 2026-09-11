@@ -118,6 +118,7 @@ Every source adapter must document:
 - Decade, chapter and artist files are created once and then hand-edited (talking points live in `dashboard/albums/<slug>.qmd`). The script never overwrites them.
 - Album data blocks come from `dashboard/_chapter.qmd`; artist pages use `_artist.qmd` (fact boxes, tags) and `_artist_life.qmd` (map, timeline); all via `music_life.dashboard`. Keep queries there, not in page files.
 - Hand-curated facts (covers, nominations, extra places) go in `data/curated/<artist>/<album>/manual.yml` with a source URL for every entry; `collect_album.py` merges them into the bundle.
+- Spotify links for the other albums or songs on the focus album's best chart week come from `scripts/chart_links.py <artist> <album>`, run after `build_db.py` (it needs the charts), then rebuild. It lists anything it could not match; check `spotify_name` in `chart_links.parquet` before committing.
 - Never copy song lyrics into the repository or pages. Link to a lyrics site, or embed Genius' own widget with `{{< genius SONG_ID url="..." >}}` (the lyrics load from genius.com under their licence).
 - Direct quotes stay in their original language (Icelandic quotation marks „…“); only paraphrases are translated.
 - Every image shown carries a visible credit: a link to the page it came from, plus author and licence when the source gives them (Wikimedia Commons). Album covers credit the Cover Art Archive; the artwork's copyright stays with its owners.
