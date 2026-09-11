@@ -156,6 +156,26 @@ TABLES: dict[str, TableSpec] = {
         ("song", "year", "release"),
         required=False,
     ),
+    # Film and TV titles that use the artist's songs: IMDb soundtrack credits (exported by hand)
+    # with TMDB's vote count for ranking (scripts/screen_credits.py). Artist-level, like places.
+    "screen_credits": TableSpec(
+        {
+            "imdb_id": "VARCHAR",
+            "title": "VARCHAR",
+            "kind": "VARCHAR",  # tv / movie / other
+            "imdb_type": "VARCHAR",
+            "first_year": "INTEGER",
+            "last_year": "INTEGER",
+            "episodes": "INTEGER",
+            "songs": "VARCHAR",  # "; "-separated, in the artist's own spelling
+            "imdb_rating": "DOUBLE",
+            "tmdb_votes": "INTEGER",
+            "tmdb_url": "VARCHAR",
+            "retrieved_at": "TIMESTAMP",
+        },
+        ("first_year", "imdb_id"),
+        required=False,
+    ),
     # Spotify links for the other entries on the album's best chart week (scripts/chart_links.py).
     # Each row carries its own provenance, so re-collecting the album leaves them valid.
     "chart_links": TableSpec(
@@ -457,6 +477,14 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
                 f"VALUES (?, {marks}, ?) ON CONFLICT DO NOTHING",
                 [artist_id, *(_value(row, c) for c in columns), source_ids.get(_value(row, "source_key"))],
             )
+
+    screen_columns = list(TABLES["screen_credits"].columns)
+    for _, row in frames.get("screen_credits", pd.DataFrame()).iterrows():
+        con.execute(
+            f"INSERT INTO screen_credits (artist_id, {', '.join(screen_columns)}) "
+            f"VALUES (?, {', '.join('?' for _ in screen_columns)}) ON CONFLICT DO NOTHING",
+            [artist_id, *(_value(row, c) for c in screen_columns)],
+        )
 
     for _, row in frames.get("soundtracks", pd.DataFrame()).iterrows():
         con.execute(

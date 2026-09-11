@@ -16,6 +16,8 @@ import duckdb
 import pandas as pd
 import yaml
 
+from .sources.musicbrainz import song_key
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = REPO_ROOT / "data" / "processed" / "music_life.duckdb"
 CONFIG_DIR = REPO_ROOT / "config"
@@ -295,11 +297,14 @@ PLACE_STYLES = {  # role: (marker colour, Font Awesome icon, description); egg a
     "residence": ("orange", "home", "Búseta"),
     "mentioned": ("#2780e3", None, "Nefndur í Wikipedia-greininni"),
 }
-TIMELINE_LANES = {"life": 18, "career": 46, "album": 76, "chart": 106, "cover": 136, "hist": 191}  # px from top
+TIMELINE_LANES = {  # px from top
+    "life": 18, "career": 46, "album": 76, "chart": 106, "cover": 136, "hist": 191, "screen": 250,
+}
 LANE_TITLES = {
     "life": "Ævi", "career": "Ferill", "album": "Plötur", "chart": "Billboard",
-    "cover": "Ábreiður", "hist": "Ný lög á ári",
+    "cover": "Ábreiður", "hist": "Ný lög á ári", "screen": "Myndir og þættir",
 }
+SCREEN_HEIGHT = 36  # the film and TV lane: a cumulative line
 HIST_BOTTOM, HIST_HEIGHT = 216, 50
 # The yearly columns count songs: new songs in the artist's own name or a band's, and
 # recordings for other artists.
@@ -620,6 +625,7 @@ def artist_timeline(artist_slug: str) -> str:
         events = _events(con, found[0]) if found else []
         focus = _focus_groups(con, found[0]) if found else {}
         chart_weeks = _chart_weeks(con, _performers(found[1], events)) if found else pd.DataFrame()
+        screen = _screen_credits(con, found[0]) if found else pd.DataFrame()
     by_kind: dict[str, list[tuple]] = {}
     for kind, when, precision, label, detail, url in events:
         by_kind.setdefault(kind, []).append((when, precision, label, detail, url))
@@ -788,6 +794,47 @@ def artist_timeline(artist_slug: str) -> str:
                         f'title="{year}: {n} {html.escape(titles[group])}"></div>'
                     )
 
+    # Film and TV: a cumulative line of titles that use the songs (IMDb), each title counted
+    # at the first year it used one of them; hover a year for the new titles.
+    screen_legend = ""
+    if not screen.empty:
+        lanes.append("screen")
+        top = TIMELINE_LANES["screen"] - SCREEN_HEIGHT / 2
+        per_year = screen.groupby("first_year")["title"].apply(list)
+        total = sum(len(names) for names in per_year)
+        screen_from, screen_to = int(per_year.index.min()), min(this_year(), int(end))
+
+        def height_at(count: int) -> float:
+            return SCREEN_HEIGHT - count / total * SCREEN_HEIGHT
+
+        running, points = 0, [(pct(screen_from), height_at(0))]
+        for year in range(screen_from, screen_to + 1):
+            new = per_year.get(year, [])
+            if not new:
+                continue
+            points.append((pct(year), height_at(running)))
+            running += len(new)
+            points.append((pct(year), height_at(running)))
+            word = "nýr titill" if len(new) % 10 == 1 and len(new) % 100 != 11 else "nýir titlar"
+            names = ", ".join(new[:5]) + (" …" if len(new) > 5 else "")
+            parts.append(
+                f'<div class="tl-screen-hit" style="top:{top}px;height:{SCREEN_HEIGHT}px;left:{pct(year):.2f}%;'
+                f'width:{pct(year + 1) - pct(year):.2f}%" '
+                f'title="{html.escape(f"{year}: {len(new)} {word} ({names}), alls {running}")}"></div>'
+            )
+        points.append((pct(screen_to + 1), height_at(running)))
+        line = " ".join(f"{x:.2f},{y:.1f}" for x, y in points)
+        area = f"{points[0][0]:.2f},{SCREEN_HEIGHT} {line} {points[-1][0]:.2f},{SCREEN_HEIGHT}"
+        parts.append(
+            f'<svg class="tl-screen" style="top:{top}px;height:{SCREEN_HEIGHT}px" viewBox="0 0 100 {SCREEN_HEIGHT}" '
+            f'preserveAspectRatio="none" aria-hidden="true"><polygon class="tl-screen-area" points="{area}"/>'
+            f'<polyline class="tl-screen-line" points="{line}" vector-effect="non-scaling-stroke"/></svg>'
+            f'<span class="tl-screen-total" style="left:{pct(screen_to + 1):.2f}%;top:{top + height_at(running):.1f}px">'
+            f"{total}</span>"
+        )
+        screen_legend = ('<span class="tl-key tl-screen-key"></span> myndir og þættir sem nota lögin, uppsafnað '
+                         "(IMDb; hver titill talinn árið sem hann notaði lag fyrst). ")
+
     labels = "".join(f'<div style="top:{TIMELINE_LANES[lane]}px">{LANE_TITLES[lane]}</div>' for lane in lanes)
     legend = (
         '<p class="tl-legend"><i class="fa-solid fa-egg"></i> fæðing · <i class="fa-solid fa-dove"></i> andlát · '
@@ -806,10 +853,13 @@ def artist_timeline(artist_slug: str) -> str:
         '<span class="tl-key tl-hist-solo"></span> í eigin nafni, '
         f"{band_keys}"
         '<span class="tl-key tl-hist-others"></span> fyrir aðra. '
+        f"{screen_legend}"
         "Bentu á tákn til að sjá nánar.</p>"
     )
-    timeline = (f'<div class="timeline"><div class="tl-labels">{labels}</div>'
-                f'<div class="tl-track">{"".join(parts)}</div></div>{legend}')
+    # The film and TV lane makes the track taller than the stylesheet's default.
+    height = f' style="height:{TIMELINE_LANES["screen"] + SCREEN_HEIGHT}px"' if "screen" in lanes else ""
+    timeline = (f'<div class="timeline"><div class="tl-labels"{height}>{labels}</div>'
+                f'<div class="tl-track"{height}>{"".join(parts)}</div></div>{legend}')
 
     table = ""
     if albums or band_albums:
@@ -1184,25 +1234,76 @@ def chart_context(slug: str, window: int = 5) -> str:
     return "".join(parts)
 
 
-def screen_use(slug: str) -> str:
-    """Soundtrack releases (films, TV series, games) that carry the album's songs, from MusicBrainz."""
-    with connect_ro() as con:
-        rows = con.execute(
-            """
-            SELECT s.song, s.release, s.year, s.url
-            FROM album_soundtracks s JOIN albums a USING (album_id)
-            WHERE a.slug = ?
-            ORDER BY s.song, s.year NULLS LAST, s.release
-            """,
-            [slug],
-        ).df()
-    if rows.empty:
-        return "*Engin skráð notkun í kvikmyndum eða sjónvarpi enn.*\n"
-    rows["release"] = [f"[{release}]({url})" for release, url in zip(rows["release"], rows["url"])]
-    rows["year"] = ["—" if pd.isna(year) else str(int(year)) for year in rows["year"]]
+SCREEN_KIND_WORDS = (("tv", "þáttaröðum"), ("movie", "kvikmyndum"), ("other", "öðrum titlum"))
+NO_SCREEN_USE = "*Engin skráð notkun í kvikmyndum eða sjónvarpi enn.*\n"
+
+
+def _screen_credits(con: duckdb.DuckDBPyConnection, artist_id: int) -> pd.DataFrame:
+    return con.execute(
+        "SELECT * FROM screen_credits WHERE artist_id = ? ORDER BY first_year, title", [artist_id]
+    ).df()
+
+
+def _screen_tables(credits: pd.DataFrame, songs: list[str] | None = None) -> str:
+    """Film and TV uses (IMDb): titles per song, then the three most popular series and films.
+
+    ``songs`` limits it to those songs (a chapter's album). Popularity is TMDB's vote count."""
+    frame = credits.assign(song=credits["songs"].str.split("; ")).explode("song")
+    if songs is not None:
+        wanted = {song_key(s) for s in songs}
+        frame = frame[frame["song"].map(lambda s: song_key(s) in wanted)]
+    if frame.empty:
+        return NO_SCREEN_USE
+    titles = frame.drop_duplicates("imdb_id")
+    kinds = titles["kind"].value_counts()
+    parts = [f"{kinds[k]} {word}" for k, word in SCREEN_KIND_WORDS if k in kinds]
+    split = " og ".join([", ".join(parts[:-1]), parts[-1]]) if len(parts) > 1 else parts[0]
+    counts = (frame.groupby(["song", "kind"])["imdb_id"].nunique().unstack(fill_value=0)
+              .reindex(columns=["tv", "movie", "other"], fill_value=0))
+    counts["total"] = counts.sum(axis=1)
+    counts["first"] = frame.groupby("song")["first_year"].min()
+    counts = counts.sort_values(["total", "first"], ascending=[False, True]).reset_index()
+    songs_of = frame.groupby("imdb_id")["song"].agg(lambda s: ", ".join(f"„{x}“" for x in dict.fromkeys(s)))
+
+    def top(kind: str) -> str:
+        rows = titles[titles["kind"] == kind].sort_values("tmdb_votes", ascending=False, na_position="last").head(3)
+        if rows.empty:
+            return "—\n"
+        rows = rows.assign(
+            link=[f"[{t}](https://www.imdb.com/title/{i}/)" for t, i in zip(rows["title"], rows["imdb_id"])],
+            years=[str(a) if a == b else f"{a}–{b}" for a, b in zip(rows["first_year"], rows["last_year"])],
+            song=[songs_of[i] for i in rows["imdb_id"]],
+        )
+        return md_table(rows, {"link": "Titill", "years": "Ár", "song": "Lag"})
+
+    retrieved = pd.to_datetime(credits["retrieved_at"]).max()
+    read = f", lesin {format_date(retrieved.date())}" if pd.notna(retrieved) else ""
+    whose = "lög af plötunni" if songs is not None else "lögin"
     return (
-        md_table(rows, {"song": "Lag", "release": "Soundtrack-plata", "year": "Ár"})
-        + "\n*Soundtrack-plötur úr kvikmyndum, sjónvarpsþáttum og tölvuleikjum sem lagið er á, samkvæmt "
-        "MusicBrainz. Listinn er ekki tæmandi: lög sem heyrast í mynd eða þætti án þess að rata á "
-        "soundtrack-plötuna vantar.*\n"
+        f"IMDb skráir {whose} í {len(titles)} myndum og þáttum: {split}.\n\n"
+        + md_table(counts, {"song": "Lag", "tv": "Þáttaraðir", "movie": "Kvikmyndir", "other": "Annað",
+                            "total": "Alls", "first": "Fyrst"})
+        + '\n:::: {layout-ncol="2"}\n::: {}\n**Vinsælustu þáttaraðirnar**\n\n' + top("tv")
+        + ":::\n\n::: {}\n**Vinsælustu kvikmyndirnar**\n\n" + top("movie") + ":::\n::::\n\n"
+        + f"*Heimild: soundtrack-skráning á IMDb{read}; hver titill tengist sinni IMDb-síðu. Vinsældir eru "
+        "fjöldi einkunna á TMDB. Þáttaröð er talin einu sinni þótt lagið heyrist í fleiri þáttum.*\n"
     )
+
+
+def screen_summary(artist_slug: str) -> str:
+    """The artist page's film and TV section: all songs."""
+    with connect_ro() as con:
+        found = _artist(con, artist_slug)
+        credits = _screen_credits(con, found[0]) if found else pd.DataFrame()
+    return _screen_tables(credits) if not credits.empty else NO_SCREEN_USE
+
+
+def screen_use(slug: str) -> str:
+    """The chapter's film and TV section: uses of the album's own songs."""
+    with connect_ro() as con:
+        row = con.execute("SELECT artist_id FROM albums WHERE slug = ?", [slug]).fetchone()
+        credits = _screen_credits(con, row[0]) if row else pd.DataFrame()
+        songs = [title for (title,) in con.execute(
+            "SELECT t.track_title FROM album_tracks t JOIN albums a USING (album_id) WHERE a.slug = ?", [slug]
+        ).fetchall()]
+    return _screen_tables(credits, songs) if not credits.empty else NO_SCREEN_USE

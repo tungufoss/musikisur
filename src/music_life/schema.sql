@@ -254,6 +254,25 @@ CREATE TABLE IF NOT EXISTS album_soundtracks (
     PRIMARY KEY (album_id, song, url)
 );
 
+-- Film and TV titles that use an artist's songs: IMDb soundtrack credits (exported by hand),
+-- ranked with TMDB vote counts (scripts/screen_credits.py).
+CREATE TABLE IF NOT EXISTS screen_credits (
+    artist_id BIGINT NOT NULL,
+    imdb_id VARCHAR NOT NULL,
+    title VARCHAR NOT NULL,
+    kind VARCHAR NOT NULL,              -- tv / movie / other
+    imdb_type VARCHAR,
+    first_year INTEGER,
+    last_year INTEGER,
+    episodes INTEGER,
+    songs VARCHAR,                      -- "; "-separated
+    imdb_rating DOUBLE,
+    tmdb_votes INTEGER,
+    tmdb_url VARCHAR,
+    retrieved_at TIMESTAMP,
+    PRIMARY KEY (artist_id, imdb_id)
+);
+
 -- Spotify links for chart entries outside the book's own albums (scripts/chart_links.py).
 CREATE TABLE IF NOT EXISTS chart_links (
     chart_id BIGINT NOT NULL,

@@ -1,5 +1,14 @@
 <!-- Shared end of artist pages: Billboard data, then the map. Pages in artists/ set ARTIST_SLUG. -->
 
+### Í kvikmyndum og sjónvarpi
+
+```{python}
+#| output: asis
+from music_life.dashboard import screen_summary
+
+print(screen_summary(ARTIST_SLUG))
+```
+
 ### Billboard
 
 Hrágögnin á bak við Billboard-reitina á tímalínunni, frá fyrstu viku til síðustu. Línuritin sýna sæti viku fyrir viku á meðan lagið eða platan var á listanum (1. sæti efst); hver ferill byrjar í viku 1 svo auðvelt sé að bera þá saman, og litur fylgir flytjanda eins og á tímalínunni.
