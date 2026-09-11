@@ -276,10 +276,12 @@ TIMELINE_LANES = {  # px from the top of the track
 }
 LANE_TITLES = {
     "life": "Ævi", "career": "Ferill", "album": "Plötur", "band": "Hljómsveitir",
-    "others": "Fyrir aðra", "cover": "Ábreiður", "hist": "Útgáfur á ári",
+    "others": "Fyrir aðra", "cover": "Ábreiður", "hist": "Ný lög á ári",
 }
 HIST_BOTTOM, HIST_HEIGHT = 236, 50
-HIST_GROUPS = {"album": "solo", "single": "solo", "band_release": "band", "production": "others", "guest": "others"}
+# The yearly columns count songs: new songs in the artist's own name or a band's, and
+# recordings for other artists.
+HIST_GROUPS = {"song": "song", "production": "others", "guest": "others"}
 HIST_COLORS = {"solo": "#2780e3", "others": "#fd7e14"}
 # One colour per band, in order of the band's first release.
 BAND_PALETTE = ["#6f42c1", "#198754", "#d63384", "#0dcaf0", "#795548", "#6c757d"]
@@ -534,7 +536,8 @@ def artist_timeline(artist_slug: str) -> str:
 
     band_releases = by_kind.get("band_release", [])
     band_colors: dict[str, str] = {}
-    for *_, band, _ in band_releases:
+    band_songs = [item for item in by_kind.get("song", []) if item[3] != "solo"]
+    for *_, band, _ in sorted(band_releases + band_songs, key=lambda item: item[0]):
         band_colors.setdefault(band, BAND_PALETTE[len(band_colors) % len(BAND_PALETTE)])
     if band_releases:
         lanes.append("band")
@@ -562,16 +565,17 @@ def artist_timeline(artist_slug: str) -> str:
         parts.append(icon("fa-award tl-award", "career", _position(when, precision),
                           f"{_when(when, precision)}: {label}", url, -14))
 
-    # Releases per year, stacked: own name, each band in its colour, for others.
+    # Songs per year, stacked: new songs in his own name, each band in its colour, for others.
     counts: dict[int, dict[str, int]] = {}
     for kind, base in HIST_GROUPS.items():
         for when, _, _, detail, _ in by_kind.get(kind, []):
-            group = f"band:{detail}" if base == "band" else base
+            group = ("solo" if detail == "solo" else f"band:{detail}") if base == "song" else base
             counts.setdefault(when.year, {})
             counts[when.year][group] = counts[when.year].get(group, 0) + 1
     stack = ["solo", *(f"band:{b}" for b in band_colors), "others"]
     colors = {**HIST_COLORS, **{f"band:{b}": c for b, c in band_colors.items()}}
-    titles = {"solo": "í eigin nafni", "others": "fyrir aðra", **{f"band:{b}": f"með {b}" for b in band_colors}}
+    titles = {"solo": "ný lög í eigin nafni", "others": "lög fyrir aðra",
+              **{f"band:{b}": f"ný lög með {b}" for b in band_colors}}
     if counts:
         lanes.append("hist")
         peak = max(sum(per.values()) for per in counts.values())
@@ -600,7 +604,8 @@ def artist_timeline(artist_slug: str) -> str:
         '<i class="fa-solid fa-sliders tl-production"></i> upptökustjórn fyrir aðra · '
         '<i class="fa-solid fa-microphone-lines tl-guest"></i> gestaframlag · '
         '<i class="fa-solid fa-award tl-award"></i> tilnefning. '
-        'Súlurnar neðst eru útgáfur á ári: <span class="tl-key tl-hist-solo"></span> í eigin nafni, '
+        'Súlurnar neðst sýna ný lög á ári (hvert lag talið einu sinni, árið sem það kom fyrst út): '
+        '<span class="tl-key tl-hist-solo"></span> í eigin nafni, '
         f"{band_keys}"
         '<span class="tl-key tl-hist-others"></span> fyrir aðra. '
         "Bentu á tákn til að sjá nánar.</p>"

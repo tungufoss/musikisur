@@ -104,10 +104,18 @@ def main() -> None:
         key = f"musicbrainz-band-{band['id'][:8]}"
         groups = musicbrainz.fetch_release_groups_of_type(band["id"], "album|single", mb)
         context["events"] += musicbrainz.release_events(groups, "band_release", key, detail=band["name"])
+        context["events"] += musicbrainz.song_events(musicbrainz.fetch_recordings(band["id"], mb), band["name"], key)
         sources.append(musicbrainz.cached_source_row(
             mb, f"release-groups-album-single-{band['id']}", key,
             f"https://musicbrainz.org/artist/{band['id']}", f"MusicBrainz releases by {band['name']}",
         ))
+    context["events"] += musicbrainz.song_events(
+        musicbrainz.fetch_recordings(artist["id"], mb), "solo", "musicbrainz-recordings"
+    )
+    sources.append(musicbrainz.cached_source_row(
+        mb, f"recordings-{artist['id']}-0", "musicbrainz-recordings",
+        f"https://musicbrainz.org/artist/{artist['id']}/recordings", f"MusicBrainz recordings by {artist['name']}",
+    ))
     context["events"] += musicbrainz.credits_for_others(relations, own_ids, mb)
     sources.append(musicbrainz.cached_source_row(
         mb, f"artist-rels-{artist['id']}", "musicbrainz-artist-relations",

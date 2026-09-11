@@ -25,6 +25,18 @@ def test_dates_keep_their_precision():
     assert wikidata.claim_time(career, "P2031") == ("1966-01-01", 9)
 
 
+def test_song_events_count_each_song_once_at_its_first_release():
+    recordings = [
+        {"id": "1", "title": "Baker Street", "first-release-date": "1978-01-20"},
+        {"id": "2", "title": "Baker Street (original demo)", "first-release-date": "2011-09-05"},
+        {"id": "3", "title": "Baker Street (live)", "first-release-date": "1979"},
+        {"id": "4", "title": "Night Owl", "first-release-date": "1979"},
+        {"id": "5", "title": "Unreleased", "first-release-date": ""},
+    ]
+    rows = sorted((r["label"], r["event_date"]) for r in musicbrainz.song_events(recordings, "solo", "mb"))
+    assert rows == [("Baker Street", "1978-01-20"), ("Night Owl", "1979-01-01")]
+
+
 def test_album_events_keep_dated_studio_albums_only():
     groups = {"release-groups": [
         {"id": "a", "title": "Studio", "first-release-date": "1978", "secondary-types": []},
