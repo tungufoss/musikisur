@@ -87,11 +87,17 @@ MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“.
 :::
 ::::
 
-Textarnir við smellina tvo, birtir af Genius:
+Textinn er í kaflanum [Þekktustu lögin á plötunni: söngtextar](#songtextar) hér fyrir neðan. Meira um Cörlu og fjölskylduna er á [síðunni um Gerry Rafferty](../artists/gerry-rafferty.qmd#fjölskylda-og-ástir).
+
+### Þekktustu lögin á plötunni: söngtextar {#songtextar}
+
+Tvö þekktustu lögin á *City to City*, með spilara fyrir ofan textann. Textarnir eru birtir af Genius.
 
 :::: {layout-ncol="2"}
 ::: {}
 **„Baker Street“**
+
+{{< spotify-player 5gOd6zDC8vhlYjqbQdJVWP >}}
 
 {{< genius 84258 url="https://genius.com/Gerry-rafferty-baker-street-lyrics" >}}
 :::
@@ -99,11 +105,11 @@ Textarnir við smellina tvo, birtir af Genius:
 ::: {}
 **„Right Down the Line“**
 
+{{< spotify-player 2Xb6wJYGi0QXwURw5WWvI5 >}}
+
 {{< genius 184903 url="https://genius.com/Gerry-rafferty-right-down-the-line-lyrics" >}}
 :::
 ::::
-
-Meira um Cörlu og fjölskylduna er á [síðunni um Gerry Rafferty](../artists/gerry-rafferty.qmd#fjölskylda-og-ástir).
 
 ### Áhrif og ábreiður
 
