@@ -513,11 +513,13 @@ def artist_facts(artist_slug: str) -> str:
         posthumous = sum(1 for when in albums if died and when > died)
         sub = f"{albums[0].year}–{albums[-1].year}" + (f", {posthumous} eftir andlát" if posthumous else "")
         boxes.append(_fact_box("Sólóplötur", len(albums), sub))
-    songs = sum(1 for kind, *_ in events if kind == "song")
+    solo = sum(1 for kind, _, _, _, detail, _ in events if kind == "song" and detail == "solo")
+    in_bands = sum(1 for kind, _, _, _, detail, _ in events if kind == "song" and detail != "solo")
     for_others = sum(1 for kind, *_ in events if kind in ("production", "guest"))
-    if songs or for_others:
-        boxes.append(_fact_box("Lög sem hann kom að", songs + for_others,
-                               f"þar af {for_others} fyrir aðra" if for_others else "", "fact-songs",
+    if solo or in_bands or for_others:
+        split = ", ".join(f"{n} {what}" for n, what in (
+            (solo, "í eigin nafni"), (in_bands, "með hljómsveitum"), (for_others, "fyrir aðra")) if n)
+        boxes.append(_fact_box("Lög sem hann kom að", solo + in_bands + for_others, split, "fact-songs",
                                "Hvert lag talið einu sinni, árið sem það kom fyrst út (MusicBrainz)"))
     # One box per chart: distinct songs/albums (re-entries merged), best position, weeks in the tooltip.
     for chart, one, many in (("Billboard Hot 100", "lag", "lög"), ("Billboard 200", "plata", "plötur")):
