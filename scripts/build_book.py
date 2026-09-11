@@ -6,7 +6,7 @@ survive. The chapter list in dashboard/_quarto.yml is rewritten between the mark
 from itertools import groupby
 from pathlib import Path
 
-from music_life.dashboard import REPO_ROOT, Chapter, decade_label, load_chapters
+from music_life.dashboard import DECADE_NAMES, REPO_ROOT, Chapter, load_chapters
 
 DASHBOARD = REPO_ROOT / "dashboard"
 QUARTO_YML = DASHBOARD / "_quarto.yml"
@@ -14,7 +14,8 @@ BEGIN = "# BEGIN GENERATED CHAPTERS"
 END = "# END GENERATED CHAPTERS"
 
 DECADE_TEMPLATE = """---
-title: "{label}"
+title: "{name}"
+subtitle: "{years}"
 ---
 
 ```{{python}}
@@ -31,6 +32,7 @@ print(decade_overview({decade}))
 
 CHAPTER_TEMPLATE = """---
 title: "{heading}"
+subtitle: "{artist}"
 ---
 
 ```{{python}}
@@ -101,16 +103,17 @@ def write_if_missing(path: Path, text: str) -> bool:
 
 
 def chapter_lines(chapters: list[Chapter]) -> list[str]:
+    """Artists first, then one part per decade with its focus albums."""
     lines = []
-    for decade, group in groupby(chapters, key=lambda c: c.decade):
-        lines.append(f"    - part: decades/{decade}s.qmd")
-        lines.append("      chapters:")
-        lines.extend(f"        - {c.path}" for c in group)
     artists = artists_of(chapters)
     if artists:
         lines.append('    - part: "Flytjendur"')
         lines.append("      chapters:")
         lines.extend(f"        - artists/{slug}.qmd" for _, slug in artists)
+    for decade, group in groupby(chapters, key=lambda c: c.decade):
+        lines.append(f"    - part: decades/{decade}s.qmd")
+        lines.append("      chapters:")
+        lines.extend(f"        - {c.path}" for c in group)
     return lines
 
 
@@ -130,11 +133,16 @@ def main() -> None:
     created = []
     for decade in sorted({c.decade for c in chapters}):
         path = DASHBOARD / "decades" / f"{decade}s.qmd"
-        if write_if_missing(path, DECADE_TEMPLATE.format(label=decade_label(decade), decade=decade)):
+        years = f"{decade}–{decade + 9}"
+        name = DECADE_NAMES.get(decade, years)
+        if write_if_missing(path, DECADE_TEMPLATE.format(name=name, years=years, decade=decade)):
             created.append(path)
     for chapter in chapters:
-        heading = chapter.heading.replace('"', '\\"')
-        if write_if_missing(DASHBOARD / chapter.path, CHAPTER_TEMPLATE.format(heading=heading, slug=chapter.slug)):
+        # The sidebar shows the album only (the artist has a page under Flytjendur); the artist is the subtitle.
+        heading = f"*{chapter.title}* ({chapter.year})".replace('"', '\\"')
+        artist = chapter.artist_name.replace('"', '\\"')
+        text = CHAPTER_TEMPLATE.format(heading=heading, artist=artist, slug=chapter.slug)
+        if write_if_missing(DASHBOARD / chapter.path, text):
             created.append(DASHBOARD / chapter.path)
     for name, slug in artists_of(chapters):
         path = DASHBOARD / "artists" / f"{slug}.qmd"
