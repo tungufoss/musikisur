@@ -121,18 +121,6 @@ def main() -> None:
         mb, f"artist-rels-{artist['id']}", "musicbrainz-artist-relations",
         f"https://musicbrainz.org/artist/{artist['id']}/relationships", f"MusicBrainz relationships of {artist['name']}",
     ))
-    # Soundtrack releases (films, TV, games) carrying the album's songs, by the artist or a band.
-    soundtracks = musicbrainz.soundtrack_rows(
-        [musicbrainz.fetch_soundtrack_recordings(mbid, mb) for mbid in sorted(own_ids)],
-        list(tables["tracks"]["track_title"]), "musicbrainz-soundtracks",
-    )
-    if soundtracks:
-        tables["soundtracks"] = pd.DataFrame(soundtracks)
-        sources.append(musicbrainz.cached_source_row(
-            mb, f"search-soundtrack-{artist['id']}", "musicbrainz-soundtracks",
-            f"https://musicbrainz.org/search?type=recording&query=arid:{artist['id']}+AND+secondarytype:soundtrack",
-            f"MusicBrainz recordings by {artist['name']} on soundtrack releases",
-        ))
     manual = curation.load_manual(bundle_dir(args.artist, args.album) / "manual.yml", wd)
     # Sharpen year-only album and single dates: first Wikidata's publication date (P577) of the
     # release group's item, then the earliest precise release date in MusicBrainz. The focus

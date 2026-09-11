@@ -144,18 +144,6 @@ TABLES: dict[str, TableSpec] = {
         ("event_date", "kind", "label"),
         required=False,
     ),
-    # Soundtrack releases (films, TV, games) that carry the album's songs, from MusicBrainz.
-    "soundtracks": TableSpec(
-        {
-            "song": "VARCHAR",  # the album track's title
-            "release": "VARCHAR",  # the soundtrack release group's title
-            "year": "INTEGER",
-            "url": "VARCHAR",
-            "source_key": "VARCHAR",
-        },
-        ("song", "year", "release"),
-        required=False,
-    ),
     # Film and TV titles that use the artist's songs: IMDb soundtrack credits (exported by hand)
     # with TMDB's vote count for ranking (scripts/screen_credits.py). Artist-level, like places.
     "screen_credits": TableSpec(
@@ -502,13 +490,6 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
             "INSERT INTO song_links (artist_id, song, spotify_url, spotify_name, retrieved_at) "
             "VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING",
             [artist_id, row["song"], row["spotify_url"], _value(row, "spotify_name"), _value(row, "retrieved_at")],
-        )
-
-    for _, row in frames.get("soundtracks", pd.DataFrame()).iterrows():
-        con.execute(
-            "INSERT INTO album_soundtracks (album_id, song, release, year, url, source_id) VALUES (?, ?, ?, ?, ?, ?)",
-            [album_id, row["song"], row["release"], _value(row, "year"), row["url"],
-             source_ids.get(_value(row, "source_key"))],
         )
 
     # Skipped when the charts themselves are not loaded (submodule not checked out).
