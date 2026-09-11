@@ -40,8 +40,36 @@ MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“.
 - **„Half a Heart“:** Svipuð saxófónlaglína heyrist í laginu „Half a Heart“ með Steve Marcus frá 1968, sem skrifað er á víbrafónleikarann Gary Burton. Burton sagði við *The Atlantic* að Rafferty kynni að hafa tekið hana ómeðvitað og líkti því við málaferlin um „My Sweet Lord“ eftir George Harrison. Burns taldi þetta tilviljun.
 - **Flökkusagan um Bob Holness:** Á níunda áratugnum skrifaði Stuart Maconie í grínþáttinn „Thrills' Believe it or Not“ í tónlistarblaðinu *NME* að Bob Holness, kynnir spurningaþáttarins *Blockbusters*, hefði leikið á saxófóninn. Það var uppspuni, en sagan hefur verið endurtekin víða.
 
-### Áhrif
+### Áhrif og ábreiður
 
 - Slash, gítarleikari Guns N' Roses, nefndi „Baker Street“ árið 1987 sem áhrifavald á gítarsólóið í „Sweet Child o' Mine“.
+
+:::: {layout-ncol="2"}
+::: {}
+<iframe src="https://open.spotify.com/embed/track/2DTQUOfYJAjdo7utgjnU4u" width="100%" height="152" frameborder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Undercover – Baker Street (1992) á Spotify"></iframe>
+
+**Undercover (1992):** danslagaútgáfa af plötunni *Check Out The Groove*.
+:::
+
+::: {}
+{{< video https://www.youtube.com/watch?v=-DmIk05vmMc title="Foo Fighters – Baker Street" >}}
+
+**Foo Fighters (1998):** á breskri CD-smáskífu „My Hero“.
+:::
+::::
+
+- **Undercover:** Rafferty þoldi ekki danslagaútgáfuna frá 1992 og kallaði hana „hræðilega, algjörlega innihaldslausa – sorglegt tímanna tákn“. Hún seldist þó í um þremur milljónum eintaka í Evrópu og Ameríku og færði honum 1,5 milljónir punda til viðbótar.
+- **Foo Fighters** tóku lagið upp og gáfu út á breskri CD-smáskífu „My Hero“ árið 1998.
+
+### Peningarnir
+
+- Í október 2010 viðurkenndi BMI að „Baker Street“ hefði verið spilað oftar en 5 milljón sinnum í útvarpi og sjónvarpi um allan heim. „Stuck in the Middle With You“ með Stealers Wheel, hljómsveit Raffertys, hafði verið spilað yfir 4 milljón sinnum og „Right Down the Line“ af þessari plötu yfir 3 milljón sinnum.
+- Í viðtali við *The Sun* í Skotlandi árið 2003 sagði Rafferty að „Baker Street“ skilaði honum enn um 80.000 pundum á ári: „Ég gæti lifað á þessu eina lagi.“
+- Hann leyfði aldrei að „Baker Street“ væri notað í auglýsingum, þrátt fyrir rausnarleg tilboð.
+
+::: {.callout-tip}
+## Reiknað úr gögnunum
+5 milljón spilanir × 6:11 mínútur (lengd lagsins á plötunni) eru um 515.000 klukkustundir, eða **58,8 ár** af samfelldri spilun. „Right Down the Line“: 3 milljón spilanir × 4:32 eru **25,9 ár**. Þetta er okkar eigin útreikningur og efri mörk, því útvarp spilar oft styttri smáskífuútgáfu.
+:::
 
 *Heimild: samantekt og þýðing úr greininni [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) á ensku Wikipediu (CC BY-SA 4.0), sem vísar í frumheimildir.*
