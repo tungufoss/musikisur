@@ -4,6 +4,7 @@ project:
   resources:
     - assets/logo/*.svg
     - assets/covers/*.jpg
+    - assets/artists/*.jpg
 
 lang: is
 
@@ -26,6 +27,9 @@ book:
     - part: decades/1970s.qmd
       chapters:
         - albums/city-to-city.qmd
+    - part: "Flytjendur"
+      chapters:
+        - artists/gerry-rafferty.qmd
     # END GENERATED CHAPTERS
   appendices:
     - methodology.qmd
@@ -34,6 +38,10 @@ format:
   html:
     theme: cosmo
     css: styles.css
+    include-in-header:
+      # Font Awesome (timeline icons such as fa-rug); Bootstrap Icons ship with Quarto.
+      text: |
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
     toc: true
 
 execute:

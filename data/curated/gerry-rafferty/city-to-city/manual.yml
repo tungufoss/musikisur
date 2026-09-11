@@ -1,0 +1,44 @@
+# Hand-curated additions to the gerry-rafferty/city-to-city bundle (see src/music_life/curation.py).
+# Every entry needs a source URL. Places are Wikidata items; their coordinates come from Wikidata.
+# Re-run `python scripts/collect_album.py gerry-rafferty city-to-city` after editing.
+
+# Short audio samples shown in the track list (track number, disc 1 unless `disc` is given).
+samples:
+  - track: 2
+    url: https://upload.wikimedia.org/wikipedia/en/5/5c/Baker_Street_%28song%29.ogg
+    source: https://en.wikipedia.org/wiki/File:Baker_Street_(song).ogg
+
+places:
+  - qid: Q27
+    role: residence
+    context: "In 2008, Rafferty moved away from California and briefly rented a home in Ireland."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+
+events:
+  - date: 1992-09-18
+    kind: cover
+    label: "Undercover – Baker Street"
+    url: https://open.spotify.com/track/2DTQUOfYJAjdo7utgjnU4u
+    source: https://en.wikipedia.org/wiki/Baker_Street_(song)
+  - date: 1998
+    kind: cover
+    label: "Foo Fighters – Baker Street (á smáskífunni My Hero)"
+    url: https://www.youtube.com/watch?v=-DmIk05vmMc
+    source: https://en.wikipedia.org/wiki/Baker_Street_(song)
+  - date: 2012-04-10
+    kind: cover
+    label: "Bonnie Raitt – Right Down the Line"
+    url: https://open.spotify.com/track/1ciDeTaBbYEP3aBj2Eu5X4
+    source: https://open.spotify.com/track/1ciDeTaBbYEP3aBj2Eu5X4
+
+  # Grammy nominations (Wikidata has none for him yet).
+  - date: 1979
+    kind: nomination
+    label: "Grammy: Record of the Year – Baker Street"
+    url: https://www.grammy.com/artists/gerry-rafferty/5767
+    source: https://www.grammy.com/artists/gerry-rafferty/5767
+  - date: 1979
+    kind: nomination
+    label: "Grammy: Best Male Pop Vocal Performance – Baker Street"
+    url: https://www.grammy.com/artists/gerry-rafferty/5767
+    source: https://www.grammy.com/artists/gerry-rafferty/5767

@@ -26,27 +26,31 @@ ALBUM_SLUG = "city-to-city"
 :::
 ::::
 
-<audio controls preload="none" class="audio-sample" title="Hljóðbrot úr Baker Street">
-  <source src="https://upload.wikimedia.org/wikipedia/en/5/5c/Baker_Street_%28song%29.ogg" type="audio/ogg">
-</audio>
-
-*Hljóðbrot úr laginu, spilað beint af [Wikipediu](https://en.wikipedia.org/wiki/File:Baker_Street_%28song%29.ogg), þar sem það er notað undir sanngjörnum notum (e. fair use).*
+*Hljóðbrot úr laginu af Wikipediu er í [lagalistanum](#lagalisti).*
 
 ::: {.callout-tip}
 ## Úr gögnunum
-MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“ {{< spotify 5gOd6zDC8vhlYjqbQdJVWP >}}. Raphael Ravenscroft leikur á saxófón í aðeins tveimur lögum plötunnar, „Baker Street“ og „Island“ {{< spotify 0WmJhww5BZROmkmAaOZUXj >}}, og Hugh Burns leikur á rafgítar í „Baker Street“. Gögnin segja hver er skráður höfundur, en ekki hver átti hugmyndina að riffinu. Þar greinir heimildum á.
+MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“. Raphael Ravenscroft leikur á saxófón í aðeins tveimur lögum plötunnar, „Baker Street“ og „Island“, og Hugh Burns leikur á rafgítar í „Baker Street“. Gögnin segja hver er skráður höfundur, en ekki hver átti hugmyndina að riffinu. Þar greinir heimildum á.
 :::
 
+„Island“, hitt lagið með saxófóni Ravenscrofts:
+
+{{< spotify-player 0WmJhww5BZROmkmAaOZUXj >}}
+
 - **Ravenscroft:** Rafferty bað hann að fylla upp í nokkrar eyður í laginu og mest af því sem hann lék var gamalt blúsriff. Rafferty hefði ekki rétt honum neinar nótur.
-- **Rafferty:** Hann var pirraður á því að fólk teldi Ravenscroft hafa samið riffið: „Þetta var mín lína. Ég söng hana fyrir hann.“
+- **Rafferty:** Hann var pirraður á því að fólk teldi Ravenscroft hafa samið riffið: „It was my line. I sang it to him.“
 - **Hugh Burns** styður frásögn Raffertys: riffið var þegar á demóinu, leikið á gítar. Rafferty bað Burns að prófa það á gítar en þeir urðu sammála um að það hentaði betur saxófóni.
 - **Demóið** kom út á endurútgáfu *City to City* árið 2011. Rab Noakes, samstarfsmaður Raffertys sem syngur sjálfur bakraddir á plötunni, skrifaði í bæklinginn að vonandi myndi demóið loksins þagga niður í þeim sem héldu því fram að saxófónleikarinn hefði samið laglínuna.
-- **„Half a Heart“:** Svipuð saxófónlaglína heyrist í laginu „Half a Heart“ {{< spotify 7CCUAlhhfmQJOtN7tcDKd8 >}} með Steve Marcus frá 1968, sem skrifað er á víbrafónleikarann Gary Burton. Burton sagði við *The Atlantic* að Rafferty kynni að hafa tekið hana ómeðvitað og líkti því við málaferlin um „My Sweet Lord“ {{< spotify 0KZodeWxqxd88F9wY1cqgs >}} eftir George Harrison. Burns taldi þetta tilviljun.
+- **„Half a Heart“:** Svipuð saxófónlaglína heyrist í laginu „Half a Heart“ með Steve Marcus frá 1968, sem skrifað er á víbrafónleikarann Gary Burton. Burton sagði við *The Atlantic* að Rafferty kynni að hafa tekið hana ómeðvitað og líkti því við málaferlin um „My Sweet Lord“ {{< spotify 0KZodeWxqxd88F9wY1cqgs >}} eftir George Harrison. Burns taldi þetta tilviljun.
+
+  {{< spotify-player 7CCUAlhhfmQJOtN7tcDKd8 >}}
 - **Flökkusagan um Bob Holness:** Á níunda áratugnum skrifaði Stuart Maconie í grínþáttinn „Thrills' Believe it or Not“ í tónlistarblaðinu *NME* að Bob Holness, kynnir spurningaþáttarins *Blockbusters*, hefði leikið á saxófóninn. Það var uppspuni, en sagan hefur verið endurtekin víða.
 
 ### Áhrif og ábreiður
 
-- Slash, gítarleikari Guns N' Roses, nefndi „Baker Street“ {{< spotify 5gOd6zDC8vhlYjqbQdJVWP >}} árið 1987 sem áhrifavald á gítarsólóið í „Sweet Child o' Mine“ {{< spotify 7snQQk1zcKl8gZ92AnueZW >}}.
+- Slash, gítarleikari Guns N' Roses, nefndi „Baker Street“ árið 1987 sem áhrifavald á gítarsólóið í „Sweet Child o' Mine“.
+
+<iframe src="https://open.spotify.com/embed/track/7snQQk1zcKl8gZ92AnueZW" width="100%" height="80" frameborder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Guns N' Roses – Sweet Child O' Mine á Spotify"></iframe>
 
 :::: {layout-ncol="2"}
 ::: {}
@@ -62,7 +66,7 @@ MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“ 
 :::
 ::::
 
-- **Undercover:** Rafferty þoldi ekki danslagaútgáfuna frá 1992 og kallaði hana „hræðilega, algjörlega innihaldslausa – sorglegt tímanna tákn“. Hún seldist þó í um þremur milljónum eintaka í Evrópu og Ameríku og færði honum 1,5 milljónir punda til viðbótar.
+- **Undercover:** Rafferty þoldi ekki danslagaútgáfuna frá 1992 og kallaði hana „dreadful, totally banal – it's a sad sign of the times“. Hún seldist þó í um þremur milljónum eintaka í Evrópu og Ameríku og færði honum 1,5 milljónir punda til viðbótar (um 558 milljónir króna á núvirði).^[Núvirt með breskri vísitölu neysluverðs (ONS, D7BT) frá ársmeðaltali 1992 til júlí 2026 (×2,28) og umreiknað á viðmiðunargengi Seðlabanka Evrópu 10. september 2026, 162,95 kr. á pundið. Reiknað með `scripts/value_today.py`.]
 - **Foo Fighters** tóku lagið upp og gáfu út á breskri CD-smáskífu „My Hero“ árið 1998.
 
 #### „Right Down the Line“ á reggí
@@ -81,34 +85,32 @@ MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“ 
 :::
 ::::
 
-- Bonnie Raitt er yfirleitt þekkt fyrir kántrírokk, svona verslunarmiðstöðva- og kellingamyndarokk seint á níunda og snemma á tíunda áratugnum, með lögum á borð við „Something to Talk About“ {{< spotify 6Ceejf3zBXvAhIY9DbP1Pr >}} og „I Can't Make You Love Me“ {{< spotify 69uJi5QsBtqlYkGURTBli8 >}}. Árið 2012, 34 árum eftir frumútgáfuna, tók hún „Right Down the Line“ {{< spotify 1ciDeTaBbYEP3aBj2Eu5X4 >}} upp í reggíútsetningu á plötunni *Slipstream*. Útgáfa hennar er tæpri mínútu lengri.
+- Bonnie Raitt er yfirleitt þekkt fyrir kántrírokk, svona verslunarmiðstöðva- og kellingamyndarokk seint á níunda og snemma á tíunda áratugnum, með lögum á borð við „Something to Talk About“ {{< spotify 6Ceejf3zBXvAhIY9DbP1Pr >}} og „I Can't Make You Love Me“ {{< spotify 69uJi5QsBtqlYkGURTBli8 >}}. Árið 2012, 34 árum eftir frumútgáfuna, tók hún „Right Down the Line“ upp í reggíútsetningu á plötunni *Slipstream*. Útgáfa hennar er tæpri mínútu lengri.
 
 #### Uppáhaldslag poppstjarnanna
 
-- Skömmu eftir að fréttist af andláti Raffertys 4. janúar 2011 tísti **Lily Allen** „Rest in Peace Gerry x“ með myndbandi við „Right Down the Line“ {{< spotify 2Xb6wJYGi0QXwURw5WWvI5 >}}, sem er sagt eitt af uppáhaldslögum hennar. Lily Allen er ensk poppdíva sem gerði „Fuck You“ {{< spotify 5st5644IlBmKiiRE73UsoZ >}} árið 2009.
-- **Elly Jackson**, önnur tveggja í enska synthpoppdúettinum La Roux („Bulletproof“ {{< spotify 3kMrazSvILsgcwtidZd1Qd >}}, 2009), sagði um lagið: „Uppáhaldslagið mitt allra tíma. Það minnir mig á heimili, nostalgíu og hamingju.“
+- Skömmu eftir að fréttist af andláti Raffertys 4. janúar 2011 tísti **Lily Allen** „Rest in Peace Gerry x“ með myndbandi við „Right Down the Line“, sem er sagt eitt af uppáhaldslögum hennar. Lily Allen er ensk poppdíva sem gerði „Fuck You“ {{< spotify 5st5644IlBmKiiRE73UsoZ >}} árið 2009.
+- **Elly Jackson**, önnur tveggja í enska synthpoppdúettinum La Roux („Bulletproof“ {{< spotify 3kMrazSvILsgcwtidZd1Qd >}}, 2009), sagði að lagið væri „my favourite track of all time. It makes me think of home, nostalgia and happiness.“
 
 ::: {.callout-tip}
 ## Úr gögnunum
-Samkvæmt MusicBrainz er Lily Allen fædd 2. maí 1985 og Elly Jackson 12. mars 1988, sjö og tíu árum eftir að lagið kom út. Í janúar 2011 voru þær 25 og 22 ára. Í dag eru þær 41 og 38 ára, á okkar aldri, sitt hvorum megin við fertugt.
+Samkvæmt MusicBrainz er Lily Allen fædd 2. maí 1985 og Elly Jackson 12. mars 1988, sjö og tíu árum eftir að lagið kom út, sumsé á okkar aldri. Í janúar 2011 voru þær 25 og 22 ára.
 :::
 
 ::: {.callout-note}
-## Persónuleg tenging
-Þegar ég var í háskóla hlustaði ég mjög mikið á La Roux og Lily Allen og þess háttar stelpulega popp-raftónlist. Og viti menn: þær héldu upp á „Right Down the Line“ {{< spotify 2Xb6wJYGi0QXwURw5WWvI5 >}}, sem er frábært lag. Það er gaman að sjá hvaðan áhrifavaldar manns fá sín áhrif, sem skila sér síðan áfram til manns sjálfs. Þetta er dæmi um hvernig tónlist hefur óbein áhrif í gegnum tímann.
-
-Tengist spurningunni úr þættinum: *Hvenær verða tengsl milli kynslóða til?*
+## Hvenær verða tengsl milli kynslóða til? – Persónuleg tenging
+Þegar ég var í háskóla hlustaði ég mjög mikið á La Roux og Lily Allen og þess háttar stelpulega popp-raftónlist. Og viti menn: þær héldu upp á „Right Down the Line“, sem er frábært lag. Sjálf hefði ég ekki haft hugmynd um hver Gerry Rafferty var þegar ég var 25 ára, þótt ég hafi örugglega þekkt lagið. Það er gaman að sjá hvaðan áhrifavaldar manns fá sín áhrif, sem skila sér síðan áfram til manns sjálfs. Þetta er dæmi um hvernig tónlist hefur óbein áhrif í gegnum tímann.
 :::
 
 ### Peningarnir
 
-- Í október 2010 viðurkenndi BMI að „Baker Street“ {{< spotify 5gOd6zDC8vhlYjqbQdJVWP >}} hefði verið spilað oftar en 5 milljón sinnum í útvarpi og sjónvarpi um allan heim. „Stuck in the Middle With You“ {{< spotify 3Vby4nGmtbDo7HDJamOWkT >}} með Stealers Wheel, hljómsveit Raffertys, hafði verið spilað yfir 4 milljón sinnum og „Right Down the Line“ {{< spotify 2Xb6wJYGi0QXwURw5WWvI5 >}} af þessari plötu yfir 3 milljón sinnum.
-- Í viðtali við *The Sun* í Skotlandi árið 2003 sagði Rafferty að „Baker Street“ {{< spotify 5gOd6zDC8vhlYjqbQdJVWP >}} skilaði honum enn um 80.000 pundum á ári: „Ég gæti lifað á þessu eina lagi.“
-- Hann leyfði aldrei að „Baker Street“ {{< spotify 5gOd6zDC8vhlYjqbQdJVWP >}} væri notað í auglýsingum, þrátt fyrir rausnarleg tilboð.
+- Í október 2010 viðurkenndi BMI að „Baker Street“ hefði verið spilað oftar en 5 milljón sinnum í útvarpi og sjónvarpi um allan heim. „Stuck in the Middle With You“ með Stealers Wheel, hljómsveit Raffertys, hafði verið spilað yfir 4 milljón sinnum og „Right Down the Line“ af þessari plötu yfir 3 milljón sinnum.
+- Í viðtali við *The Sun* í Skotlandi árið 2003 sagði Rafferty að „Baker Street“ skilaði honum enn um 80.000 pundum á ári (um 24,7 milljónum króna á ári á núvirði^[Sama aðferð: vísitala neysluverðs frá 2003 til júlí 2026 (×1,89) og gengi 10. september 2026.]): „I could live off that song alone.“
+- Hann leyfði aldrei að „Baker Street“ væri notað í auglýsingum, þrátt fyrir rausnarleg tilboð.
 
 ::: {.callout-tip}
 ## Reiknað úr gögnunum
-5 milljón spilanir × 6:11 mínútur (lengd lagsins á plötunni) eru um 515.000 klukkustundir, eða **58,8 ár** af samfelldri spilun. „Right Down the Line“ {{< spotify 2Xb6wJYGi0QXwURw5WWvI5 >}}: 3 milljón spilanir × 4:32 eru **25,9 ár**. Þetta er okkar eigin útreikningur og efri mörk, því útvarp spilar oft styttri smáskífuútgáfu.
+5 milljón spilanir × 6:11 mínútur (lengd lagsins á plötunni) eru um 515.000 klukkustundir, eða **58,8 ár** af samfelldri spilun. „Right Down the Line“: 3 milljón spilanir × 4:32 eru **25,9 ár**. Þetta er okkar eigin útreikningur og efri mörk, því útvarp spilar oft styttri smáskífuútgáfu.
 :::
 
 *Heimild: samantekt og þýðing úr greinunum [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0), sem vísa í frumheimildir.*
