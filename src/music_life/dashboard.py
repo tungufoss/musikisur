@@ -402,12 +402,6 @@ def artist_facts(artist_slug: str) -> str:
         details = ", ".join(filter(None, (age, cause)))
         sub = " · ".join(filter(None, (places.get("death", ""), details)))
         boxes.append(_fact_box("Andlát", format_date(died), sub, "fact-death"))
-    divorces = {label: when for kind, when, _, label, *_ in events if kind == "divorce"}
-    marriages = [(when, label) for kind, when, _, label, *_ in events if kind == "marriage"]
-    for when, spouse in marriages:
-        end = divorces.get(spouse)
-        span = f"{when.year}–{end.year}" + (", skilnaður" if end else "")
-        boxes.append(_fact_box("Hjónaband", spouse, span, "fact-marriage"))
     if "career_start" in first:
         start = first["career_start"][0]
         end = first["career_end"][0] if "career_end" in first else None

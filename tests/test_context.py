@@ -37,6 +37,21 @@ def test_song_events_count_each_song_once_at_its_first_release():
     assert rows == [("Baker Street", "1978-01-20"), ("Night Owl", "1979-01-01")]
 
 
+def test_work_for_others_counts_each_song_once():
+    def row(date, kind, label):
+        return {"event_date": date, "kind": kind, "label": label}
+
+    rows = musicbrainz.unique_songs([
+        row("1988-01-01", "production", "The Proclaimers – Letter From America"),
+        row("1987-01-01", "production", "The Proclaimers – Letter From America (Band version)"),
+        row("1993-01-01", "guest", "Richard & Linda Thompson – For Shame of Doing Wrong"),
+        row("1993-01-01", "production", "Richard & Linda Thompson – For Shame of Doing Wrong"),
+    ])
+    assert sorted((r["event_date"], r["kind"]) for r in rows) == [
+        ("1987-01-01", "production"), ("1993-01-01", "production"),
+    ]
+
+
 def test_album_events_keep_dated_studio_albums_only():
     groups = {"release-groups": [
         {"id": "a", "title": "Studio", "first-release-date": "1978", "secondary-types": []},

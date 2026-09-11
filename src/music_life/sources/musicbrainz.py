@@ -185,7 +185,20 @@ def credits_for_others(relations: dict[str, Any], own_ids: set[str], c: CachedCl
             "url": f"https://musicbrainz.org/recording/{recording['id']}",
             "source_key": "musicbrainz-artist-relations",
         })
-    return rows
+    return unique_songs(rows)
+
+
+def unique_songs(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """One row per song ("Artist – Title" labels): the band and single versions of a song are one
+    song, and producing and singing on the same track is one contribution. Keeps the earliest,
+    preferring production."""
+    best: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        title = normalize_text(VERSION_NOTE.sub("", row["label"].split(" – ", 1)[-1]))
+        rank = (row["event_date"], row["kind"] != "production")
+        if title not in best or rank < (best[title]["event_date"], best[title]["kind"] != "production"):
+            best[title] = row
+    return list(best.values())
 
 
 def cached_source_row(c: CachedClient, cache_key: str, source_key: str, url: str, citation: str) -> dict[str, Any]:
