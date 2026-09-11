@@ -31,6 +31,16 @@ events:
     url: https://open.spotify.com/track/1ciDeTaBbYEP3aBj2Eu5X4
     source: https://open.spotify.com/track/1ciDeTaBbYEP3aBj2Eu5X4
 
+  # Marriage (Wikidata has no spouse for him). Daughter Martha: no sourced birth date yet.
+  - date: 1970
+    kind: marriage
+    label: "Carla Ventilla"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - date: 1990
+    kind: divorce
+    label: "Carla Ventilla"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+
   # Grammy nominations (Wikidata has none for him yet).
   - date: 1979
     kind: nomination
