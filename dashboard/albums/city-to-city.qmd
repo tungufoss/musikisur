@@ -62,12 +62,12 @@ MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“.
 ::: {}
 {{< video https://www.youtube.com/watch?v=-DmIk05vmMc title="Foo Fighters – Baker Street" >}}
 
-**Foo Fighters (1998):** á breskri CD-smáskífu „My Hero“.
+**Foo Fighters (1998):** á breskri CD-smáskífu „My Hero“ {{< spotify 4dVbhS6OiYvFikshyaQaCN >}}.
 :::
 ::::
 
 - **Undercover:** Rafferty þoldi ekki danslagaútgáfuna frá 1992 og kallaði hana „dreadful, totally banal – it's a sad sign of the times“. Hún seldist þó í um þremur milljónum eintaka í Evrópu og Ameríku og færði honum 1,5 milljónir punda til viðbótar (um 558 milljónir króna á núvirði).^[Núvirt með breskri vísitölu neysluverðs (ONS, D7BT) frá ársmeðaltali 1992 til júlí 2026 (×2,28) og umreiknað á viðmiðunargengi Seðlabanka Evrópu 10. september 2026, 162,95 kr. á pundið. Reiknað með `scripts/value_today.py`.]
-- **Foo Fighters** tóku lagið upp og gáfu út á breskri CD-smáskífu „My Hero“ árið 1998.
+- **Foo Fighters** tóku lagið upp og gáfu út á breskri CD-smáskífu „My Hero“ {{< spotify 4dVbhS6OiYvFikshyaQaCN >}} árið 1998.
 
 #### „Right Down the Line“ á reggí
 
