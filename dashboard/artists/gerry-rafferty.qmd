@@ -50,11 +50,31 @@ Gerry Rafferty (1947–2011) var skoskur söngvari og lagahöfundur, fæddur inn
 
   {{< spotify-player 6OG8fTcc7S5HWuFYVc5WgR >}}
 
-- „Right Down the Line“ er sagt vera óður til Cörlu, sem stóð með honum í gegnum erfiðleikana. Sú fullyrðing kemur frá [Songfacts](https://www.songfacts.com/facts/gerry-rafferty/right-down-the-line), sem vísar ekki í heimild.
+- „Right Down the Line“ er sagt vera óður til Cörlu. Samkvæmt [Genius](https://genius.com/Gerry-rafferty-right-down-the-line-lyrics) er lagið mildara en „Baker Street“ og fjallar um ástina í lífi hans, en þegar það kom út var hann giftur Cörlu. Í laginu þakkar hann henni fyrir að hafa stutt sig í gegnum erfiða tíma, og Genius tengir það við áfengissýkina sem hann glímdi við mestan hluta ævinnar. [Songfacts](https://www.songfacts.com/facts/gerry-rafferty/right-down-the-line) segir það sama, en hvorug síðan vísar í orð hans sjálfs.
+- Genius nefnir að lagið gæti sótt innblástur í „Maybe I'm Amazed“ eftir Paul McCartney, sem fjallar um svipað efni. Mér finnst það reyndar minna meira á „Your Song“ með Elton John.
 
-  {{< spotify-player 2Xb6wJYGi0QXwURw5WWvI5 >}}
+:::: {layout-ncol="3"}
+::: {}
+{{< spotify-player 2Xb6wJYGi0QXwURw5WWvI5 >}}
 
-  Textann má lesa á [AZLyrics](https://www.azlyrics.com/lyrics/gerryrafferty/rightdowntheline.html).
+**Gerry Rafferty (1978)**
+:::
+
+::: {}
+{{< spotify-player 130Kv7HiXa7rF55hMqWwJr >}}
+
+**Paul McCartney (1970)**
+:::
+
+::: {}
+{{< spotify-player 38zsOOcu31XbbYj9BIPUF1 >}}
+
+**Elton John (1970)**
+:::
+::::
+
+Textann við „Right Down the Line“ má lesa á [AZLyrics](https://www.azlyrics.com/lyrics/gerryrafferty/rightdowntheline.html).
+
 - Vaxandi drykkja lagði mikið álag á hjónabandið og Carla skildi við hann árið 1990, en þau héldu góðu sambandi.
 - Síðustu árin var hann með Enzinu Fuschini, ítalskri listakonu sem bjó í Dorset. Hún segir að hann hafi beðið hennar á Ritz-hótelinu í París á aðfangadagskvöld 2009.
 
