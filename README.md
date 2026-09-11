@@ -68,23 +68,7 @@ Windows PowerShell activation:
 
 ## API keys
 
-Copy `.env.example` to `.env` and fill in the keys. `.env` is git-ignored and must never be committed.
-
-| Variable | Where to get it |
-|---|---|
-| `DISCOGS_TOKEN` | discogs.com → Settings → Developers → Generate new token |
-| `SPOTIFY_CLIENT_ID` / `SPOTIFY_CLIENT_SECRET` | developer.spotify.com → Dashboard → your app → Settings |
-| `TMDB_API_TOKEN` | themoviedb.org → Settings → API → **API Read Access Token** |
-
-### Syncing `.env` to GitHub Actions secrets
-
-`.env` is the source of truth. To push its values to the repository's Actions secrets:
-
-```bash
-gh secret set -f .env -R tungufoss/musikisur
-```
-
-This is **one-way** (`.env` → GitHub) and overwrites existing secrets with the same names, so only run it when `.env` is filled in. GitHub secrets are write-only: they cannot be read back, so they cannot be used to recreate a lost `.env` — get the values from the providers again instead.
+Copy `.env.example` to `.env` and fill in the keys; `.env` is git-ignored. Where to get and renew each key (most every ~180 days), how to sync `.env` to the GitHub Actions secrets, and which sources need no key: [issue #1](https://github.com/tungufoss/musikisur/issues/1).
 
 ## GitHub Pages
 

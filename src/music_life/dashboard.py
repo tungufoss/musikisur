@@ -171,11 +171,10 @@ def spotify_link(url: str, text: str = "") -> str:
     return f'<a href="{url}" class="spotify-link" title="Hlusta á Spotify" aria-label="{label}">{icon}{" " + text if text else ""}</a>'
 
 
-def age_at_release(born: date, released: date | None, year: int) -> float:
-    """Exact age on the release date; when only the year is known, the midpoint of the two possible ages."""
-    if released:
-        return released.year - born.year - ((released.month, released.day) < (born.month, born.day))
-    return year - born.year - 0.5
+def age_at_release(born: date, released: date | None, year: int) -> int:
+    """Age on the release date; when only the year is known, on the first day of that year."""
+    when = released or date(year, 1, 1)
+    return when.year - born.year - ((when.month, when.day) < (born.month, born.day))
 
 
 def release_ages() -> list[float]:
@@ -230,9 +229,7 @@ def album_facts(slug: str) -> str:
     if year:
         lines.append(f"- **Aldur plötunnar í dag:** {this_year() - year} ár")
     if born and year:
-        age = age_at_release(born, released, year)
-        shown = str(int(age)) if released else f"{int(age - 0.5)}–{int(age + 0.5)}"
-        lines.append(f"- **Aldur flytjanda við útgáfu:** {shown} ára")
+        lines.append(f"- **Aldur flytjanda við útgáfu:** {age_at_release(born, released, year)} ára")
     lines.append(f"- **Lög:** {track_count}")
     if duration_ms:
         lines.append(f"- **Lengd:** {duration_ms / 60000:.0f} mínútur (lágmarkshlustun fyrir virkan klúbbmeðlim)")
@@ -283,7 +280,9 @@ LANE_TITLES = {
 }
 HIST_BOTTOM, HIST_HEIGHT = 236, 50
 HIST_GROUPS = {"album": "solo", "single": "solo", "band_release": "band", "production": "others", "guest": "others"}
-HIST_TITLES = {"solo": "í eigin nafni", "band": "með hljómsveit", "others": "fyrir aðra"}
+HIST_COLORS = {"solo": "#2780e3", "others": "#fd7e14"}
+# One colour per band, in order of the band's first release.
+BAND_PALETTE = ["#6f42c1", "#198754", "#d63384", "#0dcaf0", "#795548", "#6c757d"]
 
 
 def _artist(con: duckdb.DuckDBPyConnection, artist_slug: str) -> tuple[int, str, str] | None:
@@ -326,9 +325,9 @@ def _when(value: date, precision: int) -> str:
     return f"{MONTHS[value.month - 1]} {value.year}" if precision == 10 else str(value.year)
 
 
-def _age_text(born: date, value: date, precision: int) -> str:
-    age = age_at_release(born, value if precision >= 11 else None, value.year)
-    return str(int(age)) if precision >= 11 else f"{int(age - 0.5)}–{int(age + 0.5)}"
+def _age_text(born: date, value: date) -> str:
+    """Age on a stored date; dates known only to the year or month are stored as their first day."""
+    return str(age_at_release(born, value, value.year))
 
 
 def artist_tldr(artist_slug: str) -> str:
@@ -363,15 +362,14 @@ def artist_tldr(artist_slug: str) -> str:
         age = f", {int(age_at_release(born, died, died.year))} ára" if born else ""
         lines.append(f"- **Lést:** {format_date(died)}{where}{age}")
     if "career_start" in first:
-        start, start_precision = first["career_start"]
-        span, ages = f"{start.year}–", [_age_text(born, start, start_precision)] if born else []
+        start = first["career_start"][0]
+        span, ages = f"{start.year}–", [_age_text(born, start)] if born else []
         if "career_end" in first:
-            end, end_precision = first["career_end"]
+            end = first["career_end"][0]
             span += str(end.year)
             if born:
                 # A career that ends in the year of death ends at the age of death.
-                ages.append(str(int(age_at_release(born, died, died.year))) if died and died.year == end.year
-                            else _age_text(born, end, end_precision))
+                ages.append(_age_text(born, died if died and died.year == end.year else end))
         age_text = f" (frá {ages[0]} ára til {ages[1]} ára)" if len(ages) == 2 else f" (frá {ages[0]} ára)" if ages else ""
         lines.append(f"- **Ferill:** {span}{age_text}")
     albums = [when for kind, when, *_ in events if kind == "album"]
@@ -423,7 +421,8 @@ def artist_map(artist_slug: str) -> Any:
         ).fetchall()
     if not places:
         return None
-    fmap = folium.Map(tiles="CartoDB positron", control_scale=True)
+    # OpenStreetMap tiles need no key; CARTO basemaps now watermark tiles without one (see the API issue).
+    fmap = folium.Map(tiles="OpenStreetMap", control_scale=True)
     for role, name, lat, lon, context in places:
         color, icon, what = PLACE_STYLES.get(role, PLACE_STYLES["mentioned"])
         popup = folium.Popup(
@@ -479,8 +478,10 @@ def artist_timeline(artist_slug: str) -> str:
         return (f'<div class="tl-bar {css}" style="top:{TIMELINE_LANES[lane]}px;left:{pct(begin):.2f}%;'
                 f'width:{pct(finish) - pct(begin):.2f}%" title="{html.escape(title)}"></div>')
 
-    def icon(css: str, lane: str, at: float, title: str, url: str | None = None, offset: int = 0) -> str:
-        tag = (f'<i class="fa-solid {css} tl-icon" style="left:{pct(at):.2f}%;top:{TIMELINE_LANES[lane] + offset}px" '
+    def icon(css: str, lane: str, at: float, title: str, url: str | None = None, offset: int = 0,
+             color: str | None = None) -> str:
+        colour = f";color:{color}" if color else ""
+        tag = (f'<i class="fa-solid {css} tl-icon" style="left:{pct(at):.2f}%;top:{TIMELINE_LANES[lane] + offset}px{colour}" '
                f'title="{html.escape(title)}"></i>')
         return f'<a href="{html.escape(url)}" target="_blank" rel="noopener">{tag}</a>' if url else tag
 
@@ -509,7 +510,7 @@ def artist_timeline(artist_slug: str) -> str:
             previous = at
             posthumous = died is not None and when > died
             css = "fa-compact-disc " + ("tl-focus" if detail in focus else "tl-posthumous" if posthumous else "tl-album")
-            age = "eftir andlát" if posthumous else f"{_age_text(born, when, precision)} ára"
+            age = "eftir andlát" if posthumous else f"{_age_text(born, when)} ára"
             # Albums with a chapter link to it; the others to MusicBrainz.
             link = f"../albums/{focus[detail]}.html" if detail in focus else url
             parts.append(icon(css, "album", at, f"{_when(when, precision)}: {label} ({age})", link, -10 if flip else 0))
@@ -520,11 +521,20 @@ def artist_timeline(artist_slug: str) -> str:
             parts.append(icon("fa-rug tl-cover", "cover", _position(when, precision), f"{_when(when, precision)}: {label}", url))
 
     band_releases = by_kind.get("band_release", [])
+    band_colors: dict[str, str] = {}
+    for *_, band, _ in band_releases:
+        band_colors.setdefault(band, BAND_PALETTE[len(band_colors) % len(BAND_PALETTE)])
     if band_releases:
         lanes.append("band")
-        for when, precision, label, detail, url in band_releases:
-            parts.append(icon("fa-users tl-band", "band", _position(when, precision),
-                              f"{_when(when, precision)}: {detail} – {label}", url))
+        for when, precision, label, band, url in band_releases:
+            parts.append(icon("fa-users", "band", _position(when, precision),
+                              f"{_when(when, precision)}: {band} – {label}", url, color=band_colors[band]))
+    band_legend = "".join(
+        f'<i class="fa-solid fa-users" style="color:{c}"></i> {html.escape(b)} · ' for b, c in band_colors.items()
+    )
+    band_keys = "".join(
+        f'<span class="tl-key" style="background:{c}"></span> með {html.escape(b)}, ' for b, c in band_colors.items()
+    )
     others = sorted(
         [("production", item) for item in by_kind.get("production", [])]
         + [("guest", item) for item in by_kind.get("guest", [])],
@@ -540,26 +550,31 @@ def artist_timeline(artist_slug: str) -> str:
         parts.append(icon("fa-award tl-award", "career", _position(when, precision),
                           f"{_when(when, precision)}: {label}", url, -14))
 
-    # Releases per year, stacked: own name, with a band, for others.
+    # Releases per year, stacked: own name, each band in its colour, for others.
     counts: dict[int, dict[str, int]] = {}
-    for kind, group in HIST_GROUPS.items():
-        for when, *_ in by_kind.get(kind, []):
-            counts.setdefault(when.year, {}).setdefault(group, 0)
-            counts[when.year][group] += 1
+    for kind, base in HIST_GROUPS.items():
+        for when, _, _, detail, _ in by_kind.get(kind, []):
+            group = f"band:{detail}" if base == "band" else base
+            counts.setdefault(when.year, {})
+            counts[when.year][group] = counts[when.year].get(group, 0) + 1
+    stack = ["solo", *(f"band:{b}" for b in band_colors), "others"]
+    colors = {**HIST_COLORS, **{f"band:{b}": c for b, c in band_colors.items()}}
+    titles = {"solo": "í eigin nafni", "others": "fyrir aðra", **{f"band:{b}": f"með {b}" for b in band_colors}}
     if counts:
         lanes.append("hist")
         peak = max(sum(per.values()) for per in counts.values())
         for year, per_group in sorted(counts.items()):
             top = HIST_BOTTOM
-            for group in ("solo", "band", "others"):
+            for group in stack:
                 n = per_group.get(group, 0)
                 if n:
                     height = n / peak * HIST_HEIGHT
                     top -= height
                     width = max(pct(year + 1) - pct(year) - 0.15, 0.3)
                     parts.append(
-                        f'<div class="tl-hist tl-hist-{group}" style="left:{pct(year):.2f}%;width:{width:.2f}%;'
-                        f'top:{top:.1f}px;height:{height:.1f}px" title="{year}: {n} {HIST_TITLES[group]}"></div>'
+                        f'<div class="tl-hist" style="left:{pct(year):.2f}%;width:{width:.2f}%;top:{top:.1f}px;'
+                        f'height:{height:.1f}px;background:{colors[group]}" '
+                        f'title="{year}: {n} {html.escape(titles[group])}"></div>'
                     )
 
     labels = "".join(f'<div style="top:{TIMELINE_LANES[lane]}px">{LANE_TITLES[lane]}</div>' for lane in lanes)
@@ -569,14 +584,14 @@ def artist_timeline(artist_slug: str) -> str:
         '<i class="fa-solid fa-compact-disc tl-focus"></i> plata með kafla í bókinni · '
         '<i class="fa-solid fa-compact-disc tl-posthumous"></i> eftir andlát · '
         '<i class="fa-solid fa-rug tl-cover"></i> ábreiða · '
-        '<i class="fa-solid fa-users tl-band"></i> með hljómsveit · '
+        f"{band_legend}"
         '<i class="fa-solid fa-sliders tl-production"></i> upptökustjórn fyrir aðra · '
         '<i class="fa-solid fa-microphone-lines tl-guest"></i> gestaframlag · '
         '<i class="fa-solid fa-award tl-award"></i> tilnefning. '
         'Súlurnar neðst eru útgáfur á ári: <span class="tl-key tl-hist-solo"></span> í eigin nafni, '
-        '<span class="tl-key tl-hist-band"></span> með hljómsveit, '
+        f"{band_keys}"
         '<span class="tl-key tl-hist-others"></span> fyrir aðra. '
-        "Lóðréttu línurnar eru á tíu ára fresti frá fæðingu; bentu á tákn til að sjá nánar.</p>"
+        "Bentu á tákn til að sjá nánar.</p>"
     )
     timeline = (f'<div class="timeline"><div class="tl-labels">{labels}</div>'
                 f'<div class="tl-track">{"".join(parts)}</div></div>{legend}')
@@ -587,7 +602,7 @@ def artist_timeline(artist_slug: str) -> str:
             {
                 "when": _when(when, precision),
                 "title": f"**[{label}](../albums/{focus[detail]}.qmd)**" if detail in focus else label,
-                "age": "eftir andlát" if died and when > died else _age_text(born, when, precision),
+                "age": "eftir andlát" if died and when > died else _age_text(born, when),
             }
             for when, precision, label, detail, _ in albums
         ])
