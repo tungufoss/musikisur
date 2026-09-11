@@ -1,5 +1,6 @@
 ---
-title: "1970–1979 · Áttundi áratugurinn"
+title: "Áttundi áratugurinn"
+subtitle: "1970–1979"
 ---
 
 ```{python}

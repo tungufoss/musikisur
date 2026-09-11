@@ -1,5 +1,6 @@
 ---
-title: "Gerry Rafferty – *City to City* (1978)"
+title: "*City to City* (1978)"
+subtitle: "Gerry Rafferty"
 ---
 
 ```{python}
