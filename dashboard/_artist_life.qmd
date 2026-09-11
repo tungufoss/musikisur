@@ -2,22 +2,37 @@
 
 ### Billboard
 
-Hrágögnin á bak við Billboard-reitina á tímalínunni: hvert lag og hver plata á Billboard Hot 100 og Billboard 200, frá fyrstu viku til síðustu.
+Hrágögnin á bak við Billboard-reitina á tímalínunni, frá fyrstu viku til síðustu. Línuritin sýna sæti viku fyrir viku á meðan lagið eða platan var á listanum (1. sæti efst); hver ferill byrjar í viku 1 svo auðvelt sé að bera þá saman, og litur fylgir flytjanda eins og á tímalínunni.
+
+```{python}
+from music_life.dashboard import chart_plot, chart_table
+```
+
+::: {.panel-tabset}
+
+#### Billboard Hot 100 (lög)
 
 ```{python}
 #| output: asis
-from music_life.dashboard import chart_table
-
-print(chart_table(ARTIST_SLUG))
+print(chart_table(ARTIST_SLUG, "Billboard Hot 100"))
 ```
-
-Sæti viku fyrir viku á meðan lagið eða platan var á listanum (1. sæti efst). Hver ferill byrjar í viku 1 svo auðvelt sé að bera þá saman; litur fylgir flytjanda eins og á tímalínunni.
 
 ```{python}
-from music_life.dashboard import chart_plot
-
-chart_plot(ARTIST_SLUG)
+chart_plot(ARTIST_SLUG, "Billboard Hot 100")
 ```
+
+#### Billboard 200 (plötur)
+
+```{python}
+#| output: asis
+print(chart_table(ARTIST_SLUG, "Billboard 200"))
+```
+
+```{python}
+chart_plot(ARTIST_SLUG, "Billboard 200")
+```
+
+:::
 
 *Heimild: vikulegir Billboard-listar úr [utdata/rwd-billboard-data](https://github.com/utdata/rwd-billboard-data) (MIT). Billboard á listana.*
 

@@ -817,13 +817,15 @@ def _performer_colours(artist_name: str, events: list[tuple]) -> dict[str, str]:
     return colours
 
 
-def chart_table(artist_slug: str) -> str:
-    """Raw Billboard data per song and album: first and last week, weeks, best position, re-entries."""
+def chart_table(artist_slug: str, chart: str | None = None) -> str:
+    """Raw Billboard data per song and album: first and last week, weeks, best position, re-entries.
+    With ``chart`` (e.g. "Billboard Hot 100") only that list, without the list and type columns."""
     with connect_ro() as con:
         found = _artist(con, artist_slug)
         runs = _chart_runs(con, _performers(found[1], _events(con, found[0]))) if found else []
+    runs = [run for run in runs if chart is None or run[0] == chart]
     if not runs:
-        return "*Engar færslur á Billboard-listum.*\n"
+        return "*Engar færslur á þessum lista.*\n" if chart else "*Engar færslur á Billboard-listum.*\n"
     frame = pd.DataFrame(runs, columns=["chart", "type", "performer", "title", "first", "last", "best", "weeks", "run"])
     table = (frame.groupby(["chart", "type", "performer", "title"])
              .agg(first=("first", "min"), last=("last", "max"), weeks=("weeks", "sum"),
@@ -832,16 +834,18 @@ def chart_table(artist_slug: str) -> str:
     table["kind"] = table["type"].map({"singles": "lag", "albums": "plata"})
     table["first_text"] = table["first"].map(format_date)
     table["last_text"] = table["last"].map(format_date)
-    return interactive_table(table, {
-        "chart": "Listi", "performer": "Flytjandi", "title": "Titill", "kind": "Tegund",
-        "first_text": "Fyrsta vika", "last_text": "Síðasta vika", "weeks": "Vikur",
-        "best": "Besta sæti", "reentries": "Endurkomur",
-    }, paging=len(table) > 25)
+    headers = {"chart": "Listi", "performer": "Flytjandi", "title": "Titill", "kind": "Tegund",
+               "first_text": "Fyrsta vika", "last_text": "Síðasta vika", "weeks": "Vikur",
+               "best": "Besta sæti", "reentries": "Endurkomur"}
+    if chart:
+        headers = {key: label for key, label in headers.items() if key not in ("chart", "kind")}
+    return interactive_table(table, headers, paging=len(table) > 25)
 
 
-def chart_plot(artist_slug: str) -> Any:
+def chart_plot(artist_slug: str, chart: str | None = None) -> Any:
     """Position week by week while on each list (1 at the top), runs aligned at their first week;
-    one panel per chart, lines coloured by performer, song or album in the legend and tooltip."""
+    one panel per chart (only ``chart`` when given), lines coloured by performer, song or album in
+    the legend and tooltip."""
     import plotly.graph_objects as go
     import plotly.io as pio
     from plotly.subplots import make_subplots
@@ -854,20 +858,23 @@ def chart_plot(artist_slug: str) -> Any:
     if weeks.empty:
         return None
     colours = _performer_colours(found[1], events)
-    charts = [c for c in ("Billboard Hot 100", "Billboard 200") if c in set(weeks["chart"])]
+    charts = [c for c in ("Billboard Hot 100", "Billboard 200")
+              if c in set(weeks["chart"]) and (chart is None or c == chart)]
+    if not charts:
+        return None
     fig = make_subplots(rows=1, cols=len(charts), subplot_titles=charts, horizontal_spacing=0.08)
-    for col, chart in enumerate(charts, start=1):
-        for (performer, title, run), trace in weeks[weeks["chart"] == chart].groupby(["performer", "title", "run"], sort=False):
+    for col, panel in enumerate(charts, start=1):
+        for (performer, title, run), trace in weeks[weeks["chart"] == panel].groupby(["performer", "title", "run"], sort=False):
             name = f"{title} ({trace['chart_date'].min().year})" + (" – endurkoma" if run else "")
             fig.add_trace(go.Scatter(
                 x=trace["week"], y=trace["position"], mode="lines+markers", name=name,
                 line={"width": 2, "color": colours.get(performer.lower(), "#6c757d")},
-                marker={"size": 6}, legendgroup=chart, legendgrouptitle_text=chart,
+                marker={"size": 6}, legendgroup=panel, legendgrouptitle_text=panel,
                 customdata=list(zip(trace["chart_date"].map(format_date), [performer] * len(trace))),
                 hovertemplate=f"<b>{html.escape(title)}</b> (%{{customdata[1]}})<br>%{{customdata[0]}}: "
                               "%{y}. sæti, vika %{x}<extra></extra>",
             ), row=1, col=col)
-        limit = 100 if chart == "Billboard Hot 100" else 200
+        limit = 100 if panel == "Billboard Hot 100" else 200
         fig.update_yaxes(range=[limit + 2, 0], title_text="Sæti" if col == 1 else None,
                          gridcolor="#e9ecef", zeroline=False, row=1, col=col)
         fig.update_xaxes(title_text="Vika á lista", gridcolor="#f1f3f5", zeroline=False, row=1, col=col)
