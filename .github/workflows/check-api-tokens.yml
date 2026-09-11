@@ -1,0 +1,26 @@
+name: Check API tokens
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - name: Verify credentials against each API
+        env:
+          REQUIRE_API_TOKENS: "1"
+          DISCOGS_TOKEN: ${{ secrets.DISCOGS_TOKEN }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}
+        run: pytest tests/test_api_tokens.py -v
