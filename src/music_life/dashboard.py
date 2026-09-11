@@ -415,7 +415,7 @@ def artist_facts(artist_slug: str) -> str:
     if albums:
         posthumous = sum(1 for when in albums if died and when > died)
         sub = f"{albums[0].year}–{albums[-1].year}" + (f", {posthumous} eftir andlát" if posthumous else "")
-        boxes.append(_fact_box("Hljóðversplötur", len(albums), sub))
+        boxes.append(_fact_box("Sólóplötur", len(albums), sub))
     songs = sum(1 for kind, *_ in events if kind == "song")
     for_others = sum(1 for kind, *_ in events if kind in ("production", "guest"))
     if songs or for_others:
@@ -546,34 +546,52 @@ def artist_timeline(artist_slug: str) -> str:
         cause = f", {LABEL_FALLBACK_IS.get(cause, cause)}" if cause else ""
         parts.append(icon("fa-dove", "life", life_end,
                           f"Andlát {format_date(died)}, {age_at_release(born, died, died.year)} ára{cause}"))
-    # Family on the life line: marriages as a pink bar with a ring, divorces, children.
-    divorces = {spouse: (when, precision) for when, precision, spouse, _, _ in by_kind.get("divorce", [])}
-    for when, precision, spouse, _, _ in by_kind.get("marriage", []):
-        begin = _position(when, precision)
-        divorced = divorces.get(spouse)
-        finish = _position(*divorced) if divorced else life_end
-        parts.append(bar("tl-marriage", "life", begin, finish,
-                         f"Hjónaband: {spouse}, {when.year}–{divorced[0].year if divorced else ''}"))
-        parts.append(icon("fa-ring tl-family", "life", begin, f"{_when(when, precision)}: gifting, {spouse}", offset=-13))
-    for spouse, (when, precision) in divorces.items():
-        parts.append(icon("fa-heart-crack tl-family", "life", _position(when, precision),
-                          f"{_when(when, precision)}: skilnaður, {spouse}", offset=-13))
-    for when, precision, child, _, _ in by_kind.get("child", []):
-        parts.append(icon("fa-baby tl-child", "life", _position(when, precision),
-                          f"{_when(when, precision)}: {child} fæðist", offset=-13))
+    # Family on the life line: marriages (pink) and later relationships (light pink) lie over it.
+    for start_kind, end_kind, css, what in (("marriage", "divorce", "tl-marriage", "Hjónaband"),
+                                            ("relationship", "relationship_end", "tl-partner", "Samband")):
+        ends = {name: (when, precision) for when, precision, name, _, _ in by_kind.get(end_kind, [])}
+        for when, precision, name, _, _ in by_kind.get(start_kind, []):
+            ended = ends.get(name)
+            parts.append(bar(css, "life", _position(when, precision), _position(*ended) if ended else life_end,
+                             f"{what}: {name}, {when.year}–{ended[0].year if ended else ''}"))
+    for when, precision, child, detail, _ in by_kind.get("child", []):
+        # A detail (such as "áætlað: fædd 1970–1977") marks an estimated date: paler icon, range in the tooltip.
+        css = "fa-baby tl-child" + (" tl-approx" if detail else "")
+        parts.append(icon(css, "life", _position(when, precision),
+                          f"{child} fæðist ({detail or _when(when, precision)})", offset=-13))
     if "career_start" in by_kind:
         lanes.append("career")
         first_year = by_kind["career_start"][0][0].year
         last_year = by_kind["career_end"][0][0].year if "career_end" in by_kind else int(end - 2)
         parts.append(bar("tl-career", "career", first_year, last_year + 1, f"Ferill: {first_year}–{last_year}"))
+    # Bands: membership periods (join/leave events) and one colour per band, in order of joining.
+    joins = {band: when for when, _, band, _, _ in by_kind.get("band_join", [])}
+    leaves = {band: when for when, _, band, _, _ in by_kind.get("band_leave", [])}
+    band_colors: dict[str, str] = {}
+    for band in [*sorted(joins, key=joins.get), *(item[3] for item in by_kind.get("band_album", [])),
+                 *(item[3] for item in by_kind.get("song", []) if item[3] != "solo")]:
+        band_colors.setdefault(band, BAND_PALETTE[len(band_colors) % len(BAND_PALETTE)])
+    # Band albums released while he was in the band sit with his own albums, in the band's colour.
+    band_albums = [
+        ("band", item) for item in by_kind.get("band_album", [])
+        if item[3] not in leaves or item[0].year <= leaves[item[3]].year
+    ]
+
     albums = by_kind.get("album", [])
-    if albums:
+    if albums or band_albums:
         lanes.append("album")
         previous, flip = None, False
-        for when, precision, label, detail, url in albums:
+        for source, (when, precision, label, detail, url) in sorted(
+            [("solo", item) for item in albums] + band_albums, key=lambda pair: pair[1][0]
+        ):
             at = _position(when, precision)
             flip = (not flip) if previous is not None and pct(at) - pct(previous) < 2.5 else False
             previous = at
+            if source == "band":
+                parts.append(icon("fa-compact-disc", "album", at,
+                                  f"{_when(when, precision)}: {detail} – {label} ({_age_text(born, when)} ára)",
+                                  url, -10 if flip else 0, color=band_colors[detail]))
+                continue
             posthumous = died is not None and when > died
             css = "fa-compact-disc " + ("tl-focus" if detail in focus else "tl-posthumous" if posthumous else "tl-album")
             age = f"{_years_between(died, when)} ár eftir andlát" if posthumous else f"{_age_text(born, when)} ára"
@@ -586,18 +604,17 @@ def artist_timeline(artist_slug: str) -> str:
         for when, precision, label, _, url in covers:
             parts.append(icon("fa-rug tl-cover", "cover", _position(when, precision), f"{_when(when, precision)}: {label}", url))
 
-    band_releases = by_kind.get("band_release", [])
-    band_colors: dict[str, str] = {}
-    band_songs = [item for item in by_kind.get("song", []) if item[3] != "solo"]
-    for *_, band, _ in sorted(band_releases + band_songs, key=lambda item: item[0]):
-        band_colors.setdefault(band, BAND_PALETTE[len(band_colors) % len(BAND_PALETTE)])
-    if band_releases:
+    if joins:
         lanes.append("band")
-        for when, precision, label, band, url in band_releases:
-            parts.append(icon("fa-users", "band", _position(when, precision),
-                              f"{_when(when, precision)}: {band} – {label}", url, color=band_colors[band]))
+        for band, joined in joins.items():
+            last = leaves[band].year if band in leaves else (died.year if died else joined.year)
+            parts.append(
+                f'<div class="tl-bar tl-band-period" style="top:{TIMELINE_LANES["band"]}px;left:{pct(joined.year):.2f}%;'
+                f'width:{pct(last + 1) - pct(joined.year):.2f}%;background:{band_colors[band]}" '
+                f'title="{html.escape(band)}: {joined.year}–{last}"></div>'
+            )
     band_legend = "".join(
-        f'<i class="fa-solid fa-users" style="color:{c}"></i> {html.escape(b)} · ' for b, c in band_colors.items()
+        f'<span class="tl-key" style="background:{c}"></span> {html.escape(b)} · ' for b, c in band_colors.items()
     )
     band_keys = "".join(
         f'<span class="tl-key" style="background:{c}"></span> með {html.escape(b)}, ' for b, c in band_colors.items()
@@ -609,10 +626,16 @@ def artist_timeline(artist_slug: str) -> str:
     )
     if others:
         lanes.append("others")
+        previous, step = None, 0
         for kind, (when, precision, label, detail, url) in others:
+            at = _position(when, precision)
+            # Icons close together (e.g. three tracks from one year) step through three heights.
+            step = step + 1 if previous is not None and pct(at) - pct(previous) < 2.5 else 0
+            previous = at
             css = "fa-sliders tl-production" if kind == "production" else "fa-microphone-lines tl-guest"
-            parts.append(icon(css, "others", _position(when, precision),
-                              f"{_when(when, precision)}: {label} ({ROLE_LABELS.get(detail, detail)})", url))
+            parts.append(icon(css, "others", at,
+                              f"{_when(when, precision)}: {label} ({ROLE_LABELS.get(detail, detail)})",
+                              url, (0, -11, 11)[step % 3]))
     for when, precision, label, _, url in by_kind.get("nomination", []) + by_kind.get("award", []):
         parts.append(icon("fa-award tl-award", "career", _position(when, precision),
                           f"{_when(when, precision)}: {label}", url, -14))
@@ -648,7 +671,7 @@ def artist_timeline(artist_slug: str) -> str:
     labels = "".join(f'<div style="top:{TIMELINE_LANES[lane]}px">{LANE_TITLES[lane]}</div>' for lane in lanes)
     legend = (
         '<p class="tl-legend"><i class="fa-solid fa-egg"></i> fæðing · <i class="fa-solid fa-dove"></i> andlát · '
-        '<i class="fa-solid fa-ring tl-family"></i> gifting · <i class="fa-solid fa-heart-crack tl-family"></i> skilnaður · '
+        '<span class="tl-key tl-marriage"></span> hjónaband · <span class="tl-key tl-partner"></span> samband · '
         '<i class="fa-solid fa-baby tl-child"></i> barn fæðist · '
         '<i class="fa-solid fa-compact-disc tl-album"></i> hljóðversplata · '
         '<i class="fa-solid fa-compact-disc tl-focus"></i> fókusplata · '
@@ -668,19 +691,22 @@ def artist_timeline(artist_slug: str) -> str:
                 f'<div class="tl-track">{"".join(parts)}</div></div>{legend}')
 
     table = ""
-    if albums:
+    if albums or band_albums:
         rows, previous = [], None
-        for when, _, label, detail, _ in albums:
+        for source, (when, _, label, detail, _) in sorted(
+            [("solo", item) for item in albums] + band_albums, key=lambda pair: pair[1][0]
+        ):
             rows.append({
                 "year": when.year,
-                "title": f"**[{label}](../albums/{focus[detail]}.qmd)**" if detail in focus else label,
+                "performer": "Sóló" if source == "solo" else detail,
+                "title": f"**[{label}](../albums/{focus[detail]}.qmd)**" if source == "solo" and detail in focus else label,
                 "age": f"{_years_between(died, when)} ár eftir andlát" if died and when > died else _age_text(born, when),
                 "gap": _gap(previous, when),
             })
             previous = when
-        table = "\n**Hljóðversplötur og aldur við útgáfu**\n\n" + md_table(
-            pd.DataFrame(rows), {"year": "Útgáfuár", "title": "Plata", "age": "Aldur", "gap": "Frá síðustu plötu"}
-        )
+        table = "\n**Plötur og aldur við útgáfu**\n\n" + md_table(pd.DataFrame(rows), {
+            "year": "Útgáfuár", "performer": "Flytjandi", "title": "Plata", "age": "Aldur", "gap": "Frá síðustu plötu",
+        })
     return "```{=html}\n" + timeline + "\n```\n" + table
 
 

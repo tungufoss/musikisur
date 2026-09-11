@@ -136,9 +136,12 @@
 }
 
 .tl-life { background: #bbb; }
-.tl-marriage { background: #d63384; height: 4px; margin-top: 7px; }
+.tl-marriage { background: #d63384; }
+.tl-partner { background: #f3a6c8; }
+.tl-band-period { height: 12px; border-radius: 6px; }
 .tl-family { color: #d63384; }
 .tl-child { color: #20c997; }
+.tl-approx { opacity: 0.5; }
 .tl-career { background: #2780e3; height: 10px; border-radius: 5px; }
 
 .tl-icon {
