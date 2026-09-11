@@ -1,4 +1,4 @@
-<!-- Shared artist life: map and timeline. Pages in artists/ set ARTIST_SLUG. -->
+<!-- Shared artist life: map and Billboard data. Pages in artists/ set ARTIST_SLUG. -->
 
 ### Kort
 
@@ -9,15 +9,6 @@ artist_map(ARTIST_SLUG)
 ```
 
 *Egg (grænt): fæðingarstaður. Dúfa (svart): dánarstaður. Hús (appelsínugult): búseta. Bláir punktar: staðir sem Wikipedia-greinin um hann nefnir; smelltu á punkt til að sjá setninguna (enska Wikipedia, CC BY-SA 4.0).*
-
-### Tímalína
-
-```{python}
-#| output: asis
-from music_life.dashboard import artist_timeline
-
-print(artist_timeline(ARTIST_SLUG))
-```
 
 ### Billboard
 
