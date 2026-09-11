@@ -73,7 +73,9 @@ Gerry Rafferty (1947–2011) var skoskur söngvari og lagahöfundur, fæddur inn
 :::
 ::::
 
-Textann við „Right Down the Line“ má lesa á [AZLyrics](https://www.azlyrics.com/lyrics/gerryrafferty/rightdowntheline.html).
+Textinn við „Right Down the Line“, birtur af Genius:
+
+{{< genius 184903 url="https://genius.com/Gerry-rafferty-right-down-the-line-lyrics" >}}
 
 - Vaxandi drykkja lagði mikið álag á hjónabandið og Carla skildi við hann árið 1990, en þau héldu góðu sambandi.
 - Síðustu árin var hann með Enzinu Fuschini, ítalskri listakonu sem bjó í Dorset. Hún segir að hann hafi beðið hennar á Ritz-hótelinu í París á aðfangadagskvöld 2009.
