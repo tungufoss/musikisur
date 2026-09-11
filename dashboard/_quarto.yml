@@ -3,12 +3,14 @@ project:
   output-dir: _site
   resources:
     - assets/logo/*.svg
+    - assets/covers/*.jpg
 
 lang: is
 
 book:
   title: "Tónlistararfurinn"
   subtitle: "Plötuklúbbur Inga — gagnakafið"
+  favicon: assets/logo/musikisur.svg
   repo-url: https://github.com/tungufoss/musikisur
   site-url: https://tungufoss.github.io/musikisur/
   page-footer:
@@ -38,3 +40,5 @@ execute:
   echo: false
   warning: false
   freeze: false
+  # A fresh kernel per render, so edits to src/music_life show up in `quarto preview`.
+  daemon: false

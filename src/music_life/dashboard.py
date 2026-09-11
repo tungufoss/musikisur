@@ -18,6 +18,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = REPO_ROOT / "data" / "processed" / "music_life.duckdb"
 CONFIG_DIR = REPO_ROOT / "config"
+COVERS_DIR = REPO_ROOT / "dashboard" / "assets" / "covers"
 
 DECADE_NAMES = {
     1950: "Sjötti áratugurinn",
@@ -153,29 +154,139 @@ def decade_overview(decade: int) -> str:
     return "\n".join(lines) + "\n"
 
 
+def spotify_link(url: str, text: str = "") -> str:
+    """Spotify icon (Bootstrap Icons, bundled with Quarto) linking to ``url``, optionally with text."""
+    icon = '<i class="bi bi-spotify spotify-icon" aria-hidden="true"></i>'
+    label = text or "Hlusta á Spotify"
+    return f'<a href="{url}" class="spotify-link" title="Hlusta á Spotify" aria-label="{label}">{icon}{" " + text if text else ""}</a>'
+
+
+def _songs(count: int, total: int | None = None) -> str:
+    if total and count == total:
+        return "öll lögin"
+    return "1 lag" if count == 1 else f"{count} lög"
+
+
 def album_facts(slug: str) -> str:
     with connect_ro() as con:
         row = con.execute(
             """
             SELECT a.title, ar.name, a.original_release_date, a.spotify_url,
-                   (SELECT count(*) FROM album_tracks t WHERE t.album_id = a.album_id)
+                   count(t.track_number), sum(r.duration_ms)
             FROM albums a
             LEFT JOIN artists ar USING (artist_id)
+            LEFT JOIN album_tracks t USING (album_id)
+            LEFT JOIN recordings r ON r.recording_id = t.recording_id
             WHERE a.slug = ?
+            GROUP BY ALL
             """,
             [slug],
         ).fetchone()
     if row is None:
         return "*Platan er ekki enn komin í gagnagrunninn.*\n"
-    title, artist, released, spotify_url, track_count = row
+    title, artist, released, spotify_url, track_count, duration_ms = row
+    # MusicBrainz often only knows the year; fall back to the year in config.
+    year = released.year if released else next((c.year for c in load_chapters() if c.slug == slug), None)
     lines = [f"- **Flytjandi:** {artist or '—'}"]
-    if released:
-        lines.append(f"- **Útgáfuár:** {released.year}")
-        lines.append(f"- **Aldur í dag:** {this_year() - released.year} ár")
-    lines.append(f"- **Lög skráð:** {track_count}")
+    if year:
+        lines.append(f"- **Útgáfuár:** {year}")
+        lines.append(f"- **Aldur í dag:** {this_year() - year} ár")
+    lines.append(f"- **Lög:** {track_count}")
+    if duration_ms:
+        lines.append(f"- **Lengd:** {duration_ms / 60000:.0f} mínútur (lágmarkshlustun fyrir virkan klúbbmeðlim)")
     if spotify_url:
-        lines.append(f"- **Spotify:** [{title}]({spotify_url})")
-    return "\n".join(lines) + "\n"
+        lines.append(f"- **Hlusta:** {spotify_link(spotify_url, title)}")
+    cover = ""
+    if (COVERS_DIR / f"{slug}.jpg").exists():
+        # Chapters live in albums/, so the cover is one directory up.
+        cover = f'<img src="../assets/covers/{slug}.jpg" class="album-cover" alt="Umslag plötunnar {title}">\n\n'
+    return cover + "\n".join(lines) + "\n"
+
+
+ROLE_LABELS = {
+    "producer": "upptökustjórn",
+    "mix": "hljóðblöndun",
+    "recording": "hljóðritun",
+    "engineer": "hljóðvinnsla",
+    "composer": "lög",
+    "lyricist": "textar",
+    "writer": "lög og textar",
+    "arranger": "útsetningar",
+    "instrument arranger": "útsetningar",
+    "vocal arranger": "raddútsetningar",
+    "vocal": "söngur",
+    "instrument": "hljóðfæraleikur",
+    "performer": "flytjandi",
+}
+
+
+def credits_summary(slug: str) -> str:
+    """Songwriters, then everyone who played on or produced the album (instruments as in the source)."""
+    with connect_ro() as con:
+        rows = con.execute(
+            """
+            WITH album AS (SELECT album_id FROM albums WHERE slug = ?),
+            tr AS (
+                SELECT t.recording_id, t.work_id, t.disc_number, t.track_number
+                FROM album_tracks t JOIN album USING (album_id)
+            )
+            SELECT p.name, c.entity_type, c.role, c.instrument, tr.disc_number, tr.track_number
+            FROM credits c
+            JOIN people p USING (person_id)
+            LEFT JOIN tr ON (c.entity_type = 'recording' AND c.entity_id = tr.recording_id)
+                         OR (c.entity_type = 'work' AND c.entity_id = tr.work_id)
+            WHERE (c.entity_type = 'album' AND c.entity_id = (SELECT album_id FROM album))
+               OR tr.track_number IS NOT NULL
+            """,
+            [slug],
+        ).df()
+        total = con.execute(
+            "SELECT count(*) FROM album_tracks JOIN albums USING (album_id) WHERE slug = ?", [slug]
+        ).fetchone()[0]
+    if rows.empty:
+        return "*Engar heimildir um flytjendur enn.*\n"
+
+    rows["track"] = [
+        None if pd.isna(t) else (int(d), int(t)) for d, t in zip(rows["disc_number"], rows["track_number"])
+    ]
+    def labels(role: str, instrument: Any) -> list[str]:
+        instruments = [p.strip() for p in instrument.split(",")] if isinstance(instrument, str) else []
+        label = ROLE_LABELS.get(role, role)
+        if role in {"instrument", "vocal"}:
+            return instruments or [label]
+        return [f"{label} ({', '.join(instruments)})"] if instruments else [label]
+
+    rows["label"] = [labels(role, inst) for role, inst in zip(rows["role"], rows["instrument"])]
+    rows = rows.explode("label")
+
+    parts = []
+    writing = rows[rows["entity_type"] == "work"]
+    if not writing.empty:
+        lines = []
+        for role, group in writing.groupby("role"):
+            people = group.groupby("name")["track"].nunique().sort_values(ascending=False)
+            names = ", ".join(f"{name} ({_songs(int(n), total)})" for name, n in people.items())
+            lines.append(f"- **{ROLE_LABELS.get(role, role).capitalize()}:** {names}")
+        parts.append("### Lagahöfundar\n\n" + "\n".join(lines) + "\n")
+
+    playing = rows[rows["entity_type"] != "work"]
+    if not playing.empty:
+        people = (
+            playing.groupby("name")
+            .agg(
+                roles=("label", lambda s: ", ".join(sorted(set(s)))),
+                tracks=("track", lambda s: len({t for t in s if t is not None})),
+            )
+            .reset_index()
+            .sort_values(["tracks", "name"], ascending=[False, True])
+        )
+        people["songs"] = [_songs(n, total) if n else "platan" for n in people["tracks"]]
+        parts.append(
+            f"\n### Hver spilaði?\n\n{len(people)} manns koma við sögu.\n\n"
+            + md_table(people, {"name": "Nafn", "roles": "Hlutverk", "songs": "Lög"})
+            + "\n*Hljóðfæri eru skráð eins og í heimildinni (MusicBrainz).*\n"
+        )
+    return "".join(parts)
 
 
 def tracklist(slug: str) -> str:
@@ -198,8 +309,11 @@ def tracklist(slug: str) -> str:
         f"{d}.{t}" if multi_disc else str(t)
         for d, t in zip(tracks["disc_number"], tracks["track_number"])
     ]
-    tracks["spotify"] = [f"[▶]({url})" if isinstance(url, str) else None for url in tracks["spotify_url"]]
-    return md_table(tracks, {"nr": "Nr.", "track_title": "Lag", "spotify": "Spotify"})
+    tracks["song"] = [
+        f"{title} {spotify_link(url)}" if isinstance(url, str) else title
+        for title, url in zip(tracks["track_title"], tracks["spotify_url"])
+    ]
+    return md_table(tracks, {"nr": "Nr.", "song": "Lag"})
 
 
 def chart_context(slug: str, window: int = 5) -> str:
