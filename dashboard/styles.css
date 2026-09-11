@@ -13,6 +13,11 @@
   box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
 }
 
+.audio-sample {
+  width: 100%;
+  max-width: 420px;
+}
+
 .spotify-icon {
   color: #1db954;
 }

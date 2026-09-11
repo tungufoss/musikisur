@@ -2,7 +2,7 @@
 import pandas as pd
 
 from music_life.bundles import write_bundle
-from music_life.sources import musicbrainz, spotify
+from music_life.sources import musicbrainz, spotify, wikidata
 
 
 def artist_rel(kind, name, attributes=()):
@@ -99,6 +99,19 @@ def test_spotify_verifies_by_isrc_and_keeps_title_matches_unverified():
     assert tracks.loc[0, "isrc"] == "GBAAA1100001"
     assert t["album"].loc[0, "spotify_album_id"] == "sp-album"
     assert t["artist"].loc[0, "spotify_id"] == "sp-artist"
+
+
+def test_wikidata_publication_date_uses_earliest_full_date():
+    def claim(time, precision):
+        return {"mainsnak": {"datavalue": {"value": {"time": time, "precision": precision}}}}
+
+    entity = {"claims": {"P577": [
+        claim("+1978-00-00T00:00:00Z", 9),
+        claim("+1978-03-01T00:00:00Z", 11),
+        claim("+1978-01-20T00:00:00Z", 11),
+    ]}}
+    assert wikidata.publication_date(entity) == "1978-01-20"
+    assert wikidata.publication_date({"claims": {"P577": [claim("+1978-00-00T00:00:00Z", 9)]}}) is None
 
 
 def test_collected_tables_form_a_valid_bundle(tmp_path):

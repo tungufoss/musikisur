@@ -71,6 +71,11 @@ def _url_id(relations: list[dict[str, Any]] | None, fragment: str) -> str | None
     return None
 
 
+def wikidata_id(entity: dict[str, Any]) -> str | None:
+    """The Wikidata item linked from a MusicBrainz artist, release group or release."""
+    return _url_id(entity.get("relations"), "wikidata.org")
+
+
 def _frame(table: str, rows: list[dict[str, Any]]) -> pd.DataFrame:
     """Rows in the bundle's column order; unfilled columns hold None so later steps can fill them."""
     frame = pd.DataFrame(rows).reindex(columns=list(TABLES[table].columns)).astype(object)
