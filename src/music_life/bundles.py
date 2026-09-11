@@ -144,6 +144,18 @@ TABLES: dict[str, TableSpec] = {
         ("event_date", "kind", "label"),
         required=False,
     ),
+    # Soundtrack releases (films, TV, games) that carry the album's songs, from MusicBrainz.
+    "soundtracks": TableSpec(
+        {
+            "song": "VARCHAR",  # the album track's title
+            "release": "VARCHAR",  # the soundtrack release group's title
+            "year": "INTEGER",
+            "url": "VARCHAR",
+            "source_key": "VARCHAR",
+        },
+        ("song", "year", "release"),
+        required=False,
+    ),
     # Spotify links for the other entries on the album's best chart week (scripts/chart_links.py).
     # Each row carries its own provenance, so re-collecting the album leaves them valid.
     "chart_links": TableSpec(
@@ -445,6 +457,13 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
                 f"VALUES (?, {marks}, ?) ON CONFLICT DO NOTHING",
                 [artist_id, *(_value(row, c) for c in columns), source_ids.get(_value(row, "source_key"))],
             )
+
+    for _, row in frames.get("soundtracks", pd.DataFrame()).iterrows():
+        con.execute(
+            "INSERT INTO album_soundtracks (album_id, song, release, year, url, source_id) VALUES (?, ?, ?, ?, ?, ?)",
+            [album_id, row["song"], row["release"], _value(row, "year"), row["url"],
+             source_ids.get(_value(row, "source_key"))],
+        )
 
     # Skipped when the charts themselves are not loaded (submodule not checked out).
     for _, row in frames.get("chart_links", pd.DataFrame()).iterrows():
