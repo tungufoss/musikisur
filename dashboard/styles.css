@@ -191,6 +191,15 @@
 .tl-hist-band { background: #6f42c1; }
 .tl-hist-others { background: #fd7e14; }
 
+/* Film and TV lane: cumulative titles that use the songs (IMDb). */
+.tl-screen { position: absolute; left: 0; width: 100%; overflow: visible; }
+.tl-screen-line { fill: none; stroke: #495057; stroke-width: 2; }
+.tl-screen-area { fill: rgb(73 80 87 / 12%); stroke: none; }
+.tl-screen-hit { position: absolute; z-index: 1; }
+.tl-screen-hit:hover { background: rgb(73 80 87 / 12%); }
+.tl-screen-total { position: absolute; transform: translate(4px, -50%); font-size: 0.7rem; color: #495057; }
+.tl-screen-key { background: #495057; height: 2px; }
+
 .tl-key {
   display: inline-block;
   width: 0.8em;
