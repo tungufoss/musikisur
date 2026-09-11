@@ -222,6 +222,7 @@ CREATE TABLE IF NOT EXISTS artist_places (
     qid VARCHAR,
     title VARCHAR NOT NULL,
     label_is VARCHAR,
+    country VARCHAR,
     latitude DOUBLE NOT NULL,
     longitude DOUBLE NOT NULL,
     context VARCHAR,
