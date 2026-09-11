@@ -6,9 +6,18 @@ title: "Gerry Rafferty"
 ARTIST_SLUG = "gerry-rafferty"
 ```
 
+```{python}
+#| output: asis
+from music_life.dashboard import artist_photo
+
+print(artist_photo(ARTIST_SLUG))
+```
+
 Gerry Rafferty (1947–2011) var skoskur söngvari og lagahöfundur, fæddur inn í verkamannafjölskyldu í Paisley. Móðir hans kenndi honum írsk og skosk þjóðlög og síðar urðu Bítlarnir og Bob Dylan áhrifavaldar hans. Árið 1969 gekk hann í þjóðlagapoppsveitina The Humblebums, þar sem grínistinn [Billy Connolly](https://www.imdb.com/name/nm0175262/) var fyrir. Connolly er samlandi hans, reyndar Glasgow-búi, en Paisley er rétt vestan við Glasgow. Árið 1972 stofnaði Rafferty Stealers Wheel með Joe Egan. Stærsti smellur hennar var „Stuck in the Middle with You“ (1973). Sem sólólistamaður átti hann smelli seint á áttunda áratugnum með „Baker Street“, „Right Down the Line“ og „Night Owl“. Hann drakk mikið stóran hluta ævinnar og lést úr lifrarbilun í janúar 2011.
 
 *Samantekt úr inngangi greinarinnar [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0).*
+
+{{< include ../_artist.qmd >}}
 
 ### Helstu smellir
 
@@ -30,4 +39,4 @@ Gerry Rafferty (1947–2011) var skoskur söngvari og lagahöfundur, fæddur inn
 :::
 ::::
 
-{{< include ../_artist.qmd >}}
+{{< include ../_artist_life.qmd >}}
