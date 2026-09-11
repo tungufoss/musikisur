@@ -325,6 +325,18 @@ def _when(value: date, precision: int) -> str:
     return f"{MONTHS[value.month - 1]} {value.year}" if precision == 10 else str(value.year)
 
 
+def _years_between(start: date, end: date) -> int:
+    return end.year - start.year - ((end.month, end.day) < (start.month, start.day))
+
+
+def _gap(previous: date | None, current: date) -> str:
+    """Time since the previous release: months under two years, whole years after that."""
+    if previous is None:
+        return "—"
+    months = (current.year - previous.year) * 12 + current.month - previous.month
+    return f"{months} mán." if months < 24 else f"{round(months / 12)} ár"
+
+
 def _age_text(born: date, value: date) -> str:
     """Age on a stored date; dates known only to the year or month are stored as their first day."""
     return str(age_at_release(born, value, value.year))
@@ -510,7 +522,7 @@ def artist_timeline(artist_slug: str) -> str:
             previous = at
             posthumous = died is not None and when > died
             css = "fa-compact-disc " + ("tl-focus" if detail in focus else "tl-posthumous" if posthumous else "tl-album")
-            age = "eftir andlát" if posthumous else f"{_age_text(born, when)} ára"
+            age = f"{_years_between(died, when)} ár eftir andlát" if posthumous else f"{_age_text(born, when)} ára"
             # Albums with a chapter link to it; the others to MusicBrainz.
             link = f"../albums/{focus[detail]}.html" if detail in focus else url
             parts.append(icon(css, "album", at, f"{_when(when, precision)}: {label} ({age})", link, -10 if flip else 0))
@@ -581,7 +593,7 @@ def artist_timeline(artist_slug: str) -> str:
     legend = (
         '<p class="tl-legend"><i class="fa-solid fa-baby"></i> fæðing · <i class="fa-solid fa-dove"></i> andlát · '
         '<i class="fa-solid fa-compact-disc tl-album"></i> hljóðversplata · '
-        '<i class="fa-solid fa-compact-disc tl-focus"></i> plata með kafla í bókinni · '
+        '<i class="fa-solid fa-compact-disc tl-focus"></i> fókusplata · '
         '<i class="fa-solid fa-compact-disc tl-posthumous"></i> eftir andlát · '
         '<i class="fa-solid fa-rug tl-cover"></i> ábreiða · '
         f"{band_legend}"
@@ -598,16 +610,17 @@ def artist_timeline(artist_slug: str) -> str:
 
     table = ""
     if albums:
-        rows = pd.DataFrame([
-            {
-                "when": _when(when, precision),
+        rows, previous = [], None
+        for when, _, label, detail, _ in albums:
+            rows.append({
+                "year": when.year,
                 "title": f"**[{label}](../albums/{focus[detail]}.qmd)**" if detail in focus else label,
-                "age": "eftir andlát" if died and when > died else _age_text(born, when),
-            }
-            for when, precision, label, detail, _ in albums
-        ])
+                "age": f"{_years_between(died, when)} ár eftir andlát" if died and when > died else _age_text(born, when),
+                "gap": _gap(previous, when),
+            })
+            previous = when
         table = "\n**Hljóðversplötur og aldur við útgáfu**\n\n" + md_table(
-            rows, {"when": "Útgáfa", "title": "Plata", "age": "Aldur"}
+            pd.DataFrame(rows), {"year": "Útgáfuár", "title": "Plata", "age": "Aldur", "gap": "Frá síðustu plötu"}
         )
     return "```{=html}\n" + timeline + "\n```\n" + table
 
