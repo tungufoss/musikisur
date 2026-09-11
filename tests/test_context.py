@@ -77,6 +77,25 @@ def test_later_line_ups_and_work_for_others_are_not_counted_as_songs():
     assert sorted(songs) == ["Right or Wrong", "Stuck in the Middle With You"]
 
 
+def test_soundtrack_rows_keep_album_songs_on_soundtrack_releases():
+    def release(title, rg_id, date, kinds=("Soundtrack",)):
+        return {"date": date, "release-group": {"id": rg_id, "title": title, "secondary-types": list(kinds)}}
+
+    results = [{"recordings": [
+        {"title": "Baker Street", "releases": [
+            release("Good Will Hunting: Music From the Miramax Motion Picture", "gwh", "1998-02-10"),
+            release("Good Will Hunting: Music From the Miramax Motion Picture", "gwh", "1997-11-18"),
+            release("Greatest Hits", "best", "1990", kinds=("Compilation",)),
+        ]},
+        {"title": "Right Down the Line (2011 remaster)", "releases": [release("The Beach Bum", "bb", "2019")]},
+        {"title": "Not on the album", "releases": [release("Some Film", "sf", "2000")]},
+    ]}]
+    rows = musicbrainz.soundtrack_rows(results, ["Baker Street", "Right Down the Line"], "mb")
+    assert [(r["song"], r["release"][:17], r["year"]) for r in rows] == [
+        ("Baker Street", "Good Will Hunting", 1997), ("Right Down the Line", "The Beach Bum", 2019),
+    ]
+
+
 def test_work_for_others_counts_each_song_once():
     def row(date, kind, label):
         return {"event_date": date, "kind": kind, "label": label}

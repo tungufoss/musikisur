@@ -260,6 +260,39 @@ def unique_songs(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return list(best.values())
 
 
+def fetch_soundtrack_recordings(artist_id: str, c: CachedClient) -> dict[str, Any]:
+    """The artist's recordings that appear on soundtrack releases (films, TV, games), via the search API."""
+    return c.get_json(
+        "recording", f"search-soundtrack-{artist_id}",
+        {"query": f"arid:{artist_id} AND secondarytype:soundtrack", "fmt": "json", "limit": 100},
+    )
+
+
+def soundtrack_rows(results: list[dict[str, Any]], titles: list[str], source_key: str) -> list[dict[str, Any]]:
+    """Soundtrack releases carrying one of the given songs: one row per song and release group,
+    dated by its earliest release. Only releases put out as soundtracks count, so a song heard in
+    a film without making its soundtrack album is missing."""
+    wanted = {song_key(title): title for title in titles}
+    found: dict[tuple[str, str], dict[str, Any]] = {}
+    for result in results:
+        for recording in result.get("recordings", []):
+            song = wanted.get(song_key(recording["title"]))
+            if song is None:
+                continue
+            for release in recording.get("releases", []):
+                group = release.get("release-group", {})
+                if "Soundtrack" not in group.get("secondary-types", []):
+                    continue
+                year = int(release["date"][:4]) if release.get("date") else None
+                row = found.setdefault((song, group["id"]), {
+                    "song": song, "release": group["title"], "year": year,
+                    "url": f"https://musicbrainz.org/release-group/{group['id']}", "source_key": source_key,
+                })
+                if year and (row["year"] is None or year < row["year"]):
+                    row["year"] = year
+    return sorted(found.values(), key=lambda r: (r["song"], r["year"] or 9999, r["release"]))
+
+
 def cached_source_row(c: CachedClient, cache_key: str, source_key: str, url: str, citation: str) -> dict[str, Any]:
     return {
         "source_key": source_key,

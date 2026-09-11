@@ -242,6 +242,18 @@ CREATE TABLE IF NOT EXISTS timeline_events (
     PRIMARY KEY (artist_id, kind, event_date, label)
 );
 
+-- Soundtrack releases (films, TV, games) that carry an album's songs, from MusicBrainz. Not a full
+-- record of screen use: songs heard on screen without making the soundtrack album are missing.
+CREATE TABLE IF NOT EXISTS album_soundtracks (
+    album_id BIGINT NOT NULL,
+    song VARCHAR NOT NULL,
+    release VARCHAR NOT NULL,
+    year INTEGER,
+    url VARCHAR NOT NULL,
+    source_id BIGINT,
+    PRIMARY KEY (album_id, song, url)
+);
+
 -- Spotify links for chart entries outside the book's own albums (scripts/chart_links.py).
 CREATE TABLE IF NOT EXISTS chart_links (
     chart_id BIGINT NOT NULL,

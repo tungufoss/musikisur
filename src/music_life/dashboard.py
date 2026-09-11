@@ -1185,23 +1185,24 @@ def chart_context(slug: str, window: int = 5) -> str:
 
 
 def screen_use(slug: str) -> str:
+    """Soundtrack releases (films, TV series, games) that carry the album's songs, from MusicBrainz."""
     with connect_ro() as con:
-        usage = con.execute(
+        rows = con.execute(
             """
-            SELECT s.recording_title, s.appearances, s.movies, s.tv_episodes,
-                   year(s.earliest_screen_date) AS first_year,
-                   year(s.latest_screen_date) AS last_year
-            FROM screen_usage_summary s
-            JOIN album_tracks t USING (recording_id)
-            JOIN albums a USING (album_id)
-            WHERE a.slug = ? AND s.appearances > 0
-            ORDER BY s.appearances DESC, s.recording_title
+            SELECT s.song, s.release, s.year, s.url
+            FROM album_soundtracks s JOIN albums a USING (album_id)
+            WHERE a.slug = ?
+            ORDER BY s.song, s.year NULLS LAST, s.release
             """,
             [slug],
         ).df()
-    if usage.empty:
+    if rows.empty:
         return "*Engin skráð notkun í kvikmyndum eða sjónvarpi enn.*\n"
-    return md_table(usage, {
-        "recording_title": "Lag", "appearances": "Skipti", "movies": "Kvikmyndir",
-        "tv_episodes": "Sjónvarpsþættir", "first_year": "Fyrst", "last_year": "Síðast",
-    })
+    rows["release"] = [f"[{release}]({url})" for release, url in zip(rows["release"], rows["url"])]
+    rows["year"] = ["—" if pd.isna(year) else str(int(year)) for year in rows["year"]]
+    return (
+        md_table(rows, {"song": "Lag", "release": "Soundtrack-plata", "year": "Ár"})
+        + "\n*Soundtrack-plötur úr kvikmyndum, sjónvarpsþáttum og tölvuleikjum sem lagið er á, samkvæmt "
+        "MusicBrainz. Listinn er ekki tæmandi: lög sem heyrast í mynd eða þætti án þess að rata á "
+        "soundtrack-plötuna vantar.*\n"
+    )
