@@ -80,6 +80,17 @@ events:
     label: "Stealers Wheel"
     source: https://en.wikipedia.org/wiki/Stealers_Wheel
 
+  # Carla Ventilla: they met at a dancehall in 1965 (he 18, she 15) and married in 1970.
+  - date: 1965
+    kind: relationship
+    label: "Carla Ventilla"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - date: 1970
+    kind: relationship_end
+    label: "Carla Ventilla"
+    detail: "gengu í hjónaband"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+
   # Marriage (Wikidata has no spouse for him).
   - date: 1970
     kind: marriage
