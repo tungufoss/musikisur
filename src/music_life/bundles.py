@@ -176,6 +176,17 @@ TABLES: dict[str, TableSpec] = {
         ("first_year", "imdb_id"),
         required=False,
     ),
+    # A Spotify link per song named in screen_credits (the artist's or a band's recording).
+    "song_links": TableSpec(
+        {
+            "song": "VARCHAR",
+            "spotify_url": "VARCHAR",
+            "spotify_name": "VARCHAR",  # what Spotify calls the match, for checking by hand
+            "retrieved_at": "TIMESTAMP",
+        },
+        ("song",),
+        required=False,
+    ),
     # Spotify links for the other entries on the album's best chart week (scripts/chart_links.py).
     # Each row carries its own provenance, so re-collecting the album leaves them valid.
     "chart_links": TableSpec(
@@ -484,6 +495,13 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
             f"INSERT INTO screen_credits (artist_id, {', '.join(screen_columns)}) "
             f"VALUES (?, {', '.join('?' for _ in screen_columns)}) ON CONFLICT DO NOTHING",
             [artist_id, *(_value(row, c) for c in screen_columns)],
+        )
+
+    for _, row in frames.get("song_links", pd.DataFrame()).iterrows():
+        con.execute(
+            "INSERT INTO song_links (artist_id, song, spotify_url, spotify_name, retrieved_at) "
+            "VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING",
+            [artist_id, row["song"], row["spotify_url"], _value(row, "spotify_name"), _value(row, "retrieved_at")],
         )
 
     for _, row in frames.get("soundtracks", pd.DataFrame()).iterrows():

@@ -1244,8 +1244,27 @@ def _screen_credits(con: duckdb.DuckDBPyConnection, artist_id: int) -> pd.DataFr
     ).df()
 
 
-def _screen_tables(credits: pd.DataFrame, songs: list[str] | None = None) -> str:
-    """Film and TV uses (IMDb): titles per song, then the three most popular series and films.
+def _song_links(con: duckdb.DuckDBPyConnection, artist_id: int) -> dict[str, str]:
+    return dict(con.execute("SELECT song, spotify_url FROM song_links WHERE artist_id = ?", [artist_id]).fetchall())
+
+
+def _song_performers(artist_name: str, events: list[tuple]) -> dict[str, tuple[str, str]]:
+    """Song key -> (who released the song first, their timeline colour)."""
+    colours = _performer_colours(artist_name, events)
+    performers: dict[str, tuple[str, str]] = {}
+    for kind, _, _, label, detail, _ in events:
+        if kind == "song":
+            who = artist_name if detail == "solo" else detail
+            performers.setdefault(song_key(label), (who, colours.get(who.lower(), HIST_COLORS["solo"])))
+    return performers
+
+
+def _screen_tables(
+    credits: pd.DataFrame, links: dict[str, str], performers: dict[str, tuple[str, str]],
+    songs: list[str] | None = None,
+) -> str:
+    """Film and TV uses (IMDb): a sortable table of titles per song (performer in the timeline
+    colour, Spotify link, first and last year of use), then the three most popular series and films.
 
     ``songs`` limits it to those songs (a chapter's album). Popularity is TMDB's vote count."""
     frame = credits.assign(song=credits["songs"].str.split("; ")).explode("song")
@@ -1262,7 +1281,19 @@ def _screen_tables(credits: pd.DataFrame, songs: list[str] | None = None) -> str
               .reindex(columns=["tv", "movie", "other"], fill_value=0))
     counts["total"] = counts.sum(axis=1)
     counts["first"] = frame.groupby("song")["first_year"].min()
+    counts["last"] = frame.groupby("song")["last_year"].max()
     counts = counts.sort_values(["total", "first"], ascending=[False, True]).reset_index()
+
+    def performer(song: str) -> str:
+        found = performers.get(song_key(song))
+        return (f'<span class="tl-key" style="background:{found[1]}"></span> {html.escape(found[0])}'
+                if found else "—")
+
+    counts["performer"] = [performer(s) for s in counts["song"]]
+    counts["song"] = [f"{html.escape(s)} {spotify_link(links[s])}" if s in links else html.escape(s)
+                      for s in counts["song"]]
+    n_songs = len(counts)
+    noun = "lag" if n_songs % 10 == 1 and n_songs % 100 != 11 else "lög"
     songs_of = frame.groupby("imdb_id")["song"].agg(lambda s: ", ".join(f"„{x}“" for x in dict.fromkeys(s)))
 
     def top(kind: str) -> str:
@@ -1278,11 +1309,14 @@ def _screen_tables(credits: pd.DataFrame, songs: list[str] | None = None) -> str
 
     retrieved = pd.to_datetime(credits["retrieved_at"]).max()
     read = f", lesin {format_date(retrieved.date())}" if pd.notna(retrieved) else ""
-    whose = "lög af plötunni" if songs is not None else "lögin"
+    which = "af plötunni" if songs is not None else ("ólíkt" if noun == "lag" else "ólík")
+    headers = {"song": "Lag", "performer": "Flytjandi", "tv": "Þáttaraðir", "movie": "Kvikmyndir",
+               "other": "Annað", "total": "Alls", "first": "Fyrst", "last": "Síðast"}
     return (
-        f"IMDb skráir {whose} í {len(titles)} myndum og þáttum: {split}.\n\n"
-        + md_table(counts, {"song": "Lag", "tv": "Þáttaraðir", "movie": "Kvikmyndir", "other": "Annað",
-                            "total": "Alls", "first": "Fyrst"})
+        (f"IMDb skráir {n_songs} {noun} af plötunni" if songs is not None else f"IMDb skráir {n_songs} {which} {noun}")
+        + f" í {len(titles)} myndum og þáttum: {split}. Smelltu á dálkheiti til að raða.\n\n"
+        + interactive_table(counts, headers, paging=len(counts) > 25, searching=False,
+                            order=[[list(headers).index("total"), "desc"]])
         + '\n:::: {layout-ncol="2"}\n::: {}\n**Vinsælustu þáttaraðirnar**\n\n' + top("tv")
         + ":::\n\n::: {}\n**Vinsælustu kvikmyndirnar**\n\n" + top("movie") + ":::\n::::\n\n"
         + f"*Heimild: soundtrack-skráning á IMDb{read}; hver titill tengist sinni IMDb-síðu. Vinsældir eru "
@@ -1295,15 +1329,21 @@ def screen_summary(artist_slug: str) -> str:
     with connect_ro() as con:
         found = _artist(con, artist_slug)
         credits = _screen_credits(con, found[0]) if found else pd.DataFrame()
-    return _screen_tables(credits) if not credits.empty else NO_SCREEN_USE
+        links = _song_links(con, found[0]) if found else {}
+        performers = _song_performers(found[1], _events(con, found[0])) if found else {}
+    return _screen_tables(credits, links, performers) if not credits.empty else NO_SCREEN_USE
 
 
 def screen_use(slug: str) -> str:
     """The chapter's film and TV section: uses of the album's own songs."""
     with connect_ro() as con:
-        row = con.execute("SELECT artist_id FROM albums WHERE slug = ?", [slug]).fetchone()
+        row = con.execute(
+            "SELECT a.artist_id, ar.name FROM albums a JOIN artists ar USING (artist_id) WHERE a.slug = ?", [slug]
+        ).fetchone()
         credits = _screen_credits(con, row[0]) if row else pd.DataFrame()
+        links = _song_links(con, row[0]) if row else {}
+        performers = _song_performers(row[1], _events(con, row[0])) if row else {}
         songs = [title for (title,) in con.execute(
             "SELECT t.track_title FROM album_tracks t JOIN albums a USING (album_id) WHERE a.slug = ?", [slug]
         ).fetchall()]
-    return _screen_tables(credits, songs) if not credits.empty else NO_SCREEN_USE
+    return _screen_tables(credits, links, performers, songs) if not credits.empty else NO_SCREEN_USE
