@@ -115,11 +115,11 @@ Every source adapter must document:
 - Parts are decades and chapters are focus albums. `scripts/build_book.py` generates both from `config/focus-albums.yml` and rewrites the marked chapter block in `dashboard/_quarto.yml`; never edit that block by hand.
 - A final part, "Flytjendur", has one page per artist with a focus album: `dashboard/artists/<slug>.qmd` (TL;DR, hits, photo, tags, map, timeline). Album chapters cover the album and link to the artist page.
 - Decade, chapter and artist files are created once and then hand-edited (talking points live in `dashboard/albums/<slug>.qmd`). The script never overwrites them.
-- Album data blocks come from `dashboard/_chapter.qmd`, artist blocks from `dashboard/_artist.qmd`, both via `music_life.dashboard`; keep queries there, not in page files.
+- Album data blocks come from `dashboard/_chapter.qmd`; artist pages use `_artist.qmd` (fact boxes, tags) and `_artist_life.qmd` (map, timeline); all via `music_life.dashboard`. Keep queries there, not in page files.
 - Hand-curated facts (covers, nominations, extra places) go in `data/curated/<artist>/<album>/manual.yml` with a source URL for every entry; `collect_album.py` merges them into the bundle.
 - Direct quotes stay in their original language (Icelandic quotation marks „…“); only paraphrases are translated.
 - Every image shown carries a visible credit: a link to the page it came from, plus author and licence when the source gives them (Wikimedia Commons). Album covers credit the Cover Art Archive; the artwork's copyright stays with its owners.
-- Songs connected to the artist, directly or indirectly (their own songs, covers, influences, lookalikes), get an embedded player once per chapter: `{{< spotify-player TRACK_ID >}}`, or a YouTube `{{< video >}}` when Spotify lacks it. Songs already embedded get no inline icon.
+- Songs connected to the artist, directly or indirectly (their own songs, covers, influences, lookalikes), get an embedded player once per chapter: `{{< spotify-player TRACK_ID >}}`, or a YouTube `{{< video >}}` when Spotify lacks it. Songs already embedded on the page get no inline icon (an artist page's summary relies on its "Helstu smellir" players).
 - Other songs named only for context (another artist's best-known hits) get an inline Spotify icon after the title: `„Title“ {{< spotify TRACK_ID >}}`.
 - Find Spotify IDs with `python scripts/spotify_lookup.py "Artist" "Title"`; prefer the original release.
 - The intro placeholder about the origin of the album list is Birna's to write. Do not write, infer or research anything about her family's personal circumstances anywhere in this repo.

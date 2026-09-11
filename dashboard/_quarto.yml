@@ -38,6 +38,8 @@ format:
   html:
     theme: cosmo
     css: styles.css
+    # Number chapters only; subheadings stay unnumbered.
+    number-depth: 1
     # Wider text column for maps, timelines and tables (Quarto's default body is 800px).
     grid:
       sidebar-width: 260px
