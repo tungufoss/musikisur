@@ -790,11 +790,11 @@ def artist_timeline(artist_slug: str) -> str:
     legend = (
         '<p class="tl-legend"><i class="fa-solid fa-egg"></i> fæðing · <i class="fa-solid fa-dove"></i> andlát · '
         '<span class="tl-key tl-marriage"></span> hjónaband · <span class="tl-key tl-partner"></span> samband · '
+        '<i class="fa-solid fa-baby tl-child"></i> barn fæðist · '
         '<span class="tl-key tl-career"></span> ferill · '
         'Billboard: <span class="tl-key" style="background:#d6e6f8"></span><span class="tl-key" style="background:#9dc0ea"></span>'
         '<span class="tl-key" style="background:#4a86d0"></span><span class="tl-key" style="background:#1b4f9c"></span> '
         'besta sæti ársins (dekkra = ofar; nánar í Billboard-hlutanum) · '
-        '<i class="fa-solid fa-baby tl-child"></i> barn fæðist · '
         '<i class="fa-solid fa-compact-disc tl-album"></i> hljóðversplata · '
         '<i class="fa-solid fa-compact-disc tl-focus"></i> fókusplata · '
         '<i class="fa-solid fa-rug tl-cover"></i> ábreiða · '

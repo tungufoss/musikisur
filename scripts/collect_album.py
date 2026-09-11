@@ -158,6 +158,8 @@ def main() -> None:
     context["places"] = [p for p in context["places"] if not (p["role"] == "mentioned" and p["qid"] in curated)]
     context["places"] += manual["places"]
     context["events"] += manual["events"]
+    # Each song once across solo, bands and work for others; needs the band_leave events above.
+    context["events"] = musicbrainz.first_songs(context["events"])
     sources += manual["sources"]
     tracks = tables["tracks"]
     for sample in manual["samples"]:

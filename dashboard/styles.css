@@ -160,12 +160,15 @@
 .tl-chart-year { height: 14px; border-radius: 3px; }
 .fact-box.fact-chart { border-left-color: #0dcaf0; }
 .tl-family { color: #d63384; }
-.tl-child { color: #20c997; }
+/* The child icon keeps the ink of the birth and death icons (.tl-icon). */
 .tl-approx { opacity: 0.5; }
-.tl-career { background: #495057; height: 10px; border-radius: 5px; }
+/* Light grey like the life line, so the band periods on top stand out. */
+.tl-career { background: #bbb; height: 10px; border-radius: 5px; }
 
 .tl-icon {
   position: absolute;
+  /* Icons (egg, dove, child, albums) always lie over the bars, whatever the drawing order. */
+  z-index: 2;
   transform: translate(-50%, -50%);
   color: #444;
   font-size: 1rem;
