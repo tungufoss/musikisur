@@ -54,6 +54,16 @@
 .fact-box.fact-award { border-left-color: #d4a017; }
 .fact-box.fact-marriage { border-left-color: #d63384; }
 .fact-box.fact-songs { border-left-color: #fd7e14; }
+.fact-box.fact-spotify { border-left-color: #1db954; }
+
+.fact-value a {
+  text-decoration: none;
+}
+
+/* Callouts next to a floated cover or photo sit beside it instead of running underneath. */
+.callout {
+  display: flow-root;
+}
 
 .fact-label {
   font-size: 0.72rem;
