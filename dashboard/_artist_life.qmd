@@ -18,3 +18,24 @@ from music_life.dashboard import artist_timeline
 
 print(artist_timeline(ARTIST_SLUG))
 ```
+
+### Billboard
+
+Hrágögnin á bak við Billboard-reitina á tímalínunni: hvert lag og hver plata á Billboard Hot 100 og Billboard 200, frá fyrstu viku til síðustu.
+
+```{python}
+#| output: asis
+from music_life.dashboard import chart_table
+
+print(chart_table(ARTIST_SLUG))
+```
+
+Sæti viku fyrir viku á meðan lagið eða platan var á listanum (1. sæti efst). Hver ferill byrjar í viku 1 svo auðvelt sé að bera þá saman; litur fylgir flytjanda eins og á tímalínunni.
+
+```{python}
+from music_life.dashboard import chart_plot
+
+chart_plot(ARTIST_SLUG)
+```
+
+*Heimild: vikulegir Billboard-listar úr [utdata/rwd-billboard-data](https://github.com/utdata/rwd-billboard-data) (MIT). Billboard á listana.*
