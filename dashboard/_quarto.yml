@@ -32,6 +32,11 @@ format:
   html:
     theme: cosmo
     css: styles.css
+    # Wider text column for maps, timelines and tables (Quarto's default body is 800px).
+    grid:
+      sidebar-width: 260px
+      body-width: 1150px
+      margin-width: 220px
     include-in-header:
       # Font Awesome (timeline icons such as fa-rug); Bootstrap Icons ship with Quarto.
       text: |
