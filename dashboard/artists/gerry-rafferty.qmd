@@ -55,6 +55,21 @@ Smellirnir hafa reynst Rafferty einstaklega gjöfulir, þótt hann hafi aldrei v
 
 *Heimild: greinarnar [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0).*
 
+#### „Stuck in the Middle with You“ og Reservoir Dogs {#stuck-in-the-middle}
+
+- Stærsti smellur Stealers Wheel (fyrsti spilarinn í [Helstu smellir](#helstu-smellir)) er eftir Rafferty og Joe Egan. Hann fór í 6. sæti Billboard Hot 100 og 8. sæti breska listans árið 1973.
+- Nær tuttugu árum síðar notaði Quentin Tarantino lagið í fyrstu mynd sinni, *Reservoir Dogs* (1992), í senunni þar sem Mr. Blonde dansar á meðan hann pínir bundinn lögreglumann. Tarantino sagðist hafa sagt leikurunum í prufunum að hann ætlaði að nota lagið í senunni. Um fyrsta leikarann sem lék senuna við lagið sagði hann: „the guy didn't even have a great audition, but it was like watching the movie.“
+- Rafferty neitaði hins vegar að veita leyfi fyrir endurútgáfu lagsins. Heimildin segir ekki hvers vegna, en það fellur að því að hann leyfði aldrei að „Baker Street“ væri notað í auglýsingum (sjá [Smellirnir borga sig](#smellirnir-borga-sig)).
+- Danslagaútgáfa söngkonunnar Louise fór á topp 10 í Bretlandi í september 2001, og myndbandið sótti mikið í senuna úr *Reservoir Dogs*.
+- Árið 2008 endurvakti Tony Williams Stealers Wheel, án Raffertys og Egans, eftir að iTunes og K-tel höfðu samband, og hljómsveitin tók lagið upp aftur.
+
+::: {.callout-tip}
+## Úr gögnunum
+Á Billboard Hot 100 er lagið aðeins árið 1973: 18 vikur og best 6. sæti. Það kom ekki aftur inn á listann eftir *Reservoir Dogs*. MusicBrainz skráir endurupptökuna, og önnur lög endurvöktu hljómsveitarinnar, undir Stealers Wheel. Rafferty kom þar hvergi nærri, svo lög sem hljómsveitin gaf fyrst út eftir að hann hætti eru ekki talin með lögum hans á tímalínunni.
+:::
+
+*Heimild: greinarnar [Stuck in the Middle with You](https://en.wikipedia.org/wiki/Stuck_in_the_Middle_with_You), [Stealers Wheel](https://en.wikipedia.org/wiki/Stealers_Wheel) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0); Billboard-gögn úr utdata/rwd-billboard-data.*
+
 {{< include ../_artist_timeline.qmd >}}
 
 ### Fjölskylda og ástir
