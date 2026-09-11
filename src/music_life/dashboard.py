@@ -363,8 +363,17 @@ def artist_tldr(artist_slug: str) -> str:
         age = f", {int(age_at_release(born, died, died.year))} ára" if born else ""
         lines.append(f"- **Lést:** {format_date(died)}{where}{age}")
     if "career_start" in first:
-        end = first["career_end"][0].year if "career_end" in first else ""
-        lines.append(f"- **Ferill:** {first['career_start'][0].year}–{end}")
+        start, start_precision = first["career_start"]
+        span, ages = f"{start.year}–", [_age_text(born, start, start_precision)] if born else []
+        if "career_end" in first:
+            end, end_precision = first["career_end"]
+            span += str(end.year)
+            if born:
+                # A career that ends in the year of death ends at the age of death.
+                ages.append(str(int(age_at_release(born, died, died.year))) if died and died.year == end.year
+                            else _age_text(born, end, end_precision))
+        age_text = f" (frá {ages[0]} ára til {ages[1]} ára)" if len(ages) == 2 else f" (frá {ages[0]} ára)" if ages else ""
+        lines.append(f"- **Ferill:** {span}{age_text}")
     albums = [when for kind, when, *_ in events if kind == "album"]
     if albums:
         posthumous = sum(1 for when in albums if died and when > died)
