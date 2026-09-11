@@ -87,9 +87,21 @@ MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“.
 :::
 ::::
 
-Textinn við „Right Down the Line“, birtur af Genius:
+Textarnir við smellina tvo, birtir af Genius:
+
+:::: {layout-ncol="2"}
+::: {}
+**„Baker Street“**
+
+{{< genius 84258 url="https://genius.com/Gerry-rafferty-baker-street-lyrics" >}}
+:::
+
+::: {}
+**„Right Down the Line“**
 
 {{< genius 184903 url="https://genius.com/Gerry-rafferty-right-down-the-line-lyrics" >}}
+:::
+::::
 
 Meira um Cörlu og fjölskylduna er á [síðunni um Gerry Rafferty](../artists/gerry-rafferty.qmd#fjölskylda-og-ástir).
 
