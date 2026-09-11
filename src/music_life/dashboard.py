@@ -337,6 +337,8 @@ def _gap(previous: date | None, current: date) -> str:
     if previous is None:
         return "—"
     months = (current.year - previous.year) * 12 + current.month - previous.month
+    if months == 0:
+        return "sama ár" if current.year == previous.year and current.month == 1 else "sama mánuð"
     return f"{months} mán." if months < 24 else f"{round(months / 12)} ár"
 
 
