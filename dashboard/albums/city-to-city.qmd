@@ -69,12 +69,8 @@ print(album_cover(ALBUM_SLUG))
 
 ::: {.callout-tip}
 ## Úr gögnunum
-MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“. Raphael Ravenscroft leikur á saxófón í aðeins tveimur lögum plötunnar, „Baker Street“ og „Island“, og Hugh Burns leikur á rafmagnsgítar í „Baker Street“. Gögnin segja hver er skráður höfundur, en ekki hver átti hugmyndina að riffinu. Þar greinir heimildum á.
+MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“. Raphael Ravenscroft leikur á saxófón í aðeins tveimur lögum plötunnar, „Baker Street“ og „Island“ {{< spotify 0WmJhww5BZROmkmAaOZUXj >}}, og Hugh Burns leikur á rafmagnsgítar í „Baker Street“. Gögnin segja hver er skráður höfundur, en ekki hver átti hugmyndina að riffinu. Þar greinir heimildum á.
 :::
-
-„Island“, hitt lagið með saxófóni Ravenscrofts:
-
-{{< spotify-player 0WmJhww5BZROmkmAaOZUXj >}}
 
 - **Ravenscroft:** Rafferty bað hann að fylla upp í nokkrar eyður í laginu og mest af því sem hann lék var gamalt blúsriff. Rafferty hefði ekki rétt honum neinar nótur.
 - **Rafferty:** Hann var pirraður á því að fólk teldi Ravenscroft hafa samið riffið: „It was my line. I sang it to him.“
