@@ -1,29 +1,35 @@
 project:
-  type: website
+  type: book
   output-dir: _site
+  resources:
+    - assets/logo/*.svg
 
-website:
-  title: "Music Life"
-  navbar:
-    left:
-      - href: index.qmd
-        text: Overview
-      - href: album.qmd
-        text: Focus album
-      - href: charts.qmd
-        text: Chart context
-      - href: screen.qmd
-        text: Film & TV
-      - href: methodology.qmd
-        text: Sources & method
+lang: is
+
+book:
+  title: "Tónlistararfurinn"
+  subtitle: "Plötuklúbbur Inga — gagnakafið"
+  repo-url: https://github.com/tungufoss/musikisur
+  site-url: https://tungufoss.github.io/musikisur/
   page-footer:
-    left: "Music Life Dashboard — sourced research prototype"
+    left: "MÚSÍKISUR — stundum reynist lagalisti vera flóknara skjal en hann lítur út fyrir að vera."
+    right: >-
+      Gögn frá
+      [![Spotify](/assets/logo/spotify.svg){.footer-logo}](https://www.spotify.com)
+      [![Discogs](/assets/logo/discogs.svg){.footer-logo}](https://www.discogs.com)
+      [![TMDB](/assets/logo/tmdb.svg){.footer-logo}](https://www.themoviedb.org)
+  chapters:
+    - index.qmd
+    # BEGIN GENERATED CHAPTERS (python scripts/build_book.py; do not edit by hand)
+    # END GENERATED CHAPTERS
+  appendices:
+    - methodology.qmd
 
 format:
   html:
-    toc: true
     theme: cosmo
-    code-fold: true
+    css: styles.css
+    toc: true
 
 execute:
   echo: false

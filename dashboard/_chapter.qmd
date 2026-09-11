@@ -1,0 +1,30 @@
+<!-- Shared chapter body. Each albums/<slug>.qmd sets ALBUM_SLUG, then includes this file. -->
+
+```{python}
+#| output: asis
+from music_life.dashboard import album_facts, chart_context, demo_notice, screen_use, tracklist
+
+print(demo_notice())
+print(album_facts(ALBUM_SLUG))
+```
+
+## Lagalisti
+
+```{python}
+#| output: asis
+print(tracklist(ALBUM_SLUG))
+```
+
+## Á vinsældalistum
+
+```{python}
+#| output: asis
+print(chart_context(ALBUM_SLUG))
+```
+
+## Í kvikmyndum og sjónvarpi
+
+```{python}
+#| output: asis
+print(screen_use(ALBUM_SLUG))
+```

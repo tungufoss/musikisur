@@ -1,34 +1,45 @@
----
-title: "Gerry Rafferty"
-subtitle: "Life, music and historical context"
----
+# Inngangur {.unnumbered}
+
+> MÚSÍKISUR — stundum reynist lagalisti vera flóknara skjal en hann lítur út fyrir að vera.
+
+## Um þáttinn
+
+**Tónlistararfurinn: Plötuklúbbur Inga** er hlaðvarp þar sem Birna, Helga og Kristín fara í gegnum plötusafn, eina plötu í einu. Þið kannist kannski við þær úr ÍSKISUM, þar sem þær ræddu Ísfólkið í rúmlega hundrað þáttum.
+
+::: {.callout-note}
+## Staðgengill — Birna skrifar
+Hér kemur texti Birnu um uppruna listans.
+:::
+
+## Gagnakafið
+
+*Helga skrifar*
+
+Á sínum tíma fór ég í umfangsmikið gagnakaf um Ísfólkið, sem við ræddum í ÍSKISUM 2016–2020: 142 þættir og 129,4 klukkustundir af efni. Í þetta sinn geri ég gagnakafið jafnóðum.
+
+Plötulistinn er fjársjóður af áhugaverðum gögnum: hver samdi lögin og hver spilaði á plötunni, hvernig henni gekk á vinsældalistum, hvað annað var vinsælt á sama tíma og í hvaða kvikmyndir og sjónvarpsþætti lögin hafa ratað. Hver kafli hér er undirbúningurinn minn fyrir viðkomandi þátt.
+
+Ég er ekki tónlistarsérfræðingur. En með almennilegu gagnakafi kemst maður ansi langt með að þykjast vera það.
+
+## Hvernig bókin er uppbyggð
+
+Hver **hluti** er einn áratugur og hver **kafli** ein plata af listanum, flytjandi og plata. Aftast er viðauki um heimildir og aðferðir.
+
+## Listinn í tölum
 
 ```{python}
-import duckdb
-from IPython.display import display
+#| output: asis
+from music_life.dashboard import list_overview
 
-con = duckdb.connect("../data/processed/music_life.duckdb", read_only=True)
-
-artist = con.execute("""
-SELECT name, birth_date, death_date, birth_place
-FROM artists WHERE slug='gerry-rafferty'
-""").df()
-
-focus = con.execute("""
-SELECT title, original_release_date, spotify_url
-FROM albums
-WHERE is_focus_album
-ORDER BY original_release_date
-""").df()
-
-display(artist)
-display(focus)
+print(list_overview())
 ```
 
-## Research lens
+## Spurningar sem gögnin reyna að svara
 
-This pilot follows **Gerry Rafferty**, with **City to City** as the first focus album.
-
-The production dashboard is intended to combine documented life events, collaborators, external credits, focus-album personnel and songs, historical chart trajectories, contemporary chart context, Spotify links, and clearly labelled sourced versus project-derived interpretation.
-
-> Starter rows are build-test data only, not the final source-backed dataset.
+| Spurning úr þættinum | Hvað gögnin geta sagt | Staða |
+|---|---|---|
+| Standast plöturnar tímans tönn? Er til viðurkenndur mælikvarði á tannþol tónlistar? | Enginn viðurkenndur mælikvarði er til. Það má þó bera saman gengi á vinsældalistum við útgáfu, notkun í kvikmyndum og sjónvarpi áratugum síðar og hlustun í dag. Samsettur „tannþolsstuðull“ yrði heimasmíðaður og merktur sem slíkur. | Í vinnslu |
+| Hvenær fær plata sem var illa tekið formlega uppreist æru? | Bera saman dóma við útgáfu og síðara endurmat, t.d. lista yfir bestu plötur allra tíma. | Heimildir vantar |
+| Hverjar eru lágmarkskröfur um hlustun í plötuklúbbi? | Lengd hverrar plötu í mínútum og heildarhlustunartími listans. | Lengd laga vantar enn |
+| Hvenær verða tengsl milli kynslóða til? | „Arfleifðarbilið“: hve mörg ár líða frá útgáfu plötunnar þar til hún er rædd í þættinum. | Reiknast þegar þættir fá dagsetningu |
+| Er hægt að rekja persónueinkenni til tiltekinna laga? | Gögnin eru einfaldlega ekki nógu góð. Þótt tvennt fari saman í tíma sannar það ekki orsakasamhengi. | Utan gagnanna |

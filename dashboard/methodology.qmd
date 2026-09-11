@@ -1,22 +1,37 @@
----
-title: "Sources & method"
----
+# Heimildir og aðferðir
 
-| Layer | Preferred sources | Purpose |
+| Svið | Helstu heimildir | Til hvers |
 |---|---|---|
-| Music identity | MusicBrainz | artists, groups, release groups, releases, recordings, works, relationships |
-| Biography | Wikidata + publications | dates, people, places, relationships and narrative events |
-| Release detail | Discogs | editions, personnel and production credits |
-| Charts | Billboard / Official Charts / archives | historical weekly chart observations |
-| Listening | Spotify | current album/track IDs, URIs and links |
-| Screen identity | TMDB + IMDb cross-IDs | movies, series, episodes, dates and stable screen IDs |
-| Screen music | source-backed soundtrack/sync observations | links from works/recordings to films and TV episodes |
-| Analysis | project code / manual / LLM-assisted | themes, candidate claims, networks, derived metrics |
+| Auðkenni tónlistar | MusicBrainz | flytjendur, hljómsveitir, plötur, útgáfur, upptökur, verk og tengsl |
+| Æviágrip | Wikidata og útgefið efni | dagsetningar, fólk, staðir og atburðir |
+| Útgáfur | Discogs | einstakar útgáfur, flytjendur og upptökustjórn |
+| Vinsældalistar | Billboard, Official Charts og söfn | vikulegir vinsældalistar |
+| Hlustun | Spotify | núverandi auðkenni og tenglar á plötur og lög |
+| Kvikmyndir og sjónvarp | TMDB og IMDb-auðkenni | kvikmyndir, þáttaraðir, einstakir þættir og dagsetningar |
+| Tónlist á skjánum | heimildir um notkun laga | tengsl laga og upptakna við kvikmyndir og sjónvarpsþætti |
+| Greining | eigin kóði, handvinnsla og gervigreind | þemu, tilgátur, tengslanet og afleiddir mælikvarðar |
 
-## Provenance
+## Gagnaveitur
 
-Conflicting source observations should be preserved rather than silently flattened.
+[![Spotify](assets/logo/spotify.svg){.provider-logo}](https://www.spotify.com)
+Tenglar á plötur og lög koma frá Spotify.
 
-## Interpretation
+[![Discogs](assets/logo/discogs.svg){.provider-logo}](https://www.discogs.com)
+Data provided by Discogs.
 
-The project distinguishes source-backed fact, published interpretation, manually curated research, LLM-extracted candidate claims, and project-derived analysis. Temporal or thematic overlap does not itself establish causality.
+[![TMDB](assets/logo/tmdb.svg){.provider-logo}](https://www.themoviedb.org)
+This product uses the TMDB API but is not endorsed or certified by TMDB.
+
+Vikulegir Billboard-listar (Hot 100 og Billboard 200) koma úr safni [utdata/rwd-billboard-data](https://github.com/utdata/rwd-billboard-data) (MIT). Billboard á listana sjálfa.
+
+## Uppruni gagna
+
+Þegar heimildum ber ekki saman eru allar útgáfur varðveittar frekar en að ein sé valin í hljóði.
+
+## Kvikmyndir og sjónvarp
+
+Kvikmynd eða þáttur og sú fullyrðing að lag heyrist í honum eru tvær aðskildar staðreyndir. TMDB er notað til að auðkenna kvikmyndir og þætti, en fullyrðingin um að lag heyrist þar þarf sína eigin heimild. Ef heimild nefnir lagið en ekki tiltekna upptöku er tengt við verkið í stað þess að giska á upptöku.
+
+## Túlkun
+
+Gerður er greinarmunur á staðreyndum með heimild, útgefinni túlkun, handunninni rannsókn, tilgátum sem gervigreind dró út og afleiddri greiningu verkefnisins. Þótt tvennt gerist á sama tíma eða fjalli um sama efni sannar það ekki orsakasamhengi.

@@ -100,12 +100,30 @@ Every source adapter must document:
 - What Spotify album/track corresponds to the historical entity?
 - What is sourced fact vs published interpretation vs project-derived analysis?
 
+## Data bundles and branches
+
+- Curated data produced by the skills is stored as Parquet, one bundle per focus album: `data/curated/<artist-slug>/<album-slug>/`. A Parquet file holds one table, so a bundle is a folder with one file per table (`sources`, `artist`, `album`, `tracks`, optional `credits`).
+- Table specs live in `src/music_life/bundles.py`. Write bundles only through `write_bundle()`, which fixes column types and row order so re-running a skill on unchanged data produces identical files.
+- Bundle rows use natural keys (slugs, disc/track numbers, `source_key`), never database IDs. `scripts/build_db.py` rebuilds DuckDB from scratch and assigns IDs.
+- Research each focus album on its own branch named `<artist-slug>/<album-slug>` (for example `gerry-rafferty/city-to-city`). Commit that album's bundle, chapter and config entries there.
+- Merge data branches into `main` with **squash merge only**, then delete the branch, so each bundle lands on `main` as one version instead of every intermediate re-write from the data digging.
+- Never commit bundle Parquet files directly on `main`.
+
+## Dashboard (Quarto book)
+
+- The site accompanies the podcast *Tónlistararfurinn: Plötuklúbbur Inga*; visible text is Icelandic, code and docs are English.
+- Parts are decades and chapters are focus albums. `scripts/build_book.py` generates both from `config/focus-albums.yml` and rewrites the marked chapter block in `dashboard/_quarto.yml`; never edit that block by hand.
+- Decade and chapter files are created once and then hand-edited (talking points live in `dashboard/albums/<slug>.qmd`). The script never overwrites them.
+- Chapter data blocks come from `dashboard/_chapter.qmd` and `music_life.dashboard`; keep queries there, not in chapter files.
+- The intro placeholder about the origin of the album list is Birna's to write. Do not write, infer or research anything about her family's personal circumstances anywhere in this repo.
+
 ## Before committing
 
 ```bash
-python scripts/init_db.py
-python scripts/build_demo_data.py
+pytest -m "not live"
+python scripts/build_db.py
 python scripts/validate.py
+python scripts/build_book.py
 quarto render dashboard
 ```
 

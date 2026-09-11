@@ -53,10 +53,10 @@ Requires Python 3.12+ and Quarto.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
-python scripts/init_db.py
-python scripts/build_demo_data.py
+pip install -e ".[dev]"
+python scripts/build_db.py
 python scripts/validate.py
+python scripts/build_book.py
 quarto preview dashboard
 ```
 

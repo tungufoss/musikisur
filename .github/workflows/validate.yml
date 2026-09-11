@@ -14,11 +14,12 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -e .
+      - run: pip install -e ".[dev]"
+      - run: pytest -m "not live"
       - run: |
-          python scripts/init_db.py
-          python scripts/build_demo_data.py
+          python scripts/build_db.py
           python scripts/validate.py
+          python scripts/build_book.py
       - uses: quarto-dev/quarto-actions/render@v2
         with:
           path: dashboard

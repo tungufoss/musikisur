@@ -17,7 +17,8 @@ Promote an album to a research focus while retaining its surrounding life, caree
 9. Ingest complete surrounding weekly chart snapshots where possible.
 10. Refresh contemporary-context analysis.
 11. Add sourced life/career events relevant to the period without implying causation.
-12. Validate and render Quarto.
+12. Run `python scripts/build_book.py` to create the chapter (and its decade part if new), then add talking points under "Punktar fyrir þáttinn" in `dashboard/albums/<slug>.qmd`.
+13. Validate and render Quarto.
 
 ## Spotify matching
 
