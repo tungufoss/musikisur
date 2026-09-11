@@ -94,7 +94,7 @@
   position: relative;
   flex: none;
   width: 6rem;
-  height: 195px;
+  height: 225px;
 }
 
 .tl-labels div {
@@ -107,7 +107,7 @@
 .tl-track {
   position: relative;
   flex: 1;
-  height: 195px;
+  height: 225px;
   border-bottom: 1px solid #ccc;
 }
 
@@ -139,6 +139,9 @@
 .tl-marriage { background: #d63384; }
 .tl-partner { background: #f3a6c8; }
 .tl-band-period { height: 12px; border-radius: 6px; }
+.tl-chart { background: #2780e3; height: 8px; border-radius: 2px; }
+.tl-chart-album { height: 3px; opacity: 0.7; margin-top: 7px; }
+.fact-box.fact-chart { border-left-color: #0dcaf0; }
 .tl-family { color: #d63384; }
 .tl-child { color: #20c997; }
 .tl-approx { opacity: 0.5; }

@@ -21,6 +21,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6
 
+      - name: Fetch Billboard chart files (sparse submodule)
+        run: bash scripts/fetch_charts.sh
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 

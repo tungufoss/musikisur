@@ -1,0 +1,3 @@
+[submodule "vendor/rwd-billboard-data"]
+	path = vendor/rwd-billboard-data
+	url = https://github.com/utdata/rwd-billboard-data

@@ -54,6 +54,7 @@ Requires Python 3.12+ and Quarto.
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
+bash scripts/fetch_charts.sh   # Billboard chart files only (~50 MB) from the pinned submodule
 python scripts/build_db.py
 python scripts/validate.py
 python scripts/build_book.py
