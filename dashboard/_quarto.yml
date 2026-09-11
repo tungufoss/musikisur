@@ -26,9 +26,17 @@ book:
       MÚSÍKISUR — stundum reynist lagalisti vera flóknara skjal en hann lítur út fyrir að vera.
     right: >-
       Gögn frá
-      [![Spotify](/assets/logo/spotify.svg){.footer-logo}](https://www.spotify.com)
-      [![Discogs](/assets/logo/discogs.svg){.footer-logo}](https://www.discogs.com)
-      [![TMDB](/assets/logo/tmdb.svg){.footer-logo}](https://www.themoviedb.org)
+      [![MusicBrainz](/assets/logo/musicbrainz.svg "MusicBrainz"){.footer-logo}](https://musicbrainz.org)
+      [![Cover Art Archive](/assets/logo/coverartarchive.svg "Cover Art Archive"){.footer-logo}](https://coverartarchive.org)
+      [![Discogs](/assets/logo/discogs.svg "Discogs"){.footer-logo}](https://www.discogs.com)
+      [![Spotify](/assets/logo/spotify.svg "Spotify"){.footer-logo}](https://www.spotify.com)
+      [![Wikidata](/assets/logo/wikidata.svg "Wikidata"){.footer-logo}](https://www.wikidata.org)
+      [![Wikipedia](/assets/logo/wikipedia.svg "Wikipedia"){.footer-logo}](https://en.wikipedia.org)
+      [![Wikimedia Commons](/assets/logo/commons.svg "Wikimedia Commons"){.footer-logo}](https://commons.wikimedia.org)
+      [![TMDB](/assets/logo/tmdb.svg "TMDB"){.footer-logo}](https://www.themoviedb.org)
+      [![IMDb](/assets/logo/imdb.svg "IMDb"){.footer-logo}](https://www.imdb.com)
+      [![Genius](/assets/logo/genius.svg "Genius"){.footer-logo}](https://genius.com)
+      [![Billboard-gögn (utdata/rwd-billboard-data)](/assets/logo/github.svg "Billboard-gögn: utdata/rwd-billboard-data"){.footer-logo}](https://github.com/utdata/rwd-billboard-data)
   chapters:
     - index.qmd
     # BEGIN GENERATED CHAPTERS (python scripts/build_book.py; do not edit by hand)
