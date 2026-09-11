@@ -8,10 +8,32 @@ samples:
     url: https://upload.wikimedia.org/wikipedia/en/5/5c/Baker_Street_%28song%29.ogg
     source: https://en.wikipedia.org/wiki/File:Baker_Street_(song).ogg
 
+# Homes (shown as residences instead of plain "mentioned" points).
 places:
   - qid: Q27
     role: residence
     context: "In 2008, Rafferty moved away from California and briefly rented a home in Ireland."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - qid: Q2351253
+    role: residence
+    context: "Late 1970s onwards: the family farm near the Kent–Sussex border (Tye Farm, Hartfield)."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - qid: Q25610
+    role: residence
+    context: "Late 1970s onwards: the family's home in Hampstead, London, alongside the farm."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - qid: Q99
+    role: residence
+    context: "Lived in California until 2008, when he moved to Ireland."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - qid: Q1610423
+    role: residence
+    context: "Rafferty and Enzina Fuschini rented a large home together in Upton, near Poole."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  # Other places from the story.
+  - qid: Q656054
+    role: mentioned
+    context: "Fuschini said he proposed to her at the Ritz Hotel in Paris on Christmas Eve 2009."
     source: https://en.wikipedia.org/wiki/Gerry_Rafferty
 
 events:
@@ -68,8 +90,9 @@ events:
     label: "Carla Ventilla"
     source: https://en.wikipedia.org/wiki/Gerry_Rafferty
 
-  # Later partner: they met in 2008 (Wikipedia); the end is not documented, so it runs to his death.
-  - date: 2008
+  # Later partner: they met in 2008; together from 2009 (she cared for him that year and he
+  # proposed on Christmas Eve 2009, per Wikipedia) until his death.
+  - date: 2009
     kind: relationship
     label: "Enzina Fuschini"
     source: https://en.wikipedia.org/wiki/Gerry_Rafferty
