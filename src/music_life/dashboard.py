@@ -236,32 +236,40 @@ def album_facts(slug: str) -> str:
     title, artist, released, spotify_url, track_count, duration_ms, born, artist_slug = row
     # MusicBrainz often only knows the year; fall back to the year in config.
     year = released.year if released else next((c.year for c in load_chapters() if c.slug == slug), None)
-    lines = [f"- **Flytjandi:** [{artist}](../artists/{artist_slug}.qmd)" if artist else "- **Flytjandi:** —"]
-    if released:
-        lines.append(f"- **Útgáfudagur:** {format_date(released)}")
-    elif year:
-        lines.append(f"- **Útgáfuár:** {year}")
+    # Chapters live in albums/, so the artist page is one directory up.
+    artist_link = f'<a href="../artists/{artist_slug}.html">{html.escape(artist)}</a>' if artist else ""
+    boxes = [_fact_box("Flytjandi", artist or "—", value_html=artist_link)]
     if year:
-        lines.append(f"- **Aldur plötunnar í dag:** {this_year() - year} ár")
+        age = this_year() - year
+        ago = f"fyrir {age} {'ári' if age % 10 == 1 and age % 100 != 11 else 'árum'}"
+        boxes.append(_fact_box("Útgáfudagur", format_date(released), ago) if released
+                     else _fact_box("Útgáfuár", year, ago))
     if born and year:
-        lines.append(f"- **Aldur flytjanda við útgáfu:** {age_at_release(born, released, year)} ára")
-    lines.append(f"- **Lög:** {track_count}")
+        boxes.append(_fact_box("Aldur flytjanda", f"{age_at_release(born, released, year)} ára", "við útgáfu"))
+    boxes.append(_fact_box("Lög", track_count))
     if duration_ms:
-        lines.append(f"- **Lengd:** {duration_ms / 60000:.0f} mínútur (lágmarkshlustun fyrir virkan klúbbmeðlim)")
+        boxes.append(_fact_box("Lengd", f"{duration_ms / 60000:.0f} mín.", "lágmarkshlustun fyrir virkan klúbbmeðlim"))
     if spotify_url:
-        lines.append(f"- **Hlusta:** {spotify_link(spotify_url, title)}")
-    cover = ""
-    if (COVERS_DIR / f"{slug}.jpg").exists():
-        with connect_ro() as con:
-            source = _image_source(con, slug, "coverart-front")
-        credit = (f'Umslag: <a href="{html.escape(source[0])}">Cover Art Archive</a>; höfundarréttur hjá rétthöfum'
-                  if source else "Umslag")
-        # Chapters live in albums/, so the cover is one directory up.
-        cover = ("```{=html}\n"
-                 f'<figure class="album-cover"><img src="../assets/covers/{slug}.jpg" '
-                 f'alt="Umslag plötunnar {html.escape(title)}"><figcaption>{credit}</figcaption></figure>\n'
-                 "```\n\n")
-    return cover + "\n".join(lines) + "\n"
+        boxes.append(_fact_box("Hlusta", title, "smelltu til að spila hér", "fact-spotify",
+                               value_html=spotify_link(spotify_url, html.escape(title))))
+    return '```{=html}\n<div class="fact-boxes">' + "".join(boxes) + "</div>\n```\n"
+
+
+def album_cover(slug: str) -> str:
+    """The album cover with its credit, floated right so the chapter's opening text wraps around it."""
+    if not (COVERS_DIR / f"{slug}.jpg").exists():
+        return ""
+    with connect_ro() as con:
+        found = con.execute("SELECT title FROM albums WHERE slug = ?", [slug]).fetchone()
+        source = _image_source(con, slug, "coverart-front")
+    title = found[0] if found else slug
+    credit = (f'Umslag: <a href="{html.escape(source[0])}">Cover Art Archive</a>; höfundarréttur hjá rétthöfum'
+              if source else "Umslag")
+    # Chapters live in albums/, so the cover is one directory up.
+    return ("```{=html}\n"
+            f'<figure class="album-cover"><img src="../assets/covers/{slug}.jpg" '
+            f'alt="Umslag plötunnar {html.escape(title)}"><figcaption>{credit}</figcaption></figure>\n'
+            "```\n")
 
 
 def _image_source(con: duckdb.DuckDBPyConnection, slug: str, source_key: str) -> tuple[str, str] | None:
@@ -444,10 +452,13 @@ def artist_photo(artist_slug: str) -> str:
             "Wikimedia Commons</figcaption></figure>\n```\n")
 
 
-def _fact_box(label: str, value: object, sub: str = "", css: str = "", title: str = "") -> str:
+def _fact_box(
+    label: str, value: object, sub: str = "", css: str = "", title: str = "", value_html: str = ""
+) -> str:
+    """One dashboard box; ``value_html`` (trusted markup such as a link) replaces the escaped value."""
     tip = f' title="{html.escape(title)}"' if title else ""
     return (f'<div class="fact-box {css}"{tip}><div class="fact-label">{label}</div>'
-            f'<div class="fact-value">{html.escape(str(value))}</div>'
+            f'<div class="fact-value">{value_html or html.escape(str(value))}</div>'
             f'<div class="fact-sub">{html.escape(sub)}</div></div>')
 
 

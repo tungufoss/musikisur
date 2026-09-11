@@ -37,6 +37,15 @@ title: "{heading}"
 ALBUM_SLUG = "{slug}"
 ```
 
+```{{python}}
+#| output: asis
+from music_life.dashboard import album_cover
+
+print(album_cover(ALBUM_SLUG))
+```
+
+*Hér kemur stutt kynning á plötunni; textinn flæðir í kringum umslagið.*
+
 {{{{< include ../_chapter.qmd >}}}}
 
 ## Punktar fyrir þáttinn
