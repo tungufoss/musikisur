@@ -16,7 +16,7 @@ ALBUM_SLUG = "city-to-city"
 
 ### Aðdragandinn: þrjú ár í banni
 
-- Eftir að Stealers Wheel hætti árið 1975 lenti Rafferty í lagadeilum sem komu í veg fyrir að hann mætti gefa út nokkuð efni í þrjú ár.
+- Eftir að Stealers Wheel hætti árið 1975 lenti Rafferty í lagadeilum sem komu í veg fyrir að hann mætti gefa út nokkuð efni í þrjú ár. Hljómsveitin hafði lengi glímt við lagaþras, vaxandi spennu milli Raffertys og Joe Egan og vandræði í umboðsmálum, og upptökustjórarnir Leiber og Stoller áttu sjálfir í rekstrarvanda. Heimildirnar segja þó ekki beinlínis um hvað deilurnar snerust, aðeins að þær leystust árið 1978 ([Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) og [Stealers Wheel](https://en.wikipedia.org/wiki/Stealers_Wheel) á ensku Wikipediu).
 - *City to City* kom út 20. janúar 1978. Hún var fyrsta sólóplata hans í sex ár og fyrsta útgáfa hans af nokkru tagi síðan 1975.
 - Útgáfufyrirtækið United Artists vildi hafa titillagið sem fyrstu smáskífu, en Rafferty taldi „Baker Street“ betri kost. Upptökustjórinn Hugh Murphy sagði síðar að þeir hefðu þurft að grátbiðja fyrirtækið um að gefa lagið út sem smáskífu: „They actually said it was too good for the public.“
 - Platan velti *Saturday Night Fever* úr 1. sæti Billboard 200 hinn 8. júlí 1978 og náði platínusölu.
@@ -46,7 +46,7 @@ ALBUM_SLUG = "city-to-city"
 
 ::: {.callout-tip}
 ## Úr gögnunum
-MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“. Raphael Ravenscroft leikur á saxófón í aðeins tveimur lögum plötunnar, „Baker Street“ og „Island“, og Hugh Burns leikur á rafgítar í „Baker Street“. Gögnin segja hver er skráður höfundur, en ekki hver átti hugmyndina að riffinu. Þar greinir heimildum á.
+MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“. Raphael Ravenscroft leikur á saxófón í aðeins tveimur lögum plötunnar, „Baker Street“ og „Island“, og Hugh Burns leikur á rafmagnsgítar í „Baker Street“. Gögnin segja hver er skráður höfundur, en ekki hver átti hugmyndina að riffinu. Þar greinir heimildum á.
 :::
 
 „Island“, hitt lagið með saxófóni Ravenscrofts:
