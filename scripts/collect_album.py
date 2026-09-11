@@ -146,6 +146,12 @@ def main() -> None:
     for row in context["events"]:
         if row["kind"] == "album" and row["detail"] == release_group["id"] and focus_date:
             row["event_date"], row["date_precision"] = str(focus_date), 11
+    # Hand-curated release dates (manual.yml) win over everything above.
+    for fix in manual["release_dates"]:
+        for row in context["events"]:
+            if row["kind"] in ("album", "band_album", "single") and row["label"] == fix["title"]:
+                row["event_date"], row["date_precision"] = fix["event_date"], fix["date_precision"]
+                row["source_key"] = fix["source_key"]
 
     # A place curated as a home (or birth/death place) is not also a plain "mentioned" point.
     curated = {p["qid"] for p in manual["places"]}

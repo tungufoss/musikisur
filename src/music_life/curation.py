@@ -37,8 +37,11 @@ def parse_date(value: Any) -> tuple[str, int]:
 
 
 def load_manual(path: Path, wd: CachedClient) -> dict[str, list[dict[str, Any]]]:
-    """Bundle rows (places, events, samples, sources) from a manual.yml; empty when it is missing."""
-    empty: dict[str, list[dict[str, Any]]] = {"places": [], "events": [], "samples": [], "sources": []}
+    """Bundle rows (places, events, samples, release dates, sources) from a manual.yml; empty
+    when it is missing. ``release_dates`` entries (title, date, source) override album dates."""
+    empty: dict[str, list[dict[str, Any]]] = {
+        "places": [], "events": [], "samples": [], "release_dates": [], "sources": [],
+    }
     if not path.exists():
         return empty
     spec = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -54,6 +57,12 @@ def load_manual(path: Path, wd: CachedClient) -> dict[str, list[dict[str, Any]]]
          "page": entry["source"], "source_key": source_key(entry["source"])}
         for entry in spec.get("samples", [])
     ]
+
+    release_dates = []
+    for entry in spec.get("release_dates", []):
+        when, precision = parse_date(entry["date"])
+        release_dates.append({"title": entry["title"], "event_date": when, "date_precision": precision,
+                              "source_key": source_key(entry["source"])})
 
     events = []
     for entry in spec.get("events", []):
@@ -86,4 +95,5 @@ def load_manual(path: Path, wd: CachedClient) -> dict[str, list[dict[str, Any]]]
          "source_url": url, "retrieved_at": None, "citation_text": f"Curated in {path.name}"}
         for i, url in enumerate(urls, start=1)
     ]
-    return {"places": places, "events": events, "samples": samples, "sources": sources}
+    return {"places": places, "events": events, "samples": samples, "release_dates": release_dates,
+            "sources": sources}
