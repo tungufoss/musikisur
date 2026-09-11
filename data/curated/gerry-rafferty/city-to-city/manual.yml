@@ -8,6 +8,18 @@ samples:
     url: https://upload.wikimedia.org/wikipedia/en/5/5c/Baker_Street_%28song%29.ogg
     source: https://en.wikipedia.org/wiki/File:Baker_Street_(song).ogg
 
+# Release months where MusicBrainz and Wikidata only have the year (they override those dates).
+release_dates:
+  - title: "First Collection of Merry Melodies"
+    date: 1969-02
+    source: https://en.wikipedia.org/wiki/The_Humblebums
+  - title: "The New Humblebums"
+    date: 1969-09
+    source: https://en.wikipedia.org/wiki/The_Humblebums
+  - title: "Open Up the Door"
+    date: 1970-06
+    source: https://en.wikipedia.org/wiki/The_Humblebums
+
 # Homes (shown as residences instead of plain "mentioned" points).
 places:
   - qid: Q27
@@ -63,10 +75,12 @@ events:
     source: https://en.wikipedia.org/wiki/Gerry_Rafferty
 
   # Band membership periods (MusicBrainz has no dates for them).
-  - date: 1969
+  # He joined "later in 1969", after their first album (February 1969): estimated as March.
+  - date: 1969-03
     kind: band_join
     label: "The Humblebums"
-    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+    detail: "áætlað: gekk til liðs síðar árið 1969, eftir fyrstu plötuna"
+    source: https://en.wikipedia.org/wiki/The_Humblebums
   - date: 1971
     kind: band_leave
     label: "The Humblebums"
