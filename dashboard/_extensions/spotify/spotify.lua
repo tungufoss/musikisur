@@ -43,9 +43,12 @@ return {
       kind = "track"
     end
     local url = "https://open.spotify.com/" .. kind .. "/" .. id
+    local embed = "https://open.spotify.com/embed/" .. kind .. "/" .. id
+    -- data-spotify-embed: a click opens the compact player on the page (_spotify-inline.html).
     return pandoc.RawInline(
       "html",
-      '<a href="' .. url .. '" class="spotify-link" title="Hlusta á Spotify" aria-label="Hlusta á Spotify">'
+      '<a href="' .. url .. '" class="spotify-link" data-spotify-embed="' .. embed .. '"'
+        .. ' aria-expanded="false" title="Hlusta á Spotify" aria-label="Hlusta á Spotify">'
         .. '<i class="bi bi-spotify spotify-icon" aria-hidden="true"></i></a>'
     )
   end,

@@ -165,10 +165,20 @@ def decade_overview(decade: int) -> str:
 
 
 def spotify_link(url: str, text: str = "") -> str:
-    """Spotify icon (Bootstrap Icons, bundled with Quarto) linking to ``url``, optionally with text."""
+    """Spotify icon (Bootstrap Icons, bundled with Quarto) linking to ``url``, optionally with text.
+
+    On the site a click opens Spotify's compact player on the page instead of leaving it
+    (dashboard/_spotify-inline.html); without JavaScript it stays a plain link.
+    """
     icon = '<i class="bi bi-spotify spotify-icon" aria-hidden="true"></i>'
     label = text or "Hlusta á Spotify"
-    return f'<a href="{url}" class="spotify-link" title="Hlusta á Spotify" aria-label="{label}">{icon}{" " + text if text else ""}</a>'
+    embed = ""
+    if "open.spotify.com/" in url and "/embed/" not in url:
+        embed = f' data-spotify-embed="{url.replace("open.spotify.com/", "open.spotify.com/embed/", 1)}" aria-expanded="false"'
+    return (
+        f'<a href="{url}" class="spotify-link"{embed} title="Hlusta á Spotify" aria-label="{label}">'
+        f'{icon}{" " + text if text else ""}</a>'
+    )
 
 
 def age_at_release(born: date, released: date | None, year: int) -> int:
