@@ -146,8 +146,8 @@ TABLES: dict[str, TableSpec] = {
     ),
 }
 EVENT_KINDS = {
-    "birth", "death", "career_start", "career_end", "marriage", "divorce", "child",
-    "album", "single", "band_release", "song", "production", "guest",
+    "birth", "death", "career_start", "career_end", "marriage", "divorce", "relationship", "relationship_end", "child",
+    "album", "single", "band_album", "band_join", "band_leave", "song", "production", "guest",
     "cover", "nomination", "award", "event",
 }
 
