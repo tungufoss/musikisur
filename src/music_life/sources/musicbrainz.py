@@ -14,6 +14,7 @@ from typing import Any
 import pandas as pd
 
 from ..bundles import TABLES
+from ..normalize import normalize_text
 from .http import CachedClient
 
 BASE_URL = "https://musicbrainz.org/ws/2"
@@ -111,6 +112,50 @@ def bands(relations: dict[str, Any]) -> list[dict[str, Any]]:
         if rel["type"] == "member of band" and rel.get("target-type") == "artist" and rel.get("direction") == "forward":
             found[rel["artist"]["id"]] = rel["artist"]
     return list(found.values())
+
+
+# Parenthetical notes that mark another take of the same song, e.g. "(original demo)".
+VERSION_NOTE = re.compile(
+    r"\s*[(\[][^)\]]*\b(demo|live|remaster\w*|mix|version|edit|mono|stereo|take|instrumental)\b[^)\]]*[)\]]",
+    re.IGNORECASE,
+)
+
+
+def fetch_recordings(artist_mbid: str, c: CachedClient) -> list[dict[str, Any]]:
+    """Every recording credited to the artist, 100 per page."""
+    recordings: list[dict[str, Any]] = []
+    offset = 0
+    while True:
+        page = c.get_json(
+            "recording", f"recordings-{artist_mbid}-{offset}",
+            {"artist": artist_mbid, "limit": 100, "offset": offset, "fmt": "json"},
+        )
+        recordings += page.get("recordings", [])
+        offset += 100
+        if offset >= page.get("recording-count", 0):
+            return recordings
+
+
+def song_events(recordings: list[dict[str, Any]], group: str, source_key: str) -> list[dict[str, Any]]:
+    """One event per distinct song, dated by its earliest released recording, so live takes,
+    demos, remasters and compilation reissues of the same song count once."""
+    first: dict[str, tuple[str, dict[str, Any]]] = {}
+    for recording in recordings:
+        date = recording.get("first-release-date") or ""
+        if not date or recording.get("video"):
+            continue
+        key = normalize_text(VERSION_NOTE.sub("", recording["title"]))
+        if key and (key not in first or date < first[key][0]):
+            first[key] = (date, recording)
+    rows = []
+    for date, recording in first.values():
+        when = _dated(date)
+        rows.append({
+            "event_date": when[0], "date_precision": when[1], "kind": "song",
+            "label": VERSION_NOTE.sub("", recording["title"]).strip(), "detail": group,
+            "url": f"https://musicbrainz.org/recording/{recording['id']}", "source_key": source_key,
+        })
+    return rows
 
 
 # Recording relationships that put the artist behind or beside someone else's record.
