@@ -195,6 +195,11 @@ def release_ages() -> list[float]:
     ]
 
 
+def _weeks(count: int) -> str:
+    """Icelandic agreement: singular after numbers ending in 1 (but not 11), e.g. 1 vika, 21 vika."""
+    return f"{count} {'vika' if count % 10 == 1 and count % 100 != 11 else 'vikur'}"
+
+
 def _songs(count: int, total: int | None = None) -> str:
     if total and count == total:
         return "öll lögin"
@@ -303,18 +308,31 @@ def _focus_groups(con: duckdb.DuckDBPyConnection, artist_id: int) -> dict[str, s
 
 
 def _chart_runs(con: duckdb.DuckDBPyConnection, performers: list[str]) -> list[tuple]:
-    """(chart, chart type, performer, title, first week, last week, best position, weeks) for every
-    song or album credited to one of the performers (exact chart credit, case-insensitive)."""
+    """(chart, chart type, performer, title, first week, last week, best position, weeks, run number)
+    for every song or album credited to one of the performers (exact chart credit, case-insensitive).
+    A new run starts after more than four weeks off the chart, so re-entries are runs of their own
+    (run number 0 is the first run)."""
     if not performers:
         return []
     marks = ", ".join("?" for _ in performers)
     return con.execute(
         f"""
-        SELECT c.name, c.chart_type, ce.artist_name, ce.title, min(ce.chart_date), max(ce.chart_date),
-               min(ce.position), count(DISTINCT ce.chart_date)
-        FROM chart_entries ce JOIN charts c USING (chart_id)
-        WHERE lower(ce.artist_name) IN ({marks})
-        GROUP BY ALL ORDER BY min(ce.chart_date)
+        WITH weeks AS (
+            SELECT c.name AS chart, c.chart_type, ce.artist_name, ce.title, ce.chart_date, ce.position,
+                   CASE WHEN ce.chart_date - lag(ce.chart_date) OVER w > 28 THEN 1 ELSE 0 END AS new_run
+            FROM chart_entries ce JOIN charts c USING (chart_id)
+            WHERE lower(ce.artist_name) IN ({marks})
+            WINDOW w AS (PARTITION BY c.name, ce.artist_name, ce.title ORDER BY ce.chart_date)
+        ), runs AS (
+            SELECT *, sum(new_run) OVER (
+                PARTITION BY chart, artist_name, title ORDER BY chart_date
+            ) AS run_number FROM weeks
+        )
+        SELECT chart, chart_type, artist_name, title, min(chart_date), max(chart_date),
+               min(position), count(DISTINCT chart_date), run_number
+        FROM runs
+        GROUP BY chart, chart_type, artist_name, title, run_number
+        ORDER BY min(chart_date)
         """,
         [p.lower() for p in performers],
     ).fetchall()
@@ -451,11 +469,18 @@ def artist_facts(artist_slug: str) -> str:
         boxes.append(_fact_box("Lög sem hann kom að", songs + for_others,
                                f"þar af {for_others} fyrir aðra" if for_others else "", "fact-songs",
                                "Hvert lag talið einu sinni, árið sem það kom fyrst út (MusicBrainz)"))
-    hot100 = [run for run in chart_runs if run[0] == "Billboard Hot 100"]
-    if hot100:
-        best = min(hot100, key=lambda run: run[6])
-        boxes.append(_fact_box("Billboard Hot 100", f"{len(hot100)} lög", f"besta sæti {best[6]} ({best[3]})",
-                               "fact-chart", "; ".join(f"{run[3]}: {run[6]}. sæti, {run[7]} vikur" for run in hot100)))
+    # One box per chart: distinct songs/albums (re-entries merged), best position, weeks in the tooltip.
+    for chart, one, many in (("Billboard Hot 100", "lag", "lög"), ("Billboard 200", "plata", "plötur")):
+        titles: dict[str, list[int]] = {}
+        for run in chart_runs:
+            if run[0] == chart:
+                best = titles.setdefault(run[3], [run[6], 0])
+                best[0], best[1] = min(best[0], run[6]), best[1] + run[7]
+        if titles:
+            top = min(titles, key=lambda title: titles[title][0])
+            count = f"{len(titles)} {one if len(titles) == 1 else many}"
+            boxes.append(_fact_box(chart, count, f"besta sæti {titles[top][0]} ({top})", "fact-chart",
+                                   "; ".join(f"{t}: {p}. sæti, {_weeks(w)}" for t, (p, w) in titles.items())))
     nominations = [(when, label) for kind, when, _, label, *_ in events if kind == "nomination"]
     if nominations:
         years = ", ".join(str(y) for y in sorted({when.year for when, _ in nominations}))
@@ -643,13 +668,13 @@ def artist_timeline(artist_slug: str) -> str:
         lanes.append("chart")
         colours = {band.lower(): colour for band, colour in band_colors.items()}
         previous, flip = None, False
-        for chart, chart_type, performer, title, first, last, peak, weeks in chart_runs:
+        for chart, chart_type, performer, title, first, last, peak, weeks, run in chart_runs:
             begin, finish = _position(first, 11), _position(last, 11) + 7 / 366
             flip = (not flip) if previous is not None and pct(begin) - pct(previous) < 1.5 else False
             previous = begin
             css = "tl-chart" + (" tl-chart-album" if chart_type == "albums" else "")
-            tip = (f"{chart}: {title} ({performer}), besta sæti {peak}, {weeks} vikur "
-                   f"({format_date(first)} – {format_date(last)})")
+            tip = (f"{chart}: {title} ({performer}), besta sæti {peak}, {_weeks(weeks)} "
+                   f"({format_date(first)} – {format_date(last)})" + (", endurkoma" if run else ""))
             parts.append(
                 f'<div class="tl-bar {css}" style="top:{TIMELINE_LANES["chart"] + (-8 if flip else 0)}px;'
                 f'left:{pct(begin):.2f}%;width:{max(pct(finish) - pct(begin), 0.4):.2f}%;'
