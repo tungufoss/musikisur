@@ -80,6 +80,8 @@ TABLES: dict[str, TableSpec] = {
             "spotify_track_id": "VARCHAR",
             "spotify_url": "VARCHAR",
             "spotify_verified": "BOOLEAN",
+            "sample_url": "VARCHAR",  # short audio sample (manual.yml)
+            "sample_page": "VARCHAR",  # page that hosts it and states its licence
             "source_key": "VARCHAR",
         },
         ("disc_number", "track_number"),
@@ -102,6 +104,50 @@ TABLES: dict[str, TableSpec] = {
         ("disc_number", "track_number", "role", "person_name", "instrument"),
         required=False,
     ),
+    # Artist context for the chapter's "Um flytjandann" section.
+    "artist_tags": TableSpec(
+        {
+            "kind": "VARCHAR",  # genre / instrument / occupation
+            "qid": "VARCHAR",
+            "label_is": "VARCHAR",
+            "label_en": "VARCHAR",
+            "source_key": "VARCHAR",
+        },
+        ("kind", "label_en"),
+        required=False,
+    ),
+    "places": TableSpec(
+        {
+            "role": "VARCHAR",  # birth / death / residence / mentioned
+            "qid": "VARCHAR",
+            "title": "VARCHAR",
+            "label_is": "VARCHAR",
+            "latitude": "DOUBLE",
+            "longitude": "DOUBLE",
+            "context": "VARCHAR",
+            "source_key": "VARCHAR",
+        },
+        ("role", "title"),
+        required=False,
+    ),
+    "events": TableSpec(
+        {
+            "event_date": "DATE",  # unknown month/day padded with 01, see date_precision
+            "date_precision": "INTEGER",  # Wikidata style: 9 year, 10 month, 11 day
+            "kind": "VARCHAR",
+            "label": "VARCHAR",
+            "detail": "VARCHAR",
+            "url": "VARCHAR",
+            "source_key": "VARCHAR",
+        },
+        ("event_date", "kind", "label"),
+        required=False,
+    ),
+}
+EVENT_KINDS = {
+    "birth", "death", "career_start", "career_end",
+    "album", "single", "band_release", "production", "guest",
+    "cover", "nomination", "award", "event",
 }
 
 
@@ -211,6 +257,15 @@ def validate_bundle(path: Path) -> list[str]:
         ]
         if workless:
             errors.append(f"credits.parquet has work credits for tracks without a work {sorted(set(workless))}")
+
+    events = frames.get("events")
+    if events is not None:
+        unknown_kinds = set(events["kind"]) - EVENT_KINDS
+        if unknown_kinds:
+            errors.append(f"events.parquet has unknown kinds {sorted(unknown_kinds)}")
+    places = frames.get("places")
+    if places is not None and places[["latitude", "longitude"]].isna().any().any():
+        errors.append("places.parquet has places without coordinates")
     return errors
 
 
@@ -321,8 +376,13 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
         recording_ids[key] = recording_id
         work_ids[key] = work_id
         con.execute(
-            "INSERT INTO album_tracks VALUES (?, ?, ?, ?, ?, ?)",
-            [album_id, recording_id, work_id, *key, track["track_title"]],
+            """
+            INSERT INTO album_tracks
+            (album_id, recording_id, work_id, disc_number, track_number, track_title, sample_url, sample_page)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [album_id, recording_id, work_id, *key, track["track_title"],
+             _value(track, "sample_url"), _value(track, "sample_page")],
         )
 
     if "credits" in frames:
@@ -352,4 +412,21 @@ def load_bundle(con: duckdb.DuckDBPyConnection, path: Path) -> None:
                 """,
                 [person_id, entity_type, entity_id, credit["role"], _value(credit, "instrument"),
                  _value(credit, "credited_as"), source_ids.get(_value(credit, "source_key"))],
+            )
+
+    # Artist context; several bundles may carry the same artist, so duplicates are skipped.
+    artist_context = {
+        "artist_tags": ("artist_tags", ["kind", "qid", "label_is", "label_en"]),
+        "places": ("artist_places", ["role", "qid", "title", "label_is", "latitude", "longitude", "context"]),
+        "events": ("timeline_events", ["event_date", "date_precision", "kind", "label", "detail", "url"]),
+    }
+    for name, (table, columns) in artist_context.items():
+        if name not in frames:
+            continue
+        marks = ", ".join("?" for _ in columns)
+        for _, row in frames[name].iterrows():
+            con.execute(
+                f"INSERT INTO {table} (artist_id, {', '.join(columns)}, source_id) "
+                f"VALUES (?, {marks}, ?) ON CONFLICT DO NOTHING",
+                [artist_id, *(_value(row, c) for c in columns), source_ids.get(_value(row, "source_key"))],
             )

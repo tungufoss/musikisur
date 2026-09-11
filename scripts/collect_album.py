@@ -1,4 +1,5 @@
-"""Collect one focus album's data bundle from MusicBrainz, Discogs, Spotify and Cover Art Archive.
+"""Collect one focus album's data bundle from MusicBrainz, Wikidata, Wikipedia, Discogs, Spotify
+and the Cover Art Archive, plus hand-curated entries from the bundle's manual.yml.
 
     python scripts/collect_album.py gerry-rafferty city-to-city
 
@@ -11,9 +12,10 @@ from typing import Any
 import pandas as pd
 import yaml
 
-from music_life.bundles import write_bundle
-from music_life.dashboard import CONFIG_DIR, COVERS_DIR
-from music_life.sources import coverart, discogs, musicbrainz, spotify, wikidata
+from music_life import curation
+from music_life.bundles import bundle_dir, write_bundle
+from music_life.dashboard import ARTISTS_DIR, CONFIG_DIR, COVERS_DIR
+from music_life.sources import commons, coverart, discogs, musicbrainz, spotify, wikidata, wikipedia
 
 
 def config_entry(filename: str, key: str, slug: str) -> dict[str, Any]:
@@ -36,6 +38,7 @@ def main() -> None:
         raise SystemExit(f"{args.album!r} belongs to {album_config['artist']!r}, not {args.artist!r}")
     ids = album_config["identifiers"]
 
+    # The album: artist, release group, the chosen edition's tracks and credits.
     mb = musicbrainz.client()
     artist = musicbrainz.fetch_artist(artist_config["identifiers"]["musicbrainz"], mb)
     release_group = musicbrainz.fetch_release_group(ids["musicbrainz_release_group"], mb)
@@ -57,13 +60,73 @@ def main() -> None:
         ),
     ]
 
+    wd = wikidata.client()
     album_qid = musicbrainz.wikidata_id(release_group)
     if album_qid and tables["album"].loc[0, "original_release_date"] is None:
-        wd = wikidata.client()
         published = wikidata.publication_date(wikidata.fetch_entity(album_qid, wd))
         if published:
             tables["album"].loc[0, "original_release_date"] = published
-            sources.append(wikidata.source_row(wd, album_qid, release_group["title"]))
+            sources.append(wikidata.source_row(wd, album_qid, f"publication date (P577) of {release_group['title']}"))
+
+    # The artist: Wikidata facts, studio albums, places named in Wikipedia, manual.yml.
+    context: dict[str, list[dict[str, Any]]] = {"artist_tags": [], "places": [], "events": []}
+    artist_qid = artist_config["identifiers"].get("wikidata") or musicbrainz.wikidata_id(artist)
+    if artist_qid:
+        person = wikidata.fetch_entity(artist_qid, wd)
+        for name, rows in wikidata.person_rows(person, wd).items():
+            context[name] += rows
+        sources.append(wikidata.source_row(wd, artist_qid, artist["name"], key="wikidata-artist"))
+        title = wikidata.enwiki_title(person)
+        if title:
+            wp = wikipedia.client()
+            context["places"] += wikipedia.place_rows(title, wp, {p["qid"] for p in context["places"]})
+            sources.append(wikipedia.source_row(wp, title))
+        photos = wikidata.claim_strings(person, "P18")
+        if photos:
+            cm = commons.client()
+            info = commons.image_info(photos[0], cm)
+            commons.download(info, ARTISTS_DIR / f"{args.artist}.jpg")
+            sources.append(commons.source_row(cm, photos[0], info))
+
+    # Output over time: studio albums, singles, band releases and credits on others' records.
+    context["events"] += musicbrainz.album_events(musicbrainz.fetch_release_groups(artist["id"], mb))
+    sources.append(musicbrainz.release_groups_source_row(mb, artist["id"], artist["name"]))
+    singles = musicbrainz.fetch_release_groups_of_type(artist["id"], "single", mb)
+    context["events"] += musicbrainz.release_events(singles, "single", "musicbrainz-singles")
+    sources.append(musicbrainz.cached_source_row(
+        mb, f"release-groups-single-{artist['id']}", "musicbrainz-singles",
+        f"https://musicbrainz.org/artist/{artist['id']}/releases", f"MusicBrainz singles by {artist['name']}",
+    ))
+    relations = musicbrainz.fetch_artist_relations(artist["id"], mb)
+    own_ids = {artist["id"]}
+    for band in musicbrainz.bands(relations):
+        own_ids.add(band["id"])
+        key = f"musicbrainz-band-{band['id'][:8]}"
+        groups = musicbrainz.fetch_release_groups_of_type(band["id"], "album|single", mb)
+        context["events"] += musicbrainz.release_events(groups, "band_release", key, detail=band["name"])
+        sources.append(musicbrainz.cached_source_row(
+            mb, f"release-groups-album-single-{band['id']}", key,
+            f"https://musicbrainz.org/artist/{band['id']}", f"MusicBrainz releases by {band['name']}",
+        ))
+    context["events"] += musicbrainz.credits_for_others(relations, own_ids, mb)
+    sources.append(musicbrainz.cached_source_row(
+        mb, f"artist-rels-{artist['id']}", "musicbrainz-artist-relations",
+        f"https://musicbrainz.org/artist/{artist['id']}/relationships", f"MusicBrainz relationships of {artist['name']}",
+    ))
+    manual = curation.load_manual(bundle_dir(args.artist, args.album) / "manual.yml", wd)
+    context["places"] += manual["places"]
+    context["events"] += manual["events"]
+    sources += manual["sources"]
+    tracks = tables["tracks"]
+    for sample in manual["samples"]:
+        hit = (tracks["disc_number"] == sample["disc"]) & (tracks["track_number"] == sample["track"])
+        tracks.loc[hit, ["sample_url", "sample_page"]] = [sample["url"], sample["page"]]
+    for name, rows in context.items():
+        if rows:
+            tables[name] = pd.DataFrame(rows)
+    if "events" in tables:
+        # One recording can credit the artist twice (vocals and guitar): keep one event.
+        tables["events"] = tables["events"].drop_duplicates(["event_date", "kind", "label"], ignore_index=True)
 
     if ids.get("discogs_master"):
         dc = discogs.client()
@@ -95,6 +158,12 @@ def main() -> None:
         linked = tables["tracks"]["spotify_url"].notna().sum()
         print(f"spotify: {linked}/{track_count} linked, {verified} verified by ISRC")
     print(f"cover: {cover['bytes'] // 1024} KB from {cover['url']}" if cover else "cover: none found")
+    kinds = tables["events"]["kind"].value_counts().to_dict() if "events" in tables else {}
+    print(
+        f"artist: {len(context['artist_tags'])} tags, {len(context['places'])} places, "
+        f"{len(tables.get('events', []))} timeline events {kinds} "
+        f"({len(manual['events']) + len(manual['places'])} from manual.yml)"
+    )
 
 
 if __name__ == "__main__":

@@ -47,6 +47,120 @@ def fetch_release(mbid: str, c: CachedClient) -> dict[str, Any]:
     return _get(c, "release", mbid, RELEASE_INC)
 
 
+def fetch_release_groups(artist_mbid: str, c: CachedClient) -> dict[str, Any]:
+    """The artist's album release groups (up to 100; enough for one artist's albums)."""
+    return c.get_json(
+        "release-group", f"release-groups-{artist_mbid}",
+        {"artist": artist_mbid, "type": "album", "fmt": "json", "limit": 100},
+    )
+
+
+def fetch_release_groups_of_type(artist_mbid: str, types: str, c: CachedClient) -> dict[str, Any]:
+    """Release groups of the given type(s), e.g. "single" or "album|single"."""
+    return c.get_json(
+        "release-group", f"release-groups-{types.replace('|', '-')}-{artist_mbid}",
+        {"artist": artist_mbid, "type": types, "fmt": "json", "limit": 100},
+    )
+
+
+def fetch_artist_relations(artist_mbid: str, c: CachedClient) -> dict[str, Any]:
+    return c.get_json(
+        f"artist/{artist_mbid}", f"artist-rels-{artist_mbid}",
+        {"inc": "release-group-rels+release-rels+recording-rels+artist-rels", "fmt": "json"},
+    )
+
+
+def fetch_recording(mbid: str, c: CachedClient) -> dict[str, Any]:
+    return c.get_json(f"recording/{mbid}", f"recording-{mbid}", {"inc": "artist-credits+releases", "fmt": "json"})
+
+
+def _dated(value: str) -> tuple[str, int] | None:
+    """A MusicBrainz date ("1978", "1978-01", "1978-01-20") as (YYYY-MM-DD, precision)."""
+    if not value:
+        return None
+    parts = value.split("-")
+    return "-".join(parts + ["01"] * (3 - len(parts))), {1: 9, 2: 10, 3: 11}[len(parts)]
+
+
+def release_events(
+    release_groups: dict[str, Any], kind: str, source_key: str, detail: str | None = None
+) -> list[dict[str, Any]]:
+    """Dated release groups without a secondary type (compilation, live ...) as timeline events."""
+    rows = []
+    for group in release_groups.get("release-groups", []):
+        when = _dated(group.get("first-release-date") or "")
+        if group.get("secondary-types") or when is None:
+            continue
+        rows.append({
+            "event_date": when[0], "date_precision": when[1], "kind": kind, "label": group["title"],
+            "detail": detail or group["id"], "url": f"https://musicbrainz.org/release-group/{group['id']}",
+            "source_key": source_key,
+        })
+    return rows
+
+
+def album_events(release_groups: dict[str, Any]) -> list[dict[str, Any]]:
+    """Studio albums as timeline events; detail holds the release group ID."""
+    return release_events(release_groups, "album", "musicbrainz-release-groups")
+
+
+def bands(relations: dict[str, Any]) -> list[dict[str, Any]]:
+    """Groups the artist was a member of."""
+    found = {}
+    for rel in relations.get("relations", []):
+        if rel["type"] == "member of band" and rel.get("target-type") == "artist" and rel.get("direction") == "forward":
+            found[rel["artist"]["id"]] = rel["artist"]
+    return list(found.values())
+
+
+# Recording relationships that put the artist behind or beside someone else's record.
+OTHERS_KINDS = {
+    "producer": "production", "mix": "production", "arranger": "production", "instrument arranger": "production",
+    "vocal": "guest", "instrument": "guest", "performer": "guest",
+}
+
+
+def credits_for_others(relations: dict[str, Any], own_ids: set[str], c: CachedClient) -> list[dict[str, Any]]:
+    """Recordings by other artists that credit this artist, dated by their first release."""
+    rows = []
+    for rel in relations.get("relations", []):
+        kind = OTHERS_KINDS.get(rel["type"])
+        if rel.get("target-type") != "recording" or kind is None:
+            continue
+        recording = fetch_recording(rel["recording"]["id"], c)
+        credited = {credit["artist"]["id"] for credit in recording.get("artist-credit", [])}
+        dates = sorted(r["date"] for r in recording.get("releases", []) if r.get("date"))
+        when = _dated(dates[0]) if dates else None
+        if credited & own_ids or when is None:
+            continue
+        who = "".join(credit["name"] + credit.get("joinphrase", "") for credit in recording["artist-credit"])
+        rows.append({
+            "event_date": when[0], "date_precision": when[1], "kind": kind,
+            "label": f"{who} – {recording['title']}", "detail": rel["type"],
+            "url": f"https://musicbrainz.org/recording/{recording['id']}",
+            "source_key": "musicbrainz-artist-relations",
+        })
+    return rows
+
+
+def cached_source_row(c: CachedClient, cache_key: str, source_key: str, url: str, citation: str) -> dict[str, Any]:
+    return {
+        "source_key": source_key,
+        "source_name": "MusicBrainz",
+        "source_type": "database",
+        "source_url": url,
+        "retrieved_at": c.retrieved_at(cache_key),
+        "citation_text": citation,
+    }
+
+
+def release_groups_source_row(c: CachedClient, artist_mbid: str, name: str) -> dict[str, Any]:
+    return cached_source_row(
+        c, f"release-groups-{artist_mbid}", "musicbrainz-release-groups",
+        f"https://musicbrainz.org/artist/{artist_mbid}/releases", f"MusicBrainz albums by {name}",
+    )
+
+
 def source_row(c: CachedClient, entity: str, mbid: str, citation: str) -> dict[str, Any]:
     return {
         "source_key": f"musicbrainz-{entity}",

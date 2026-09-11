@@ -91,12 +91,19 @@ class CachedClient:
             if wait > 0:
                 time.sleep(wait)
             self._last_request = time.monotonic()
-            response = httpx.get(
-                f"{self.base_url}/{path.lstrip('/')}",
-                params=params,
-                headers=self._live_headers(),
-                timeout=30.0,
-            )
+            try:
+                response = httpx.get(
+                    f"{self.base_url}/{path.lstrip('/')}",
+                    params=params,
+                    headers=self._live_headers(),
+                    timeout=60.0,
+                )
+            except httpx.TransportError:
+                # Timeouts and dropped connections: back off and try again.
+                if attempt == 5:
+                    raise
+                time.sleep(2 ** attempt)
+                continue
             if response.status_code not in RETRY_STATUS:
                 break
             wait = float(response.headers.get("Retry-After", 2 ** attempt))

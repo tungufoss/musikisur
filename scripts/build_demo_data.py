@@ -42,7 +42,8 @@ for title, track_no in [("The Ark", 1), ("Baker Street", 2), ("Right Down the Li
         ).fetchone()[0]
     con.execute(
         """
-        INSERT INTO album_tracks VALUES (?, ?, NULL, 1, ?, ?)
+        INSERT INTO album_tracks (album_id, recording_id, work_id, disc_number, track_number, track_title)
+        VALUES (?, ?, NULL, 1, ?, ?)
         ON CONFLICT (album_id, disc_number, track_number) DO NOTHING
         """,
         [album_id, rid, track_no, title],
