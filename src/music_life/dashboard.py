@@ -272,14 +272,9 @@ PLACE_STYLES = {  # role: (marker colour, Font Awesome icon, description); egg a
     "residence": ("orange", "home", "Búseta"),
     "mentioned": ("#2780e3", None, "Nefndur í Wikipedia-greininni"),
 }
-TIMELINE_LANES = {  # px from the top of the track
-    "life": 18, "career": 46, "album": 76, "band": 104, "others": 132, "cover": 160, "hist": 211,
-}
-LANE_TITLES = {
-    "life": "Ævi", "career": "Ferill", "album": "Plötur", "band": "Hljómsveitir",
-    "others": "Fyrir aðra", "cover": "Ábreiður", "hist": "Ný lög á ári",
-}
-HIST_BOTTOM, HIST_HEIGHT = 236, 50
+TIMELINE_LANES = {"life": 18, "career": 46, "album": 76, "cover": 106, "hist": 161}  # px from the top
+LANE_TITLES = {"life": "Ævi", "career": "Ferill", "album": "Plötur", "cover": "Ábreiður", "hist": "Ný lög á ári"}
+HIST_BOTTOM, HIST_HEIGHT = 186, 50
 # The yearly columns count songs: new songs in the artist's own name or a band's, and
 # recordings for other artists.
 HIST_GROUPS = {"song": "song", "production": "others", "guest": "others"}
@@ -608,12 +603,12 @@ def artist_timeline(artist_slug: str) -> str:
         for when, precision, label, _, url in covers:
             parts.append(icon("fa-rug tl-cover", "cover", _position(when, precision), f"{_when(when, precision)}: {label}", url))
 
+    # Band periods lie over the career bar, in each band's colour.
     if joins:
-        lanes.append("band")
         for band, joined in joins.items():
             last = leaves[band].year if band in leaves else (died.year if died else joined.year)
             parts.append(
-                f'<div class="tl-bar tl-band-period" style="top:{TIMELINE_LANES["band"]}px;left:{pct(joined.year):.2f}%;'
+                f'<div class="tl-bar tl-band-period" style="top:{TIMELINE_LANES["career"]}px;left:{pct(joined.year):.2f}%;'
                 f'width:{pct(last + 1) - pct(joined.year):.2f}%;background:{band_colors[band]}" '
                 f'title="{html.escape(band)}: {joined.year}–{last}"></div>'
             )
@@ -623,23 +618,6 @@ def artist_timeline(artist_slug: str) -> str:
     band_keys = "".join(
         f'<span class="tl-key" style="background:{c}"></span> með {html.escape(b)}, ' for b, c in band_colors.items()
     )
-    others = sorted(
-        [("production", item) for item in by_kind.get("production", [])]
-        + [("guest", item) for item in by_kind.get("guest", [])],
-        key=lambda pair: pair[1][0],
-    )
-    if others:
-        lanes.append("others")
-        previous, step = None, 0
-        for kind, (when, precision, label, detail, url) in others:
-            at = _position(when, precision)
-            # Icons close together (e.g. three tracks from one year) step through three heights.
-            step = step + 1 if previous is not None and pct(at) - pct(previous) < 2.5 else 0
-            previous = at
-            css = "fa-sliders tl-production" if kind == "production" else "fa-microphone-lines tl-guest"
-            parts.append(icon(css, "others", at,
-                              f"{_when(when, precision)}: {label} ({ROLE_LABELS.get(detail, detail)})",
-                              url, (0, -11, 11)[step % 3]))
     for when, precision, label, _, url in by_kind.get("nomination", []) + by_kind.get("award", []):
         parts.append(icon("fa-award tl-award", "career", _position(when, precision),
                           f"{_when(when, precision)}: {label}", url, -14))
@@ -682,8 +660,6 @@ def artist_timeline(artist_slug: str) -> str:
         '<i class="fa-solid fa-compact-disc tl-posthumous"></i> eftir andlát · '
         '<i class="fa-solid fa-rug tl-cover"></i> ábreiða · '
         f"{band_legend}"
-        '<i class="fa-solid fa-sliders tl-production"></i> upptökustjórn fyrir aðra · '
-        '<i class="fa-solid fa-microphone-lines tl-guest"></i> gestaframlag · '
         '<i class="fa-solid fa-award tl-award"></i> tilnefning. '
         'Súlurnar neðst sýna ný lög á ári (hvert lag talið einu sinni, árið sem það kom fyrst út): '
         '<span class="tl-key tl-hist-solo"></span> í eigin nafni, '
