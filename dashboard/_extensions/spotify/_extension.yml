@@ -1,0 +1,7 @@
+title: Spotify link
+author: musikisur
+version: 1.0.0
+quarto-required: ">=1.4.0"
+contributes:
+  shortcodes:
+    - spotify.lua

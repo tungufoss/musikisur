@@ -115,6 +115,7 @@ Every source adapter must document:
 - Parts are decades and chapters are focus albums. `scripts/build_book.py` generates both from `config/focus-albums.yml` and rewrites the marked chapter block in `dashboard/_quarto.yml`; never edit that block by hand.
 - Decade and chapter files are created once and then hand-edited (talking points live in `dashboard/albums/<slug>.qmd`). The script never overwrites them.
 - Chapter data blocks come from `dashboard/_chapter.qmd` and `music_life.dashboard`; keep queries there, not in chapter files.
+- Every song named in chapter text gets a Spotify icon link right after its title: `„Title“ {{< spotify TRACK_ID >}}`. Find IDs with `python scripts/spotify_lookup.py "Artist" "Title"` and prefer the original release. Embedded players are only for side-by-side comparisons.
 - The intro placeholder about the origin of the album list is Birna's to write. Do not write, infer or research anything about her family's personal circumstances anywhere in this repo.
 
 ## Before committing

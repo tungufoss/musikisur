@@ -13,7 +13,7 @@ import yaml
 
 from music_life.bundles import write_bundle
 from music_life.dashboard import CONFIG_DIR, COVERS_DIR
-from music_life.sources import coverart, discogs, musicbrainz, spotify
+from music_life.sources import coverart, discogs, musicbrainz, spotify, wikidata
 
 
 def config_entry(filename: str, key: str, slug: str) -> dict[str, Any]:
@@ -57,6 +57,14 @@ def main() -> None:
         ),
     ]
 
+    album_qid = musicbrainz.wikidata_id(release_group)
+    if album_qid and tables["album"].loc[0, "original_release_date"] is None:
+        wd = wikidata.client()
+        published = wikidata.publication_date(wikidata.fetch_entity(album_qid, wd))
+        if published:
+            tables["album"].loc[0, "original_release_date"] = published
+            sources.append(wikidata.source_row(wd, album_qid, release_group["title"]))
+
     if ids.get("discogs_master"):
         dc = discogs.client()
         master = discogs.fetch_master(ids["discogs_master"], dc)
@@ -81,6 +89,7 @@ def main() -> None:
     track_count = len(tables["tracks"])
     minutes = tables["tracks"]["duration_ms"].sum() / 60000
     print(f"bundle: {path.relative_to(CONFIG_DIR.parent).as_posix()}")
+    print(f"released: {tables['album'].loc[0, 'original_release_date'] or 'year only'}")
     print(f"tracks: {track_count} ({minutes:.0f} min), credits: {len(tables['credits'])}")
     if verified is not None:
         linked = tables["tracks"]["spotify_url"].notna().sum()

@@ -7,7 +7,7 @@ an ``output: asis`` cell. Visible text is Icelandic because the site is.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -142,6 +142,14 @@ def list_overview() -> str:
         f"- **Nýjasta plata:** {newest.heading}",
         f"- **Meðalaldur platnanna í dag:** {average_age:.0f} ár",
     ]
+    ages = release_ages()
+    if ages:
+        average = f"{sum(ages) / len(ages):.1f}".replace(".", ",")
+        albums = "1 plata" if len(ages) == 1 else f"{len(ages)} plötur"
+        lines.append(
+            f"- **Meðalaldur flytjenda við útgáfu:** {average} ár "
+            f"(reiknað úr fæðingardegi og útgáfudegi, {albums})"
+        )
     return "\n".join(lines) + "\n\n*Tölurnar uppfærast sjálfkrafa þegar plötum er bætt á listann.*\n"
 
 
@@ -161,6 +169,31 @@ def spotify_link(url: str, text: str = "") -> str:
     return f'<a href="{url}" class="spotify-link" title="Hlusta á Spotify" aria-label="{label}">{icon}{" " + text if text else ""}</a>'
 
 
+def age_at_release(born: date, released: date | None, year: int) -> float:
+    """Exact age on the release date; when only the year is known, the midpoint of the two possible ages."""
+    if released:
+        return released.year - born.year - ((released.month, released.day) < (born.month, born.day))
+    return year - born.year - 0.5
+
+
+def release_ages() -> list[float]:
+    """Artist age at release for every focus album whose artist has a known birth date."""
+    years = {c.slug: c.year for c in load_chapters()}
+    with connect_ro() as con:
+        rows = con.execute(
+            """
+            SELECT a.slug, a.original_release_date, ar.birth_date
+            FROM albums a JOIN artists ar USING (artist_id)
+            WHERE a.is_focus_album AND ar.birth_date IS NOT NULL
+            """
+        ).fetchall()
+    return [
+        age_at_release(born, released, released.year if released else years[slug])
+        for slug, released, born in rows
+        if released or slug in years
+    ]
+
+
 def _songs(count: int, total: int | None = None) -> str:
     if total and count == total:
         return "öll lögin"
@@ -172,7 +205,7 @@ def album_facts(slug: str) -> str:
         row = con.execute(
             """
             SELECT a.title, ar.name, a.original_release_date, a.spotify_url,
-                   count(t.track_number), sum(r.duration_ms)
+                   count(t.track_number), sum(r.duration_ms), ar.birth_date
             FROM albums a
             LEFT JOIN artists ar USING (artist_id)
             LEFT JOIN album_tracks t USING (album_id)
@@ -184,13 +217,20 @@ def album_facts(slug: str) -> str:
         ).fetchone()
     if row is None:
         return "*Platan er ekki enn komin í gagnagrunninn.*\n"
-    title, artist, released, spotify_url, track_count, duration_ms = row
+    title, artist, released, spotify_url, track_count, duration_ms, born = row
     # MusicBrainz often only knows the year; fall back to the year in config.
     year = released.year if released else next((c.year for c in load_chapters() if c.slug == slug), None)
     lines = [f"- **Flytjandi:** {artist or '—'}"]
-    if year:
+    if released:
+        lines.append(f"- **Útgáfudagur:** {format_date(released)}")
+    elif year:
         lines.append(f"- **Útgáfuár:** {year}")
-        lines.append(f"- **Aldur í dag:** {this_year() - year} ár")
+    if year:
+        lines.append(f"- **Aldur plötunnar í dag:** {this_year() - year} ár")
+    if born and year:
+        age = age_at_release(born, released, year)
+        shown = str(int(age)) if released else f"{int(age - 0.5)}–{int(age + 0.5)}"
+        lines.append(f"- **Aldur flytjanda við útgáfu:** {shown} ára (fæddur {format_date(born)})")
     lines.append(f"- **Lög:** {track_count}")
     if duration_ms:
         lines.append(f"- **Lengd:** {duration_ms / 60000:.0f} mínútur (lágmarkshlustun fyrir virkan klúbbmeðlim)")

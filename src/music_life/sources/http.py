@@ -20,6 +20,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 RAW_DIR = REPO_ROOT / "data" / "raw"
 USER_AGENT = "musikisur/0.1 ( https://github.com/tungufoss/musikisur )"
 RETRY_STATUS = {429, 502, 503, 504}
+# Longer Retry-After waits (Spotify can ask for hours) fail fast instead of hanging.
+MAX_RETRY_WAIT = 60.0
 
 
 def load_dotenv(path: Path = REPO_ROOT / ".env") -> None:
@@ -97,7 +99,13 @@ class CachedClient:
             )
             if response.status_code not in RETRY_STATUS:
                 break
-            time.sleep(float(response.headers.get("Retry-After", 2 ** attempt)))
+            wait = float(response.headers.get("Retry-After", 2 ** attempt))
+            if wait > MAX_RETRY_WAIT:
+                raise RuntimeError(
+                    f"{self.base_url} asks us to wait {wait:.0f} s (HTTP {response.status_code}); "
+                    "try again later"
+                )
+            time.sleep(wait)
         response.raise_for_status()
 
         data = response.json()
