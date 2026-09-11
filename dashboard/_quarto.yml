@@ -3,6 +3,7 @@ project:
   output-dir: _site
   resources:
     - assets/logo/*.svg
+    - assets/logo/*.png
     - assets/covers/*.jpg
     - assets/artists/*.jpg
 
@@ -11,11 +12,18 @@ lang: is
 book:
   title: "Tónlistararfurinn"
   subtitle: "Plötuklúbbur Inga — gagnakafið"
-  favicon: assets/logo/musikisur.svg
+  # PNG (exported from musikisur.svg at 192px) because Safari ignores SVG favicons.
+  favicon: assets/logo/musikisur.png
+  # The logo tops the sidebar on every page.
+  sidebar:
+    logo: assets/logo/musikisur.svg
+    logo-alt: "MÚSÍKISUR"
   repo-url: https://github.com/tungufoss/musikisur
   site-url: https://tungufoss.github.io/musikisur/
   page-footer:
-    left: "MÚSÍKISUR — stundum reynist lagalisti vera flóknara skjal en hann lítur út fyrir að vera."
+    left: >-
+      ![](/assets/logo/musikisur.svg){.footer-logo fig-alt="MÚSÍKISUR"}
+      MÚSÍKISUR — stundum reynist lagalisti vera flóknara skjal en hann lítur út fyrir að vera.
     right: >-
       Gögn frá
       [![Spotify](/assets/logo/spotify.svg){.footer-logo}](https://www.spotify.com)
@@ -43,6 +51,8 @@ format:
       # Font Awesome (timeline icons such as fa-rug); Bootstrap Icons ship with Quarto.
       text: |
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+    # Spotify icons open a compact player on the page instead of leaving it.
+    include-after-body: _spotify-inline.html
     toc: true
 
 execute:

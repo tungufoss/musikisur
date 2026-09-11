@@ -4,6 +4,14 @@
   vertical-align: middle;
 }
 
+/* MÚSÍKISUR logo at the top of the sidebar: large enough to recognise, not the whole column. */
+.sidebar-logo {
+  display: block;
+  width: 110px;
+  max-width: 60%;
+  margin: 0.5rem auto 0.75rem;
+}
+
 .album-cover,
 .artist-photo {
   float: right;
@@ -194,6 +202,22 @@
 
 .spotify-link {
   text-decoration: none;
+}
+
+/* Compact player opened by a Spotify icon (_spotify-inline.html). */
+.spotify-popover {
+  position: absolute;
+  z-index: 1080;
+  width: min(340px, calc(100vw - 16px));
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.spotify-popover iframe {
+  display: block;
+  border: 0;
+  border-radius: 12px;
 }
 
 .provider-logo {

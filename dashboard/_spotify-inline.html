@@ -1,0 +1,49 @@
+<script>
+// Spotify icons (class spotify-link with data-spotify-embed) open Spotify's compact player in a
+// small popover on the page instead of leaving it. Without JavaScript they stay plain links.
+(() => {
+  let current = null; // { link, popover }
+
+  function close() {
+    if (!current) return;
+    current.popover.remove();
+    current.link.setAttribute("aria-expanded", "false");
+    current = null;
+  }
+
+  function open(link) {
+    const popover = document.createElement("div");
+    popover.className = "spotify-popover";
+    const iframe = document.createElement("iframe");
+    iframe.src = link.dataset.spotifyEmbed;
+    iframe.width = "100%";
+    iframe.height = "80";
+    iframe.title = "Spotify";
+    iframe.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+    popover.append(iframe);
+    document.body.append(popover);
+
+    const box = link.getBoundingClientRect();
+    const right = window.scrollX + document.documentElement.clientWidth - popover.offsetWidth - 8;
+    popover.style.left = `${Math.max(window.scrollX + 8, Math.min(box.left + window.scrollX, right))}px`;
+    popover.style.top = `${box.bottom + window.scrollY + 6}px`;
+    link.setAttribute("aria-expanded", "true");
+    current = { link, popover };
+  }
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a.spotify-link[data-spotify-embed]");
+    if (link) {
+      event.preventDefault();
+      const same = current && current.link === link;
+      close();
+      if (!same) open(link);
+    } else if (current && !current.popover.contains(event.target)) {
+      close();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") close();
+  });
+})();
+</script>
