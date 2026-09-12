@@ -26,12 +26,12 @@ sources:
     purpose: "historical UK chart observations"
     cache: true
 
+  imdb:
+    enabled: true
+    purpose: "soundtrack credits: which films and TV titles use the songs (exported by hand; no open API, no automated collection)"
+    cache: false
   tmdb:
-    enabled: false
-    purpose: "canonical film/TV/episode identity, dates, metadata and IMDb cross-IDs"
+    enabled: true
+    purpose: "finds each IMDb title by its IMDb id and ranks titles by vote count"
     requires_secret: TMDB_API_TOKEN
-    cache: true
-  screen_music:
-    enabled: false
-    purpose: "source-backed observations linking recordings/works to films and TV episodes"
     cache: true

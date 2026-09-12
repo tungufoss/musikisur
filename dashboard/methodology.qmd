@@ -40,10 +40,10 @@ Söngtextar birtast í spilara Genius og tenglar vísa á Genius.
 Tenglar á plötur og lög koma frá Spotify.
 
 [![Discogs](assets/logo/discogs.svg){.provider-logo}](https://www.discogs.com)
-Data provided by Discogs.
+Einstakar útgáfur og útgáfuupplýsingar koma frá Discogs („Data provided by Discogs“).
 
 [![TMDB](assets/logo/tmdb.svg){.provider-logo}](https://www.themoviedb.org)
-This product uses the TMDB API but is not endorsed or certified by TMDB.
+Kvikmyndir og þættir eru fundnir og raðað eftir vinsældum með TMDB („This product uses the TMDB API but is not endorsed or certified by TMDB“).
 
 Vikulegir Billboard-listar (Hot 100 og Billboard 200) koma úr safni [utdata/rwd-billboard-data](https://github.com/utdata/rwd-billboard-data) (MIT). Billboard á listana sjálfa.
 

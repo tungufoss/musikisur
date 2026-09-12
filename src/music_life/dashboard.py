@@ -1304,8 +1304,9 @@ def _screen_tables(
             link=[f"[{t}](https://www.imdb.com/title/{i}/)" for t, i in zip(rows["title"], rows["imdb_id"])],
             years=[str(a) if a == b else f"{a}–{b}" for a, b in zip(rows["first_year"], rows["last_year"])],
             song=[songs_of[i] for i in rows["imdb_id"]],
+            rating=["—" if pd.isna(r) else f"{r:.1f}".replace(".", ",") for r in rows["imdb_rating"]],
         )
-        return md_table(rows, {"link": "Titill", "years": "Ár", "song": "Lag"})
+        return md_table(rows, {"link": "Titill", "years": "Ár", "song": "Lag", "rating": "Einkunn (IMDb)"})
 
     retrieved = pd.to_datetime(credits["retrieved_at"]).max()
     read = f", lesin {format_date(retrieved.date())}" if pd.notna(retrieved) else ""
@@ -1319,8 +1320,9 @@ def _screen_tables(
                             order=[[list(headers).index("total"), "desc"]])
         + '\n:::: {layout-ncol="2"}\n::: {}\n**Vinsælustu þáttaraðirnar**\n\n' + top("tv")
         + ":::\n\n::: {}\n**Vinsælustu kvikmyndirnar**\n\n" + top("movie") + ":::\n::::\n\n"
-        + f"*Heimild: soundtrack-skráning á IMDb{read}; hver titill tengist sinni IMDb-síðu. Vinsældir eru "
-        "fjöldi einkunna á TMDB. Þáttaröð er talin einu sinni þótt lagið heyrist í fleiri þáttum.*\n"
+        + f"*Heimild: soundtrack-skráning á IMDb{read}; hver titill tengist sinni IMDb-síðu. Raðað eftir "
+        "vinsældum (fjölda einkunna á TMDB); einkunnin sýnir gæði (meðaleinkunn á IMDb). Þáttaröð er talin "
+        "einu sinni þótt lagið heyrist í fleiri þáttum.*\n"
     )
 
 
