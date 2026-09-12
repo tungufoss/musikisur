@@ -1,0 +1,255 @@
+---
+title: "Plötuklúbbur Inga"
+subtitle: "Pilotþáttur: Gerry Rafferty og *City to City* (1978)"
+date: 2026-09-12
+date-format: "D. MMMM YYYY"
+lang: is
+format:
+  revealjs:
+    theme: simple
+    width: 1280
+    height: 720
+    hash: true
+    transition: none
+    slide-number: false
+    include-after-body: _pilot-timer.html
+---
+
+```{=html}
+<!-- Programme: segment name and planned minutes (60 in all). Each segment's first slide carries
+     {data-segment="..."} with the same name; the bar at the bottom shows "(2 af 4)" and the timer. -->
+<script>
+window.PILOT_SEGMENTS = [
+  ["Velkomin", 2],
+  ["Hver var Gerry Rafferty?", 8],
+  ["Stuck in the Middle with You", 9],
+  ["Þrjú ár í banni", 5],
+  ["Baker Street", 14],
+  ["Right Down the Line", 10],
+  ["Ábreiður og arfleifð", 7],
+  ["Frægð og endalok", 4],
+  ["Lokaorð", 1],
+];
+</script>
+```
+
+## Í þættinum {data-segment="Velkomin"}
+
+Birna, Kristín og Helga · þrjú lög í fullri lengd og nokkur hljóðbrot
+
+| | Dagskrárliður | Mín. |
+|---|---|---|
+| 1 | Velkomin | 0–2 |
+| 2 | Hver var Gerry Rafferty? | 2–10 |
+| 3 | Stuck in the Middle with You 🎵 | 10–19 |
+| 4 | Þrjú ár í banni | 19–24 |
+| 5 | Baker Street 🎵 | 24–38 |
+| 6 | Right Down the Line 🎵 | 38–48 |
+| 7 | Ábreiður og arfleifð | 48–55 |
+| 8 | Frægð og endalok | 55–59 |
+| 9 | Lokaorð | 59–60 |
+
+::: {.notes}
+▶ í horninu (eða T) ræsir tímamælinn. Liturinn segir hvort við erum á áætlun: grænt á áætlun, blátt á undan, appelsínugult á eftir. Spotify-spilararnir spila heil lög aðeins ef vafrinn er innskráður á Spotify; annars 30 sekúndna brot.
+:::
+
+## Hver var Gerry Rafferty? {data-segment="Hver var Gerry Rafferty?"}
+
+- Fæddur 16. apríl 1947 í Paisley, rétt vestan við Glasgow
+- 1969: gengur í The Humblebums með grínistanum Billy Connolly
+- 1972: stofnar Stealers Wheel með Joe Egan, skólafélaga úr Paisley
+- 1978: *City to City* fer í 1. sæti Billboard 200
+- Lést 4. janúar 2011, 63 ára, á heimili Mörthu dóttur sinnar í Stroud
+
+::: {.notes}
+Móðir hans kenndi honum írsk og skosk þjóðlög; Bítlarnir og Bob Dylan urðu síðan áhrifavaldar. Connolly er Glasgow-búi, Paisley er rétt vestan við Glasgow. Charlie Reid úr The Proclaimers eftir útförina: „He was not entirely comfortable with fame.“
+:::
+
+## Úr gögnunum
+
+- **206 lög** sem hann kom að: 131 í eigin nafni, 70 með hljómsveitum, 5 fyrir aðra
+- **9 lög á Billboard Hot 100**, besta sæti 2 („Baker Street“)
+- **5 plötur á Billboard 200**, besta sæti 1 (*City to City*, 50 vikur)
+- **110 myndir og þættir** nota lögin hans (IMDb), 12 ólík lög
+
+::: {.notes}
+Tölurnar eru úr bókinni (tímalínan og kvikmyndakaflinn á síðu Gerrys). Hvert lag talið einu sinni, árið sem það kom fyrst út; lög sem endurvakin Stealers Wheel gaf út eftir að hann hætti eru ekki talin með.
+:::
+
+## Stuck in the Middle with You {data-segment="Stuck in the Middle with You"}
+
+Stealers Wheel, 1972 · 3:28 · 6. sæti Billboard Hot 100 (1973), 18 vikur
+
+```{=html}
+<iframe src="https://open.spotify.com/embed/track/3Vby4nGmtbDo7HDJamOWkT" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Stealers Wheel – Stuck in the Middle with You"></iframe>
+```
+
+🎵 **Spilað í fullri lengd**
+
+::: {.notes}
+Eftir Rafferty og Egan. Á fyrstu plötunni voru þeir fimm (Paul Pilnick, Tony Williams, Rod Coombes); frá 1973 var Stealers Wheel opinberlega dúett með leigðum hljóðfæraleikurum.
+:::
+
+## Reservoir Dogs (1992)
+
+- Jómfrúarmynd Quentins Tarantino: Mr. Blonde (Michael Madsen) dansar við lagið á meðan hann pínir bundinn lögreglumann (Kirk Baltz)
+- Rafferty neitaði að leyfa endurútgáfu lagsins
+- 2001: danslagaútgáfa Louise fer á topp 10 í Bretlandi, myndbandið sækir í senuna
+- Ábreiða Grace Potter er titillag *Grace and Frankie* (2015–2022) með Jane Fonda og Lily Tomlin
+
+::: {.notes}
+Tarantino við Rolling Stone: „The first time somebody actually did the torture scene to that song, the guy didn't even have a great audition, but it was like watching the movie. I was thinking, 'Oh my God, this is gonna be awesome!'“ Hann nefnir ekki hvaða leikari það var. Heimildin (Wikipedia) segir ekki hvers vegna Rafferty neitaði endurútgáfunni.
+:::
+
+## Þrjú ár í banni {data-segment="Þrjú ár í banni"}
+
+- Stealers Wheel hættir 1975 → lagadeilur, ekkert gefið út í þrjú ár
+- Ferðaðist á milli fjölskyldunnar í Paisley og London, gisti í íbúð vinar við Baker Street
+- „Baker Street“ er **ekki** Sherlock Holmes-lag: 221B var skáldskapur
+- Ferðirnar urðu kveikjan að titillaginu og „Mattie's Rag“
+
+::: {.notes}
+Þegar Holmes-sögurnar komu út náðu húsnúmerin í Baker Street ekki upp í 221. Engin heimild hefur Rafferty sjálfan fyrir nafni plötunnar; ferðalagið er okkar lestur, studdur af Wikipediu. „Mattie's Rag“ fjallar um gleðina við að hitta dótturina aftur.
+:::
+
+## *City to City* (1978)
+
+- Kom út 20. janúar 1978 hjá United Artists; Hugh Murphy og Rafferty stjórnuðu upptökum
+- UA vildi titillagið sem smáskífu (kom út seint 1977); Rafferty vildi „Baker Street“ (febrúar 1978)
+- Umslagsmálverkið: John Patrick Byrne, sem málaði öll umslögin fram að 1982
+- 8. júlí 1978: velti *Saturday Night Fever* úr 1. sæti Billboard 200
+
+::: {.notes}
+Hugh Murphy: „They actually said it was too good for the public.“ Byrne málaði líka Martin-gítarinn með andlitsmynd af Rafferty og flutti líkræðuna í St Mirin's-dómkirkjunni í Paisley 21. janúar 2011. Platan kom aftur inn á Billboard 200 í janúar 2011, tveimur vikum eftir andlátið.
+:::
+
+## Baker Street {data-segment="Baker Street"}
+
+Gerry Rafferty, 1978 · 6:05 · 2. sæti Billboard Hot 100, 3. sæti í Bretlandi
+
+```{=html}
+<iframe src="https://open.spotify.com/embed/track/5gOd6zDC8vhlYjqbQdJVWP" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Gerry Rafferty – Baker Street"></iframe>
+```
+
+🎵 **Spilað í fullri lengd**
+
+## Hver á saxófónriffið?
+
+- **Raphael Ravenscroft:** mest gamalt blúsriff, engar nótur frá Rafferty
+- **Rafferty:** „It was my line. I sang it to him.“
+- **Hugh Burns:** riffið var á demóinu, leikið á gítar
+- Demóið kom út 2011 og átti að þagga niður í efasemdarröddunum
+
+::: {.notes}
+Rab Noakes í bæklingnum 2011: „Let's hope [the demo] will, at last, silence all who keep on asserting that the saxophone player came up with the melody line.“ Flökkusagan um Bob Holness (kynni Blockbusters) var uppspuni Stuarts Maconie í NME.
+:::
+
+## Half a Heart (1968)
+
+Steve Marcus · lag eftir víbrafónleikarann Gary Burton
+
+```{=html}
+<iframe src="https://open.spotify.com/embed/track/7CCUAlhhfmQJOtN7tcDKd8" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Steve Marcus – Half a Heart"></iframe>
+```
+
+🎸 **Helga spilar riffið**
+
+::: {.notes}
+Tíu árum á undan Baker Street. Burton sagði við The Atlantic að Rafferty kynni að hafa tekið laglínuna ómeðvitað og líkti því við „My Sweet Lord“-málið. Hugh Burns taldi þetta tilviljun.
+:::
+
+## Sweet Child o' Mine (1987)
+
+Slash nefndi „Baker Street“ sem áhrifavald á gítarsólóið
+
+```{=html}
+<iframe src="https://open.spotify.com/embed/track/7snQQk1zcKl8gZ92AnueZW" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Guns N' Roses – Sweet Child O' Mine"></iframe>
+```
+
+🎸 **Sólóið spilað**
+
+## Smellirnir borga sig
+
+- 2003: „Baker Street“ skilaði honum enn um 80.000 pundum á ári, um 24,7 m. kr. á núvirði
+- BMI 2010: yfir 5 milljón spilanir, um **58,8 ár** af samfelldri spilun
+- Undercover-útgáfan 1992: 1,5 milljónir punda til viðbótar
+- Hann leyfði aldrei „Baker Street“ í auglýsingum
+
+::: {.notes}
+Rafferty við The Sun: „I could live off that song alone.“ 58,8 ár er okkar útreikningur (5 milljón × lengd lagsins á plötunni) og efri mörk, því útvarp spilar oft styttri útgáfu. „Stuck in the Middle“ yfir 4 milljón spilanir, „Right Down the Line“ yfir 3 milljón.
+:::
+
+## Right Down the Line {data-segment="Right Down the Line"}
+
+Gerry Rafferty, 1978 · 4:27 · 12. sæti Billboard Hot 100, 15 vikur
+
+```{=html}
+<iframe src="https://open.spotify.com/embed/track/2Xb6wJYGi0QXwURw5WWvI5" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Gerry Rafferty – Right Down the Line"></iframe>
+```
+
+🎵 **Spilað í fullri lengd**
+
+## Óður til Cörlu?
+
+- Gerry og Carla Ventilla kynntust á dansleik 1965: hann 18, hún 15
+- Gift 1970, skilin 1990; drykkjan tók sinn toll
+- Oft lesið sem óður til hennar, sem stóð með honum í gegnum erfiða tíma
+- „Baker Street“ horfir út á borgina; „Right Down the Line“ horfir heim
+
+::: {.notes}
+Genius og Songfacts tengja lagið við Cörlu, en hvorug síðan vísar í orð Raffertys sjálfs. Síðustu árin var hann með Enzinu Fuschini, ítalskri listakonu; Carla var líka af ítalskri fjölskyldu („greinilega með týpu“).
+:::
+
+## Bonnie Raitt (2012)
+
+Reggíútsetning á *Slipstream*, 34 árum eftir frumútgáfuna · 5:27
+
+```{=html}
+<iframe src="https://open.spotify.com/embed/track/1ciDeTaBbYEP3aBj2Eu5X4" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Bonnie Raitt – Right Down the Line"></iframe>
+```
+
+🎵 **Hljóðbrot**
+
+::: {.notes}
+Lily Allen tísti „Rest in Peace Gerry x“ með myndbandi við lagið þegar hann lést. Elly Jackson (La Roux): „my favourite track of all time. It makes me think of home, nostalgia and happiness.“
+:::
+
+## Foo Fighters: Baker Street (1998) {data-segment="Ábreiður og arfleifð"}
+
+Á breskri CD-smáskífu „My Hero“ · ekki á Spotify
+
+[▶ Foo Fighters – Baker Street á YouTube](https://www.youtube.com/watch?v=-DmIk05vmMc)
+
+🎵 **Hljóðbrot**
+
+## Á skjánum
+
+- IMDb skráir lögin hans í **110 myndum og þáttum**: 73 þáttaröðum, 30 kvikmyndum
+- Vinsælustu þáttaraðirnar: *The Boys*, *Rick and Morty*, *Euphoria*
+- Vinsælustu kvikmyndirnar: *Reservoir Dogs*, *Good Will Hunting*, *Zodiac*
+- „Stuck in the Middle“ í 57 titlum, „Baker Street“ í 33
+
+::: {.notes}
+Vinsældir eru fjöldi einkunna á TMDB. „Right Down the Line“ er meðal annars í Ozark, The Killing og Euphoria.
+:::
+
+## Frægð og endalok {data-segment="Frægð og endalok"}
+
+- Neitaði að túra um Bandaríkin; tók sér hlé 1983
+- 2008: fjögurra daga fyllerí á Westbury-hótelinu í Mayfair, svo St Thomas'-sjúkrahúsið
+- Lést úr lifrarbilun 4. janúar 2011 í Stroud, 63 ára
+- Sálumessa í Paisley 21. janúar 2011; John Byrne flutti líkræðuna
+
+::: {.notes}
+Hótelstjórinn á Westbury lýsti honum sem einstaklega indælum manni sem hélt sig út af fyrir sig. Hann hvarf af sjúkrahúsinu 1. ágúst 2008 og sagðist vera í Toskana. Kaldhæðnin: lagið um hve illa honum leið í sviðsljósinu gerði hann enn frægari.
+:::
+
+## Takk fyrir að hlusta {data-segment="Lokaorð"}
+
+Plötuklúbbur Inga · MÚSÍKISUR
+
+Nánar í bókinni: Gerry Rafferty og *City to City*
+
+::: {.notes}
+Heimildir: ensk Wikipedia (Gerry Rafferty, City to City, Baker Street, Stuck in the Middle with You, Stealers Wheel), MusicBrainz, Billboard (utdata/rwd-billboard-data), IMDb, TMDB, Genius og Songfacts. Allt nánar, með tenglum, í bókinni.
+:::
