@@ -48,6 +48,8 @@ Einstakar útgáfur og útgáfuupplýsingar koma frá Discogs („Data provided 
 [![TMDB](assets/logo/tmdb.svg){.provider-logo}](https://www.themoviedb.org)
 Kvikmyndir og þættir eru fundnir og raðað eftir vinsældum með TMDB („This product uses the TMDB API but is not endorsed or certified by TMDB“).
 
+[![Billboard](assets/logo/billboard.svg){.provider-logo}](https://www.billboard.com)
+[![GitHub: utdata/rwd-billboard-data](assets/logo/github.svg){.provider-logo}](https://github.com/utdata/rwd-billboard-data)
 Vikulegir Billboard-listar (Hot 100 og Billboard 200) koma úr safni [utdata/rwd-billboard-data](https://github.com/utdata/rwd-billboard-data) (MIT). Billboard á listana sjálfa.
 
 Myndbönd birtast í spilara [YouTube](https://www.youtube.com) og eru ekki afrituð.
@@ -62,19 +64,48 @@ Handunnar heimildir hverrar plötu eru í `manual.yml`, hver með sinni vefsló�
 
 Þegar heimildum ber ekki saman eru allar útgáfur varðveittar frekar en að ein sé valin í hljóði.
 
+## Vinsældalistar Billboard
+
+**Billboard Hot 100** er vikulegur listi yfir vinsælustu *lögin* í Bandaríkjunum, frá 4. ágúst 1958.
+
+- Á áttunda áratugnum var hann reiknaður með punktakerfi úr sölu, útvarpsspilun og glymskröttum, og salan vó yfirleitt þyngra en spilunin.
+- Frá 1991 hefur salan verið mæld með Nielsen SoundScan og útvarpsspilunin með Nielsen BDS.
+- Stafrænt niðurhal bættist við í febrúar 2005, streymi í ágúst 2007 og áhorf á YouTube í febrúar 2013.
+- Frá 2015 falla lög af listanum eftir 20 vikur ef þau eru komin niður fyrir 50. sæti. Vikufjöldi nýrra laga er því ekki alveg sambærilegur við vikufjölda laga frá áttunda áratugnum.
+
+**Billboard 200** er vikulegur listi yfir vinsælustu *plöturnar* í Bandaríkjunum.
+
+- Vikulegur plötulisti hóf göngu sína 24. mars 1956, fékk 200 sæti 13. maí 1967 og nafnið Billboard 200 í mars 1992.
+- Fram til 1991 byggði hann að mestu á sölutölum sem verslanir gáfu upp. Frá 25. maí 1991 byggir hann á Nielsen SoundScan.
+- Frá 13. desember 2014 telja streymi og stök lög líka, umreiknuð í plötuígildi: 10 seld lög eða 1.500 streymi jafngilda einni seldri plötu. Myndbandsáhorf bættist við í janúar 2020.
+- Fram til 5. desember 2009 voru eldri plötur útilokaðar frá listanum. Sú regla var fallin úr gildi þegar *City to City* kom aftur inn á listann í janúar 2011, rúmum 30 árum eftir útgáfu.
+
+**Dagsetningar.** Hver listi er dagsettur á laugardegi, þeim degi sem prentaða blaðið kom í verslanir, en mælingavikunni lýkur nokkrum dögum fyrr. Dagsetningarnar í bókinni eru dagsetningar listanna.
+
+**Hvernig bókin notar listana.**
+
+- Gögnin eru vikulegir listar úr safni utdata/rwd-billboard-data. Listar frá 2022 eru sóttir vikulega af billboard.com; eldri listar eru teknir saman úr öðrum söfnum og safnið tilgreinir nokkrar þekktar villur í þeim.
+- Lög og plötur eru tengd flytjanda eftir nafninu eins og það stendur á listanum: flytjandanum sjálfum og hljómsveitum hans.
+- Ný lota telst hefjast ef lag eða plata hefur verið meira en fjórar vikur (28 daga) af listanum. Það er „endurkoma“ í töflunum.
+- „Vikur“ eru vikurnar sem safnið skráir. Á tímalínunni sýnir hver reitur besta sæti ársins.
+
+*Heimild: greinarnar [Billboard Hot 100](https://en.wikipedia.org/wiki/Billboard_Hot_100) og [Billboard 200](https://en.wikipedia.org/wiki/Billboard_200) á ensku Wikipediu (CC BY-SA 4.0).*
+
 ## Kvikmyndir og sjónvarp
 
 Kvikmynd eða þáttur og sú fullyrðing að lag heyrist í honum eru tvær aðskildar staðreyndir. Fullyrðingin kemur úr soundtrack-skráningu IMDb, sem er lesin í vafra því IMDb hefur ekkert opið API og leyfir ekki sjálfvirka söfnun. TMDB er notað til að finna hvern titil eftir IMDb-auðkenni og raða eftir vinsældum (fjölda einkunna). Ef heimild nefnir lagið en ekki tiltekna upptöku er tengt við verkið í stað þess að giska á upptöku.
 
 ## Lógó
 
-Lógóin í fæti síðunnar og hér að ofan vísa á heimildirnar og eru eign rétthafa sinna. Þau sem ekki komu frá veitunum sjálfum eru af Wikimedia Commons:
+Lógóin í fæti síðunnar og hér að ofan vísa á heimildirnar og eru eign rétthafa sinna. Lógó Spotify, Discogs og TMDB koma frá veitunum sjálfum; hin eru af Wikimedia Commons:
 
-- MusicBrainz, Wikidata, IMDb og Genius: almenningseign ([MusicBrainz](https://commons.wikimedia.org/wiki/File:MusicBrainz_Logo_Icon_(2016).svg), [Wikidata](https://commons.wikimedia.org/wiki/File:Wikidata-logo.svg), [IMDb](https://commons.wikimedia.org/wiki/File:IMDB_Logo_2016.svg), [Genius](https://commons.wikimedia.org/wiki/File:Genius_Logo_2018.svg)).
+- MusicBrainz, Wikidata, IMDb, Genius og Billboard: almenningseign ([MusicBrainz](https://commons.wikimedia.org/wiki/File:MusicBrainz_Logo_Icon_(2016).svg), [Wikidata](https://commons.wikimedia.org/wiki/File:Wikidata-logo.svg), [IMDb](https://commons.wikimedia.org/wiki/File:IMDB_Logo_2016.svg), [Genius](https://commons.wikimedia.org/wiki/File:Genius_Logo_2018.svg), [Billboard](https://commons.wikimedia.org/wiki/File:Billboard_logo.svg)).
 - Cover Art Archive: MetaBrainz Foundation, CC BY-SA 4.0 ([Commons](https://commons.wikimedia.org/wiki/File:Cover_Art_Archive_Logo_(2020).svg)).
 - Wikipedia: Nohat (hugmynd Paullusmagnus), Wikimedia, CC BY-SA 3.0 ([Commons](https://commons.wikimedia.org/wiki/File:Wikipedia-logo-v2.svg)).
 - Wikimedia Commons: Reidab, Grunt, 3247 og Pumbaa, CC BY-SA 3.0 ([Commons](https://commons.wikimedia.org/wiki/File:Commons-logo.svg)).
 - GitHub-merkið (fyrir Billboard-gögnin frá utdata): GitHub, MIT ([Commons](https://commons.wikimedia.org/wiki/File:Octicons-mark-github.svg)).
+
+MÚSÍKISUR-lógóið er lógó verkefnisins.
 
 ## Túlkun
 
