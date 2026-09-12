@@ -26,6 +26,15 @@ print(album_cover(ALBUM_SLUG))
 *Heimild: greinarnar [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [221B Baker Street](https://en.wikipedia.org/wiki/221B_Baker_Street) á ensku Wikipediu (CC BY-SA 4.0).*
 :::
 
+::: {.callout-note}
+## Af hverju *City to City*?
+Engin heimild hefur Rafferty sjálfan fyrir nafninu. Löngu ferðirnar á milli London og Skotlands, á meðan lagadeilurnar stóðu yfir, urðu hins vegar kveikjan að nokkrum lögum plötunnar, meðal annars titillaginu og „Mattie's Rag“, sem fjallar um gleðina við að hitta dótturina aftur. Það má lesa lagaröðina í [lagalistanum](#lagalisti) hér fyrir neðan sem slíkt ferðalag, og „Baker Street“ er frægasta sagan úr því.
+
+Titillagið kom meira að segja fyrst út sem smáskífa, seint á árinu 1977 í Bretlandi og nokkrum Evrópulöndum. „Baker Street“ fylgdi í febrúar 1978.
+
+*Heimild: greinarnar [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty), [City to City](https://en.wikipedia.org/wiki/City_to_City) og [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) á ensku Wikipediu (CC BY-SA 4.0).*
+:::
+
 {{< include ../_chapter.qmd >}}
 
 ## Punktar fyrir þáttinn
