@@ -600,12 +600,16 @@ def artist_map(artist_slug: str) -> Any:
         else:
             folium.CircleMarker([lat, lon], radius=6, color=color, fill=True, fill_opacity=0.7,
                                 popup=popup, tooltip=name).add_to(fmap)
-    # Frame the life places; the places Wikipedia mentions stay reachable by zooming out.
-    framed = [(lat, lon) for role, _, lat, lon, _ in places if role != "mentioned"] or [
-        (lat, lon) for _, _, lat, lon, _ in places
-    ]
+    # Frame birth and death: centred between them with both in view. Homes and the places
+    # Wikipedia mentions stay reachable by zooming out.
+    framed = (
+        [(lat, lon) for role, _, lat, lon, _ in places if role in ("birth", "death")]
+        or [(lat, lon) for role, _, lat, lon, _ in places if role != "mentioned"]
+        or [(lat, lon) for _, _, lat, lon, _ in places]
+    )
     lats, lons = [p[0] for p in framed], [p[1] for p in framed]
-    fmap.fit_bounds([[min(lats), min(lons)], [max(lats), max(lons)]], padding=(30, 30))
+    # max_zoom keeps one place, or two close together, from filling the map with a few streets.
+    fmap.fit_bounds([[min(lats), min(lons)], [max(lats), max(lons)]], padding=(40, 40), max_zoom=8)
     return fmap
 
 
@@ -858,8 +862,16 @@ def artist_timeline(artist_slug: str) -> str:
     )
     # The film and TV lane makes the track taller than the stylesheet's default.
     height = f' style="height:{TIMELINE_LANES["screen"] + SCREEN_HEIGHT}px"' if "screen" in lanes else ""
-    timeline = (f'<div class="timeline"><div class="tl-labels"{height}>{labels}</div>'
-                f'<div class="tl-track"{height}>{"".join(parts)}</div></div>{legend}')
+    # Copy or download the timeline with its legend as a PNG (_timeline-export.html); the title
+    # only shows in the image, so a shared picture says whose timeline it is.
+    tools = (f'<div class="tl-tools" data-target="tl-{artist_slug}" data-file="{artist_slug}-timalina">'
+             '<button type="button" class="tl-copy"><i class="fa-solid fa-copy"></i> Afrita mynd</button>'
+             '<button type="button" class="tl-download"><i class="fa-solid fa-download"></i> Sækja PNG</button>'
+             '<span class="tl-tools-status" aria-live="polite"></span></div>')
+    timeline = (f'{tools}<div class="tl-figure" id="tl-{artist_slug}">'
+                f'<div class="tl-export-title">{html.escape(found[1])} · tímalína · MÚSÍKISUR</div>'
+                f'<div class="timeline"><div class="tl-labels"{height}>{labels}</div>'
+                f'<div class="tl-track"{height}>{"".join(parts)}</div></div>{legend}</div>')
 
     table = ""
     if albums or band_albums:
