@@ -35,7 +35,8 @@ Gerry Rafferty / *City to City* is the pilot only. New artists and focus albums 
 - **Discogs**: edition-level releases, printed personnel and production credits.
 - **Spotify**: current track/album IDs, URIs and external URLs.
 - **Billboard / Official Charts / archives**: historical chart observations.
-- **TMDB**: canonical movie/TV/episode identity and metadata; not assumed to be a complete soundtrack source.
+- **IMDb**: soundtrack credits (which films and TV titles use the songs) and ratings (quality), exported by hand; no open API.
+- **TMDB**: finds each IMDb title by its IMDb id; its vote count ranks titles by popularity. Its cast and crew credits do not list licensed songs.
 - **Screen-music evidence sources**: recording/work appearances in films and TV episodes.
 - **Biographies/interviews/obituaries/liner notes/journalism**: narrative life events and claims.
 - **Manual/LLM analysis**: candidate themes, links and research notes.
@@ -119,7 +120,8 @@ Every source adapter must document:
 - Album data blocks come from `dashboard/_chapter.qmd`; artist pages use `_artist.qmd` (fact boxes, tags) and `_artist_life.qmd` (map, timeline); all via `music_life.dashboard`. Keep queries there, not in page files.
 - Hand-curated facts (covers, nominations, extra places) go in `data/curated/<artist>/<album>/manual.yml` with a source URL for every entry; `collect_album.py` merges them into the bundle.
 - Spotify links for the other albums or songs on the focus album's best chart week come from `scripts/chart_links.py <artist> <album>`, run after `build_db.py` (it needs the charts), then rebuild. It lists anything it could not match; check `spotify_name` in `chart_links.parquet` before committing.
-- Film and TV uses come from IMDb's soundtrack credits. IMDb has no open API and forbids automated collection: never script requests to imdb.com. Export the artist's credits by hand from a browser into `data/raw/imdb/soundtrack-<nm-id>.json` (not committed), then run `scripts/screen_credits.py <artist> <album> <export>` after `build_db.py`; it adds TMDB vote counts for ranking and writes `screen_credits.parquet`.
+- Film and TV uses come from IMDb's soundtrack credits. IMDb has no open API and forbids automated collection: never script requests to imdb.com. Export the artist's credits by hand from a browser into `data/raw/imdb/soundtrack-<nm-id>.json` (not committed), then run `scripts/screen_credits.py <artist> <album> <export>` after `build_db.py`; it adds TMDB vote counts (popularity), maps IMDb's song titles to the artist's songs, finds Spotify links and writes `screen_credits.parquet` and `song_links.parquet`.
+- The book renders with `freeze: auto`: a full `quarto render` re-executes only pages whose `.qmd` changed. After re-collecting an album's data, render its pages by name (`quarto render albums/<slug>.qmd artists/<artist>.qmd`; single-file renders always execute). After changing `src/music_life/dashboard.py` or a shared include (`_chapter.qmd`, `_artist*.qmd`), delete `dashboard/_freeze/` before a full render. `_freeze/` is not committed; the Pages workflow renders everything.
 - Never copy song lyrics into the repository or pages. Link to a lyrics site, or embed Genius' own widget with `{{< genius SONG_ID url="..." >}}` (the lyrics load from genius.com under their licence).
 - Direct quotes stay in their original language (Icelandic quotation marks „…“); only paraphrases are translated.
 - Every image shown carries a visible credit: a link to the page it came from, plus author and licence when the source gives them (Wikimedia Commons). Album covers credit the Cover Art Archive; the artwork's copyright stays with its owners.

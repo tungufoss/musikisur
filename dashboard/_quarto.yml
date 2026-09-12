@@ -72,6 +72,7 @@ format:
 execute:
   echo: false
   warning: false
-  freeze: false
+  # A full render re-executes only pages whose .qmd changed; see AGENTS.md after data or code changes.
+  freeze: auto
   # A fresh kernel per render, so edits to src/music_life show up in `quarto preview`.
   daemon: false
