@@ -1,0 +1,201 @@
+---
+title: "*City to City* (1978)"
+subtitle: "Gerry Rafferty"
+---
+
+```{python}
+ALBUM_SLUG = "city-to-city"
+```
+
+```{python}
+#| output: asis
+from music_life.dashboard import album_cover
+
+print(album_cover(ALBUM_SLUG))
+```
+
+*City to City* er önnur sólóplata Gerrys Rafferty, sjö árum á eftir *Can I Have My Money Back?* (1971), og sú fyrsta eftir þriggja ára lagabaráttu í kjölfar þess að Stealers Wheel hætti. Hún kom út hjá United Artists 20. janúar 1978, tekin upp í Chipping Norton Recording Studios undir stjórn Hughs Murphy og Raffertys sjálfs, með umslagsmálverki eftir John Patrick Byrne. Platan fór í 1. sæti Billboard 200 sumarið 1978, seldist í platínuupplagi í Bandaríkjunum og gaf af sér smellina „Baker Street“, „Right Down the Line“ og „Home and Dry“.
+
+*Heimildir: greinin [City to City](https://en.wikipedia.org/wiki/City_to_City) á ensku Wikipediu (CC BY-SA 4.0), Wikidata (upptökustaður), MusicBrainz (upptökustjórn) og Discogs (umslag).*
+
+::: {.callout-note}
+## TL;DR: lögin tvö
+- **„Baker Street“ er ekki Sherlock Holmes-lag**, þótt nafnið kalli óhjákvæmilega á 221B Baker Street. Heimilisfang Holmes var skáldskapur: þegar sögurnar komu út náðu húsnúmerin í götunni ekki upp í 221. Lagið sprettur úr lífi Raffertys sjálfs. Á meðan lagadeilurnar stóðu yfir ferðaðist hann reglulega á milli fjölskyldunnar í Paisley og London, þar sem hann gisti oft í íbúð vinar síns við Baker Street í Marylebone. Gatan varð þannig tákn fyrir biðina, einmanaleikann og óánægju hans með stjörnukerfið.
+- **„Right Down the Line“ horfir heim**, til Cörlu, eiginkonu hans, sem stóð með honum í gegnum þennan tíma ([nánar hér fyrir neðan](#oedur-til-corlu)).
+
+*Heimild: greinarnar [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [221B Baker Street](https://en.wikipedia.org/wiki/221B_Baker_Street) á ensku Wikipediu (CC BY-SA 4.0).*
+:::
+
+::: {.callout-note}
+## Af hverju *City to City*?
+Engin heimild hefur Rafferty sjálfan fyrir nafninu. Löngu ferðirnar á milli London og Skotlands, á meðan lagadeilurnar stóðu yfir, urðu hins vegar kveikjan að nokkrum lögum plötunnar, meðal annars titillaginu og „Mattie's Rag“, sem fjallar um gleðina við að hitta dótturina aftur. Það má lesa lagaröðina í [lagalistanum](#lagalisti) hér fyrir neðan sem slíkt ferðalag, og „Baker Street“ er frægasta sagan úr því.
+
+Titillagið kom meira að segja fyrst út sem smáskífa, seint á árinu 1977 í Bretlandi og nokkrum Evrópulöndum. „Baker Street“ fylgdi í febrúar 1978.
+
+*Heimild: greinarnar [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty), [City to City](https://en.wikipedia.org/wiki/City_to_City) og [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) á ensku Wikipediu (CC BY-SA 4.0).*
+:::
+
+{{< include ../_chapter.qmd >}}
+
+## Punktar fyrir þáttinn
+
+### Aðdragandinn: þrjú ár í banni
+
+- Eftir að Stealers Wheel hætti árið 1975 lenti Rafferty í lagadeilum sem komu í veg fyrir að hann mætti gefa út nokkuð efni í þrjú ár. Hljómsveitin hafði lengi glímt við lagaþras, vaxandi spennu milli Raffertys og Joe Egan og vandræði í umboðsmálum, og upptökustjórarnir Leiber og Stoller áttu sjálfir í rekstrarvanda. Heimildirnar segja þó ekki beinlínis um hvað deilurnar snerust, aðeins að þær leystust árið 1978 ([Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) og [Stealers Wheel](https://en.wikipedia.org/wiki/Stealers_Wheel) á ensku Wikipediu).
+- *City to City* kom út 20. janúar 1978. Hún var fyrsta sólóplata hans í sex ár og fyrsta útgáfa hans af nokkru tagi síðan 1975.
+- Útgáfufyrirtækið United Artists vildi hafa titillagið sem fyrstu smáskífu, en Rafferty taldi „Baker Street“ betri kost. Upptökustjórinn Hugh Murphy sagði síðar að þeir hefðu þurft að grátbiðja fyrirtækið um að gefa lagið út sem smáskífu: „They actually said it was too good for the public.“
+- Platan velti *Saturday Night Fever* úr 1. sæti Billboard 200 hinn 8. júlí 1978 og náði platínusölu.
+
+::: {.callout-tip}
+## Úr gögnunum
+Þagnarárin sjást í gögnunum. Á [tímalínunni um Gerry Rafferty](../artists/gerry-rafferty.qmd#tímalína) eru engin ný lög árin 1976 og 1977, og á Billboard-listunum sést hvorki hann né Stealers Wheel frá vorinu 1974 þar til „Baker Street“ fer inn á Hot 100 í apríl 1978. Vikuna 8. júlí 1978, þegar platan var í 1. sæti, var *Saturday Night Fever* komin niður í 2. sæti (sjá vinsældalistana hér að ofan).
+:::
+
+### Umslagið: John Patrick Byrne
+
+- Umslagsmálverkið er eftir John Patrick Byrne, listmálara og leikskáld frá Paisley og vin Raffertys til áratuga. Hann myndskreytti allar plötur Raffertys og Stealers Wheel fram að *Sleepwalking* (1982), sem fékk í staðinn einfalda ljósmynd af auðum vegi, og síðar líka *Another World*.
+- Byrne málaði líka Martin-kassagítar með andlitsmynd af Rafferty og nafninu hans. Gítarinn var ein dýrmætasta eign Raffertys og sést á mörgum ljósmyndum af honum. [Mynd af gítarnum](https://www.facebook.com/OfficialGerryRaffertyPage/posts/the-martin-guitar-hand-painted-by-john-byrne-and-which-gerry-wrote-many-of-his-b/844562893710855/) er á opinberri Facebook-síðu Raffertys.
+- Byrne flutti líkræðuna þegar sálumessa var sungin yfir Rafferty í St Mirin's-dómkirkjunni í Paisley 21. janúar 2011.
+
+*Heimild: greinarnar [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) og [John Byrne (playwright)](https://en.wikipedia.org/wiki/John_Byrne_%28playwright%29) á ensku Wikipediu (CC BY-SA 4.0).*
+
+### Hver á saxófónriffið í „Baker Street“?
+
+:::: {layout-ncol="2"}
+::: {}
+{{< video https://www.youtube.com/watch?v=7bcXRkMs0fs title="Baker Street – demó Gerry Rafferty" >}}
+
+**Demóið:** riffið leikið á gítar.
+:::
+
+::: {}
+{{< video https://www.youtube.com/watch?v=Fo6aKnRnBxM title="Baker Street – opinbera myndbandið" >}}
+
+**Útgefna lagið:** riffið á saxófón.
+:::
+::::
+
+*Hljóðbrot úr laginu af Wikipediu er í [lagalistanum](#lagalisti).*
+
+::: {.callout-tip}
+## Úr gögnunum
+MusicBrainz skráir Gerry Rafferty einan fyrir lagi og texta „Baker Street“. Raphael Ravenscroft leikur á saxófón í aðeins tveimur lögum plötunnar, „Baker Street“ og „Island“ {{< spotify 0WmJhww5BZROmkmAaOZUXj >}}, og Hugh Burns leikur á rafmagnsgítar í „Baker Street“. Gögnin segja hver er skráður höfundur, en ekki hver átti hugmyndina að riffinu. Þar greinir heimildum á.
+:::
+
+- **Ravenscroft:** Rafferty bað hann að fylla upp í nokkrar eyður í laginu og mest af því sem hann lék var gamalt blúsriff. Rafferty hefði ekki rétt honum neinar nótur.
+- **Rafferty:** Hann var pirraður á því að fólk teldi Ravenscroft hafa samið riffið: „It was my line. I sang it to him.“
+- **Hugh Burns** styður frásögn Raffertys: riffið var þegar á demóinu, leikið á gítar. Rafferty bað Burns að prófa það á gítar en þeir urðu sammála um að það hentaði betur saxófóni.
+- **Demóið** kom út á endurútgáfu *City to City* árið 2011. Rab Noakes, samstarfsmaður Raffertys sem syngur sjálfur bakraddir á plötunni, skrifaði í bæklinginn: „Let's hope [the demo] will, at last, silence all who keep on asserting that the saxophone player came up with the melody line.“
+- **„Half a Heart“:** Svipuð saxófónlaglína heyrist í laginu „Half a Heart“ með Steve Marcus frá 1968 (tíu árum áður), sem skrifað er á víbrafónleikarann Gary Burton. Burton sagði við *The Atlantic* að Rafferty kynni að hafa tekið hana ómeðvitað og líkti því við málaferlin um „My Sweet Lord“ {{< spotify 0KZodeWxqxd88F9wY1cqgs >}} eftir George Harrison. Burns taldi þetta tilviljun.
+
+  {{< spotify-player 7CCUAlhhfmQJOtN7tcDKd8 >}}
+- **Flökkusagan um Bob Holness:** Á níunda áratugnum skrifaði Stuart Maconie í grínþáttinn „Thrills' Believe it or Not“ í tónlistarblaðinu *NME* að Bob Holness, kynnir spurningaþáttarins *Blockbusters*, hefði leikið á saxófóninn. Það var uppspuni, en sagan hefur verið endurtekin víða.
+
+### „Right Down the Line“: óður til Cörlu? {#oedur-til-corlu}
+
+- „Right Down the Line“ er oft lesið sem óður til Cörlu Ventilla, eiginkonu Raffertys, sem stóð með honum í gegnum erfiða tíma. [Genius](https://genius.com/Gerry-rafferty-right-down-the-line-lyrics) og [Songfacts](https://www.songfacts.com/facts/gerry-rafferty/right-down-the-line) tengja lagið við Cörlu, þó hvorug síðan vísi í beina yfirlýsingu Raffertys sjálfs.
+- Genius nefnir að lagið gæti sótt innblástur í „Maybe I'm Amazed“ eftir Paul McCartney, sem fjallar um svipað efni. Mér finnst það reyndar minna meira á „Your Song“ með Elton John.
+
+:::: {layout-ncol="3"}
+::: {}
+{{< spotify-player 2Xb6wJYGi0QXwURw5WWvI5 >}}
+
+**Gerry Rafferty (1978)**
+:::
+
+::: {}
+{{< spotify-player 130Kv7HiXa7rF55hMqWwJr >}}
+
+**Paul McCartney (1970)**
+:::
+
+::: {}
+{{< spotify-player 38zsOOcu31XbbYj9BIPUF1 >}}
+
+**Elton John (1970)**
+:::
+::::
+
+Textinn er í kaflanum [Þekktustu lögin á plötunni: söngtextar](#songtextar) hér fyrir neðan. Meira um Cörlu og fjölskylduna er á [síðunni um Gerry Rafferty](../artists/gerry-rafferty.qmd#fjölskylda-og-ástir).
+
+### Þekktustu lögin á plötunni: söngtextar {#songtextar}
+
+Tvö þekktustu lögin á *City to City*, með spilara fyrir ofan textann. Textarnir eru birtir af Genius.
+
+:::: {layout-ncol="2"}
+::: {}
+**„Baker Street“**
+
+{{< spotify-player 5gOd6zDC8vhlYjqbQdJVWP >}}
+
+{{< genius 84258 url="https://genius.com/Gerry-rafferty-baker-street-lyrics" >}}
+:::
+
+::: {}
+**„Right Down the Line“**
+
+{{< spotify-player 2Xb6wJYGi0QXwURw5WWvI5 >}}
+
+{{< genius 184903 url="https://genius.com/Gerry-rafferty-right-down-the-line-lyrics" >}}
+:::
+::::
+
+### Áhrif og ábreiður
+
+- Slash, gítarleikari Guns N' Roses, nefndi „Baker Street“ árið 1987 sem áhrifavald á gítarsólóið í „Sweet Child o' Mine“.
+
+<iframe src="https://open.spotify.com/embed/track/7snQQk1zcKl8gZ92AnueZW" width="100%" height="80" frameborder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Guns N' Roses – Sweet Child O' Mine á Spotify"></iframe>
+
+:::: {layout-ncol="2"}
+::: {}
+<iframe src="https://open.spotify.com/embed/track/2DTQUOfYJAjdo7utgjnU4u" width="100%" height="152" frameborder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Undercover – Baker Street (1992) á Spotify"></iframe>
+
+**Undercover (1992):** danslagaútgáfa af plötunni *Check Out The Groove*.
+:::
+
+::: {}
+{{< video https://www.youtube.com/watch?v=-DmIk05vmMc title="Foo Fighters – Baker Street" >}}
+
+**Foo Fighters (1998):** á breskri CD-smáskífu „My Hero“ {{< spotify 4dVbhS6OiYvFikshyaQaCN >}}.
+:::
+::::
+
+- **Undercover:** Rafferty þoldi ekki danslagaútgáfuna frá 1992 og kallaði hana „dreadful, totally banal – it's a sad sign of the times“. Hún seldist þó í um þremur milljónum eintaka í Evrópu og Ameríku og færði honum 1,5 milljónir punda til viðbótar (um 558 milljónir króna á núvirði).^[Núvirt með breskri vísitölu neysluverðs (ONS, D7BT) frá ársmeðaltali 1992 til júlí 2026 (×2,28) og umreiknað á viðmiðunargengi Seðlabanka Evrópu 10. september 2026, 162,95 kr. á pundið. Reiknað með `scripts/value_today.py`.]
+- **Foo Fighters** tóku lagið upp og gáfu út á breskri CD-smáskífu „My Hero“ {{< spotify 4dVbhS6OiYvFikshyaQaCN >}} árið 1998.
+
+#### „Right Down the Line“ á reggí
+
+:::: {layout-ncol="2"}
+::: {}
+<iframe src="https://open.spotify.com/embed/track/2Xb6wJYGi0QXwURw5WWvI5" width="100%" height="152" frameborder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Gerry Rafferty – Right Down the Line (1978) á Spotify"></iframe>
+
+**Frumútgáfan (1978):** 4:32, af þessari plötu.
+:::
+
+::: {}
+<iframe src="https://open.spotify.com/embed/track/1ciDeTaBbYEP3aBj2Eu5X4" width="100%" height="152" frameborder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Bonnie Raitt – Right Down the Line (2012) á Spotify"></iframe>
+
+**Bonnie Raitt (2012):** 5:28, reggíútsetning af plötunni *Slipstream*.
+:::
+::::
+
+- Bonnie Raitt er yfirleitt þekkt fyrir kántrírokk, svona verslunarmiðstöðva- og kellingamyndarokk seint á níunda og snemma á tíunda áratugnum, með lögum á borð við „Something to Talk About“ {{< spotify 6Ceejf3zBXvAhIY9DbP1Pr >}} og „I Can't Make You Love Me“ {{< spotify 69uJi5QsBtqlYkGURTBli8 >}}. Árið 2012, 34 árum eftir frumútgáfuna, tók hún „Right Down the Line“ upp í reggíútsetningu á plötunni *Slipstream*. Útgáfa hennar er tæpri mínútu lengri.
+
+#### Uppáhaldslag poppstjarnanna
+
+- Skömmu eftir að fréttist af andláti Raffertys 4. janúar 2011 tísti **Lily Allen** „Rest in Peace Gerry x“ með myndbandi við „Right Down the Line“, sem er sagt eitt af uppáhaldslögum hennar. Lily Allen er ensk poppdíva sem gerði „Fuck You“ {{< spotify 5st5644IlBmKiiRE73UsoZ >}} árið 2009.
+- **Elly Jackson**, önnur tveggja í enska synthpoppdúettinum La Roux („Bulletproof“ {{< spotify 3kMrazSvILsgcwtidZd1Qd >}}, 2009), sagði að lagið væri „my favourite track of all time. It makes me think of home, nostalgia and happiness.“
+
+::: {.callout-tip}
+## Úr gögnunum
+Samkvæmt MusicBrainz er Lily Allen fædd 2. maí 1985 og Elly Jackson 12. mars 1988, sjö og tíu árum eftir að lagið kom út, sumsé á okkar aldri. Í janúar 2011 voru þær 25 og 22 ára.
+:::
+
+::: {.callout-note}
+## Hvenær verða tengsl milli kynslóða til? – Persónuleg tenging
+Þegar ég var í háskóla hlustaði ég mjög mikið á La Roux og Lily Allen og þess háttar stelpulega popp-raftónlist. Og viti menn: þær héldu upp á „Right Down the Line“, sem er frábært lag. Sjálf hefði ég ekki haft hugmynd um hver Gerry Rafferty var þegar ég var 25 ára, þótt ég hafi örugglega þekkt lagið. Það er gaman að sjá hvaðan áhrifavaldar manns fá sín áhrif, sem skila sér síðan áfram til manns sjálfs. Þetta er dæmi um hvernig tónlist hefur óbein áhrif í gegnum tímann.
+:::
+
+Um peningana sem smellirnir skiluðu: sjá [síðuna um Gerry Rafferty](../artists/gerry-rafferty.qmd#smellirnir-borga-sig).
+
+*Heimild: samantekt og þýðing úr greinunum [City to City](https://en.wikipedia.org/wiki/City_to_City), [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0), sem vísa í frumheimildir.*

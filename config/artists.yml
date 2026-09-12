@@ -1,2 +1,15 @@
 # Artists are added on their album branch, <artist-slug>/<album-slug>, and squash-merged (see AGENTS.md).
-artists: []
+artists:
+  - slug: gerry-rafferty
+    name: Gerry Rafferty
+    status: primary
+    identifiers:
+      musicbrainz: 563201cb-721c-4cfb-acca-c1ba69e3d1fb
+      wikidata: Q110919
+      discogs: "253945"
+      spotify: null
+    research:
+      include_groups: true
+      include_external_credits: true
+      include_biography: true
+      notes: "Pilot artist."

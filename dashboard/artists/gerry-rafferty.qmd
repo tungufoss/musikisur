@@ -1,0 +1,123 @@
+---
+title: "Gerry Rafferty"
+---
+
+```{python}
+ARTIST_SLUG = "gerry-rafferty"
+```
+
+```{python}
+#| output: asis
+from music_life.dashboard import artist_photo
+
+print(artist_photo(ARTIST_SLUG))
+```
+
+Gerry Rafferty (1947–2011) var skoskur söngvari og lagahöfundur, fæddur inn í verkamannafjölskyldu í Paisley. Móðir hans kenndi honum írsk og skosk þjóðlög og síðar urðu Bítlarnir og Bob Dylan áhrifavaldar hans. Árið 1969 gekk hann í þjóðlagapoppsveitina The Humblebums, þar sem grínistinn [Billy Connolly](https://www.imdb.com/name/nm0175262/) var fyrir. Connolly er samlandi hans, reyndar Glasgow-búi, en Paisley er rétt vestan við Glasgow. Árið 1972 stofnaði Rafferty Stealers Wheel með Joe Egan. Stærsti smellur hennar var „Stuck in the Middle with You“ (1973). Sem sólólistamaður átti hann smelli seint á áttunda áratugnum með „Baker Street“, „Right Down the Line“ og „Night Owl“. Hann drakk mikið stóran hluta ævinnar og lést úr lifrarbilun í janúar 2011.
+
+*Samantekt úr inngangi greinarinnar [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0).*
+
+{{< include ../_artist.qmd >}}
+
+### Helstu smellir
+
+:::: {layout-ncol="2"}
+::: {}
+{{< spotify-player 3Vby4nGmtbDo7HDJamOWkT >}}
+:::
+
+::: {}
+{{< spotify-player 5gOd6zDC8vhlYjqbQdJVWP >}}
+:::
+
+::: {}
+{{< spotify-player 2Xb6wJYGi0QXwURw5WWvI5 >}}
+:::
+
+::: {}
+{{< spotify-player 4hVDaHlxORYEBYjqeuzbI1 >}}
+:::
+::::
+
+#### Smellirnir borga sig {#smellirnir-borga-sig}
+
+Smellirnir hafa reynst Rafferty einstaklega gjöfulir, þótt hann hafi aldrei viljað spila leikinn sem fylgdi frægðinni (sjá [Frægð, áfengi og veikindi](#fraegd-afengi-og-veikindi)).
+
+- Í október 2010 tilkynnti BMI að „Baker Street“ hefði verið spilað oftar en 5 milljón sinnum í útvarpi og sjónvarpi um allan heim. „Stuck in the Middle With You“ með Stealers Wheel hafði verið spilað yfir 4 milljón sinnum og „Right Down the Line“ af *City to City* yfir 3 milljón sinnum.
+- Í viðtali við *The Sun* í Skotlandi árið 2003 sagði Rafferty að „Baker Street“ skilaði honum enn um 80.000 pundum á ári (um 24,7 milljónum króna á ári á núvirði^[Núvirt með breskri vísitölu neysluverðs (ONS, D7BT) frá ársmeðaltali 2003 til júlí 2026 (×1,89) og umreiknað á viðmiðunargengi Seðlabanka Evrópu 10. september 2026, 162,95 kr. á pundið. Reiknað með `scripts/value_today.py`.]): „I could live off that song alone.“
+- Danslagaútgáfa Undercover af „Baker Street“ árið 1992 færði honum 1,5 milljónir punda til viðbótar (um 558 milljónir króna á núvirði^[Sama aðferð, frá ársmeðaltali 1992 (×2,28).]); sjá [kaflann um City to City](../albums/city-to-city.qmd#áhrif-og-ábreiður).
+- Hann leyfði aldrei að „Baker Street“ væri notað í auglýsingum, þrátt fyrir rausnarleg tilboð.
+
+::: {.callout-tip}
+## Reiknað úr gögnunum
+5 milljón spilanir × 6:11 mínútur (lengd lagsins á plötunni) eru um 515.000 klukkustundir, eða **58,8 ár** af samfelldri spilun. „Right Down the Line“: 3 milljón spilanir × 4:32 eru **25,9 ár**. Þetta er okkar eigin útreikningur og efri mörk, því útvarp spilar oft styttri smáskífuútgáfu.
+:::
+
+*Heimild: greinarnar [Baker Street (song)](https://en.wikipedia.org/wiki/Baker_Street_%28song%29) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0).*
+
+#### „Stuck in the Middle with You“ og Reservoir Dogs {#stuck-in-the-middle}
+
+- Stærsti smellur Stealers Wheel er eftir Rafferty og Joe Egan. Hann fór í 6. sæti Billboard Hot 100 og 8. sæti breska listans árið 1973.
+- Rafferty og Egan, skólafélagar frá Paisley, voru kjarni hljómsveitarinnar, en á fyrstu plötunni (1972), þar sem lagið er, voru þeir fimm: auk þeirra Paul Pilnick (gítar), Tony Williams (bassi) og Rod Coombes (trommur). Frá 1973 var Stealers Wheel opinberlega dúett með leigðum hljóðfæraleikurum.
+- Nær tuttugu árum síðar notaði Quentin Tarantino lagið í jómfrúarmynd sinni, *Reservoir Dogs* (1992), í senunni þar sem Mr. Blonde (Michael Madsen) dansar á meðan hann pínir bundinn lögreglumann (Kirk Baltz). Í viðtali við *Rolling Stone* sagði Tarantino frá prufunum:
+
+  > That was one of those things where I thought [the song] would work really well, and [during] auditions, I told the actors that I wanted them to do the torture scene, and I'm gonna use "Stuck in the Middle with You", but they could pick anything they wanted, they didn't have to use that song. And a couple of people picked another one, but almost everyone came in with "Stuck in the Middle with You", and they were saying that they tried to come up with something else, but that's the one. The first time somebody actually did the torture scene to that song, the guy didn't even have a great audition, but it was like watching the movie. I was thinking, "Oh my God, this is gonna be awesome!"
+
+  Hann nefnir ekki hvaða leikari það var.
+
+  {{< video https://www.youtube.com/watch?v=RKQIGvULZCI title="Reservoir Dogs – senan við „Stuck in the Middle with You“" >}}
+- Rafferty neitaði hins vegar að veita leyfi fyrir endurútgáfu lagsins. Heimildin segir ekki hvers vegna.
+- Danslagaútgáfa söngkonunnar Louise {{< spotify 02TlsMxkW8B6JikkUmpCn8 >}} fór á topp 10 í Bretlandi í september 2001, og myndbandið sótti mikið í senuna úr *Reservoir Dogs*.
+- Ábreiða Grace Potter af laginu er titillag Netflix-þáttanna *Grace and Frankie* (2015–2022) með Jane Fonda og Lily Tomlin.
+- Árið 2008, eftir að iTunes og K-tel höfðu samband, endurvakti Tony Williams Stealers Wheel með Rod Coombes og Paul Pilnick, þremur af fimm sem léku á fyrstu plötunni, en án Raffertys og Egans. Þeir tóku lagið upp aftur.
+
+::: {.callout-tip}
+## Úr gögnunum
+Á Billboard Hot 100 er lagið aðeins árið 1973: 18 vikur og best 6. sæti. Það kom ekki aftur inn á listann eftir *Reservoir Dogs*. MusicBrainz skráir endurupptökuna, og önnur lög endurvöktu hljómsveitarinnar, undir Stealers Wheel. Rafferty kom þar hvergi nærri, svo lög sem hljómsveitin gaf fyrst út eftir að hann hætti eru ekki talin með lögum hans á tímalínunni.
+:::
+
+*Heimild: greinarnar [Stuck in the Middle with You](https://en.wikipedia.org/wiki/Stuck_in_the_Middle_with_You), [Stealers Wheel](https://en.wikipedia.org/wiki/Stealers_Wheel) og [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0); Billboard-gögn úr utdata/rwd-billboard-data.*
+
+{{< include ../_artist_timeline.qmd >}}
+
+### Fjölskylda og ástir
+
+- Gerry kynntist Cörlu Ventilla á dansleik árið 1965, hann 18 ára og hún 15 ára. Hún var lærlingur í hárgreiðslu, af ítalskri fjölskyldu í Clydebank. Söguna sagði hann síðar í laginu „Shipyard Town“ á plötunni *North and South* (1988).
+
+  {{< spotify-player 09PFxrSJ37blQEzjKFLkjo >}}
+
+- Þau giftust árið 1970 og bjuggu í Skotlandi með dótturinni Mörthu Mary, áður en þau fluttu suður til Englands seint á áttunda áratugnum. Þar skiptu þau tímanum á milli sveitabæjar við mörk Kent og Sussex og heimilis í Hampstead í London.
+- Langar ferðir á milli London og Skotlands urðu kveikjan að lögum á *City to City*, meðal annars titillaginu og „Mattie's Rag“, sem fjallar um gleðina við að hitta dótturina aftur.
+
+  {{< spotify-player 6OG8fTcc7S5HWuFYVc5WgR >}}
+
+- „Right Down the Line“ er sagt vera óður til Cörlu; um það er fjallað í [kaflanum um City to City](../albums/city-to-city.qmd#oedur-til-corlu).
+- Vaxandi drykkja lagði mikið álag á hjónabandið og Carla skildi við hann árið 1990, en þau héldu góðu sambandi.
+- Síðustu árin var hann með Enzinu Fuschini, ítalskri listakonu sem bjó í Dorset. Hún segir að hann hafi beðið hennar á Ritz-hótelinu í París á aðfangadagskvöld 2009.
+
+::: {.callout-note}
+## Punktur
+Carla af ítalskri fjölskyldu, Enzina ítölsk listakona: greinilega með týpu.
+:::
+
+*Heimild: samantekt úr greininni [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0), nema annað sé tekið fram.*
+
+### Frægð, áfengi og veikindi {#fraegd-afengi-og-veikindi}
+
+- Rafferty kunni illa við frægðina. Hann greindi skýrt á milli listræns heiðarleika tónlistarmanns og þarfar tónlistariðnaðarins fyrir stjörnur og söluvöru. Charlie Reid úr The Proclaimers sagði eftir útförina: „He was not entirely comfortable with fame.“
+- Textinn við „Baker Street“ endurspeglar óánægju hans með stjörnukerfið. Kaldhæðni örlaganna: lagið um hve illa honum leið í sviðsljósinu varð risasmellur um allan heim og gerði hann enn frægari.
+- Hann neitaði staðfastlega að túra um Bandaríkin og að taka þátt í leik tónlistarbransans. Árið 1983 tilkynnti hann að hann ætlaði að taka sér hlé og verja meiri tíma með fjölskyldunni, og um aldamótin fór hann að gefa út tónlist á netinu, algjörlega á eigin forsendum.
+- Hann hafði gaman af áfengi frá unga aldri og snemmbúin lög á borð við „One Drink Down“ {{< spotify 6SktEg1TjaIgfx5B5xMJsJ >}}, „Baker Street“ og „Night Owl“ nefna það berum orðum. Michael Gray, umboðsmaður hans snemma á níunda áratugnum, sagðist aldrei hafa grunað að hann stefndi í alkóhólisma. Drykkjan jókst eftir því sem leið á áratuginn og Carla skildi við hann árið 1990.
+- Síðasta áratuginn rataði hann aftur í fréttirnar, nú vegna alkóhólisma, þunglyndis og óútreiknanlegrar hegðunar. Árið 2008 flutti hann frá Kaliforníu til Írlands, þar sem drykkjan varð fljótt vandamál á ný.
+- Í júlí 2008 gisti hann á fimm stjörnu Westbury-hótelinu í Mayfair í London og fór á fjögurra daga fyllerí þar sem hann skemmdi herbergið mikið. Honum var vísað af hótelinu og hann lagðist inn á St Thomas'-sjúkrahúsið með langvinnan lifrarsjúkdóm. Hinn 1. ágúst hvarf hann af sjúkrahúsinu og skildi eigur sínar eftir, og sjúkrahúsið tilkynnti hann týndan. Eftir það flakkaði hann á milli hótela í London, á meðan hann sagðist vera í Toskana.
+- Í nóvember 2010 var hann lagður inn á Royal Bournemouth-sjúkrahúsið, settur í öndunarvél og meðhöndlaður við fjöllíffærabilun. Hann lést úr lifrarbilun á heimili Mörthu dóttur sinnar í Stroud 4. janúar 2011.
+- Sálumessa var sungin yfir honum í St Mirin's-dómkirkjunni í heimabænum Paisley 21. janúar 2011. John Byrne, vinur hans til áratuga sem málaði flest plötuumslög hans, flutti líkræðuna.
+
+::: {.callout-note}
+## Punktur
+Hótelstjórinn á Westbury lýsti honum sem einstaklega indælum manni sem hélt sig út af fyrir sig og truflaði enga aðra gesti. Hann leit alls ekki út fyrir að vera týpan sem rústar hótelherbergjum, sem gerir söguna enn ótrúlegri. Staðirnir, frá Westbury til sjúkrahúsanna, eru á kortinu hér fyrir neðan.
+:::
+
+*Heimild: samantekt úr greininni [Gerry Rafferty](https://en.wikipedia.org/wiki/Gerry_Rafferty) á ensku Wikipediu (CC BY-SA 4.0).*
+
+{{< include ../_artist_life.qmd >}}

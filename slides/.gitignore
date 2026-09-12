@@ -1,0 +1,5 @@
+# Rendered slides (quarto render slides/<file>.qmd); only the sources are committed.
+*.html
+!_*.html
+*_files/
+/.quarto/

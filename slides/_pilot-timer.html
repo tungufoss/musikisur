@@ -1,0 +1,102 @@
+<!-- Programme bar for the episode slides: the current segment ("2 af 4"), its planned window and a
+     global timer. Segments and minutes come from window.PILOT_SEGMENTS in the slides; a slide
+     starts a segment with {data-segment="..."} on its heading. T starts/stops the timer. -->
+<style>
+  .pilot-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 6px 16px; font: 15px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: rgb(255 255 255 / 94%); border-top: 1px solid #ddd; color: #333;
+  }
+  .pilot-bar b { font-weight: 600; }
+  .pilot-muted { color: #6c757d; }
+  .pilot-timer { display: flex; align-items: center; gap: 0.5rem; font-variant-numeric: tabular-nums; }
+  .pilot-timer button {
+    border: 1px solid #ced4da; border-radius: 4px; background: #fff; padding: 2px 10px; cursor: pointer; font-size: 15px;
+  }
+  .pilot-clock { min-width: 4.5em; text-align: right; font-size: 20px; font-weight: 600; }
+  .pilot-clock.on-time { color: #198754; }
+  .pilot-clock.late { color: #d9480f; }
+  .pilot-clock.ahead { color: #1c7ed6; }
+</style>
+<div class="pilot-bar">
+  <div><b id="pilot-name"></b> <span id="pilot-count" class="pilot-muted"></span> · <span id="pilot-plan" class="pilot-muted"></span></div>
+  <div class="pilot-timer">
+    <span id="pilot-status" class="pilot-muted"></span>
+    <span id="pilot-clock" class="pilot-clock">0:00</span>
+    <button id="pilot-play" title="Ræsa eða stöðva tímamælinn (T)">▶</button>
+    <button id="pilot-reset" title="Núllstilla tímamælinn">↺</button>
+  </div>
+</div>
+<script>
+(() => {
+  const segments = window.PILOT_SEGMENTS || [];
+  const plan = {};
+  let minute = 0;
+  for (const [name, minutes] of segments) { plan[name] = [minute, minute + minutes]; minute += minutes; }
+
+  // The timer survives a reload: running state, start time and time already counted.
+  const KEY = "pilot-timer";
+  let state = { running: false, since: 0, counted: 0 };
+  try { state = { ...state, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+  const elapsed = () => state.counted + (state.running ? Date.now() - state.since : 0);
+  const clock = (ms) => { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
+  const $ = (id) => document.getElementById(id);
+  let segment = "";
+
+  function segmentAt(slides, index) {
+    for (let i = index; i >= 0; i--) {
+      const name = slides[i].getAttribute("data-segment");
+      if (name) return name;
+    }
+    return segments.length ? segments[0][0] : "";
+  }
+
+  function showSlide() {
+    const slides = Reveal.getSlides();
+    const index = slides.indexOf(Reveal.getCurrentSlide());
+    segment = segmentAt(slides, index);
+    const members = slides.filter((_, i) => segmentAt(slides, i) === segment);
+    const order = Object.keys(plan).indexOf(segment) + 1;
+    $("pilot-name").textContent = `${order ? order + ". " : ""}${segment}`;
+    $("pilot-count").textContent = `(${members.indexOf(slides[index]) + 1} af ${members.length})`;
+    const [from, to] = plan[segment] || [0, 0];
+    $("pilot-plan").textContent = `áætlað ${from}–${to} mín.`;
+    tick();
+  }
+
+  function tick() {
+    const ms = elapsed(), minutes = ms / 60000;
+    const [from, to] = plan[segment] || [0, Infinity];
+    const el = $("pilot-clock");
+    el.textContent = clock(ms);
+    el.className = "pilot-clock" + (ms === 0 ? "" : minutes > to ? " late" : minutes < from ? " ahead" : " on-time");
+    $("pilot-status").textContent =
+      ms === 0 ? "" : minutes > to ? `${Math.ceil(minutes - to)} mín. á eftir` : minutes < from ? `${Math.ceil(from - minutes)} mín. á undan` : "á áætlun";
+    $("pilot-play").textContent = state.running ? "⏸" : "▶";
+  }
+
+  function toggle() {
+    if (state.running) { state.counted = elapsed(); state.running = false; }
+    else { state.since = Date.now(); state.running = true; }
+    save(); tick();
+  }
+
+  function reset() { state = { running: false, since: 0, counted: 0 }; save(); tick(); }
+
+  function start() {
+    $("pilot-play").addEventListener("click", toggle);
+    $("pilot-reset").addEventListener("click", reset);
+    Reveal.addKeyBinding({ keyCode: 84, key: "T", description: "Ræsa eða stöðva tímamælinn" }, toggle);
+    Reveal.on("slidechanged", showSlide);
+    showSlide();
+    setInterval(tick, 500);
+  }
+
+  window.addEventListener("load", () => {
+    if (!window.Reveal) return;
+    if (Reveal.isReady()) start(); else Reveal.on("ready", start);
+  });
+})();
+</script>

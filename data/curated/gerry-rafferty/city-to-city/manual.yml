@@ -1,0 +1,135 @@
+# Hand-curated additions to the gerry-rafferty/city-to-city bundle (see src/music_life/curation.py).
+# Every entry needs a source URL. Places are Wikidata items; their coordinates come from Wikidata.
+# Re-run `python scripts/collect_album.py gerry-rafferty city-to-city` after editing.
+
+# Short audio samples shown in the track list (track number, disc 1 unless `disc` is given).
+samples:
+  - track: 2
+    url: https://upload.wikimedia.org/wikipedia/en/5/5c/Baker_Street_%28song%29.ogg
+    source: https://en.wikipedia.org/wiki/File:Baker_Street_(song).ogg
+
+# Release months where MusicBrainz and Wikidata only have the year (they override those dates).
+release_dates:
+  - title: "First Collection of Merry Melodies"
+    date: 1969-02
+    source: https://en.wikipedia.org/wiki/The_Humblebums
+  - title: "The New Humblebums"
+    date: 1969-09
+    source: https://en.wikipedia.org/wiki/The_Humblebums
+  - title: "Open Up the Door"
+    date: 1970-06
+    source: https://en.wikipedia.org/wiki/The_Humblebums
+
+# Homes (shown as residences instead of plain "mentioned" points).
+places:
+  - qid: Q27
+    role: residence
+    context: "In 2008, Rafferty moved away from California and briefly rented a home in Ireland."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - qid: Q2351253
+    role: residence
+    context: "Late 1970s onwards: the family farm near the Kent–Sussex border (Tye Farm, Hartfield)."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - qid: Q25610
+    role: residence
+    context: "Late 1970s onwards: the family's home in Hampstead, London, alongside the farm."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - qid: Q99
+    role: residence
+    context: "Lived in California until 2008, when he moved to Ireland."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - qid: Q1610423
+    role: residence
+    context: "Rafferty and Enzina Fuschini rented a large home together in Upton, near Poole."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  # Other places from the story.
+  - qid: Q656054
+    role: mentioned
+    context: "Fuschini said he proposed to her at the Ritz Hotel in Paris on Christmas Eve 2009."
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+
+events:
+  - date: 1992-09-18
+    kind: cover
+    label: "Undercover – Baker Street"
+    url: https://open.spotify.com/track/2DTQUOfYJAjdo7utgjnU4u
+    source: https://en.wikipedia.org/wiki/Baker_Street_(song)
+  - date: 1998
+    kind: cover
+    label: "Foo Fighters – Baker Street (á smáskífunni My Hero)"
+    url: https://www.youtube.com/watch?v=-DmIk05vmMc
+    source: https://en.wikipedia.org/wiki/Baker_Street_(song)
+  - date: 2012-04-10
+    kind: cover
+    label: "Bonnie Raitt – Right Down the Line"
+    url: https://open.spotify.com/track/1ciDeTaBbYEP3aBj2Eu5X4
+    source: https://open.spotify.com/track/1ciDeTaBbYEP3aBj2Eu5X4
+
+  # Daughter Martha Mary: no published birth date. Wikipedia has the family living in Scotland
+  # with her after the 1970 marriage, and "Mattie's Rag" (City to City, 1978) is about being
+  # reunited with her, so she was born before 1978. Plotted mid-range and marked approximate.
+  - date: 1974
+    kind: child
+    label: "Martha Mary"
+    detail: "áætlað: fædd 1970–1977"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+
+  # Band membership periods (MusicBrainz has no dates for them).
+  # He joined "later in 1969", after their first album (February 1969): estimated as March.
+  - date: 1969-03
+    kind: band_join
+    label: "The Humblebums"
+    detail: "áætlað: gekk til liðs síðar árið 1969, eftir fyrstu plötuna"
+    source: https://en.wikipedia.org/wiki/The_Humblebums
+  - date: 1971
+    kind: band_leave
+    label: "The Humblebums"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - date: 1972
+    kind: band_join
+    label: "Stealers Wheel"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - date: 1975
+    kind: band_leave
+    label: "Stealers Wheel"
+    source: https://en.wikipedia.org/wiki/Stealers_Wheel
+
+  # Carla Ventilla: they met at a dancehall in 1965 (he 18, she 15) and married in 1970.
+  - date: 1965
+    kind: relationship
+    label: "Carla Ventilla"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - date: 1970
+    kind: relationship_end
+    label: "Carla Ventilla"
+    detail: "gengu í hjónaband"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+
+  # Marriage (Wikidata has no spouse for him).
+  - date: 1970
+    kind: marriage
+    label: "Carla Ventilla"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+  - date: 1990
+    kind: divorce
+    label: "Carla Ventilla"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+
+  # Later partner: they met in 2008; together from 2009 (she cared for him that year and he
+  # proposed on Christmas Eve 2009, per Wikipedia) until his death.
+  - date: 2009
+    kind: relationship
+    label: "Enzina Fuschini"
+    source: https://en.wikipedia.org/wiki/Gerry_Rafferty
+
+  # Grammy nominations (Wikidata has none for him yet).
+  - date: 1979
+    kind: nomination
+    label: "Grammy: Record of the Year – Baker Street"
+    url: https://www.grammy.com/artists/gerry-rafferty/5767
+    source: https://www.grammy.com/artists/gerry-rafferty/5767
+  - date: 1979
+    kind: nomination
+    label: "Grammy: Best Male Pop Vocal Performance – Baker Street"
+    url: https://www.grammy.com/artists/gerry-rafferty/5767
+    source: https://www.grammy.com/artists/gerry-rafferty/5767

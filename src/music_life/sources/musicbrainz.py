@@ -84,13 +84,17 @@ def _dated(value: str) -> tuple[str, int] | None:
 
 
 def release_events(
-    release_groups: dict[str, Any], kind: str, source_key: str, detail: str | None = None
+    release_groups: dict[str, Any], kind: str, source_key: str, detail: str | None = None,
+    primary_type: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Dated release groups without a secondary type (compilation, live ...) as timeline events."""
+    """Dated release groups without a secondary type (compilation, live ...) as timeline events,
+    optionally only one primary type (such as "Album")."""
     rows = []
     for group in release_groups.get("release-groups", []):
         when = _dated(group.get("first-release-date") or "")
         if group.get("secondary-types") or when is None:
+            continue
+        if primary_type and group.get("primary-type") != primary_type:
             continue
         rows.append({
             "event_date": when[0], "date_precision": when[1], "kind": kind, "label": group["title"],

@@ -40,6 +40,12 @@ book:
   chapters:
     - index.qmd
     # BEGIN GENERATED CHAPTERS (python scripts/build_book.py; do not edit by hand)
+    - part: "Flytjendur"
+      chapters:
+        - artists/gerry-rafferty.qmd
+    - part: decades/1970s.qmd
+      chapters:
+        - albums/city-to-city.qmd
     # END GENERATED CHAPTERS
   appendices:
     - methodology.qmd
