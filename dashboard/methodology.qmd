@@ -3,14 +3,17 @@
 | Svið | Helstu heimildir | Til hvers |
 |---|---|---|
 | Auðkenni tónlistar | MusicBrainz | flytjendur, hljómsveitir, plötur, útgáfur, upptökur, verk og tengsl |
-| Æviágrip | Wikidata og útgefið efni | dagsetningar, fólk, staðir og atburðir |
+| Æviágrip | Wikidata, Wikipedia og útgefið efni | dagsetningar, fólk, staðir og atburðir |
 | Útgáfur | Discogs | einstakar útgáfur, flytjendur og upptökustjórn |
-| Vinsældalistar | Billboard, Official Charts og söfn | vikulegir vinsældalistar |
+| Vinsældalistar | Billboard (safn utdata/rwd-billboard-data) | vikulegir Hot 100- og Billboard 200-listar |
 | Hlustun | Spotify | núverandi auðkenni og tenglar á plötur og lög |
-| Kvikmyndir og sjónvarp | TMDB og IMDb-auðkenni | kvikmyndir, þáttaraðir, einstakir þættir og dagsetningar |
-| Tónlist á skjánum | IMDb (soundtrack-skráning) og TMDB | hvaða kvikmyndir og þættir nota lögin, og vinsældir þeirra |
+| Kvikmyndir og sjónvarp | IMDb (soundtrack-skráning og einkunnir) og TMDB (vinsældir) | hvaða kvikmyndir og þættir nota lögin, hvenær, gæði og vinsældir |
 | Umslög og myndir | Cover Art Archive og Wikimedia Commons | plötuumslög og myndir af flytjendum |
 | Söngtextar | Genius | textarnir birtast í spilara Genius sjálfs; þeir eru aldrei afritaðir |
+| Myndbönd | YouTube | demó, tónlistarmyndbönd og senur, birt í spilara YouTube |
+| Kort | OpenStreetMap | kortagrunnur (© OpenStreetMap-höfundar, ODbL) |
+| Núvirði | Hagstofa Bretlands (ONS) og Seðlabanki Evrópu | upphæðir í pundum umreiknaðar í krónur á núvirði |
+| Handunnar heimildir | `manual.yml` hverrar plötu | t.d. Grammy.com, Songfacts og Facebook-síða flytjanda; hver fullyrðing tengist sinni heimild |
 | Greining | eigin kóði, handvinnsla og gervigreind | þemu, tilgátur, tengslanet og afleiddir mælikvarðar |
 
 ## Gagnaveitur
@@ -46,6 +49,14 @@ Einstakar útgáfur og útgáfuupplýsingar koma frá Discogs („Data provided 
 Kvikmyndir og þættir eru fundnir og raðað eftir vinsældum með TMDB („This product uses the TMDB API but is not endorsed or certified by TMDB“).
 
 Vikulegir Billboard-listar (Hot 100 og Billboard 200) koma úr safni [utdata/rwd-billboard-data](https://github.com/utdata/rwd-billboard-data) (MIT). Billboard á listana sjálfa.
+
+Myndbönd birtast í spilara [YouTube](https://www.youtube.com) og eru ekki afrituð.
+
+Kortagrunnurinn er frá [OpenStreetMap](https://www.openstreetmap.org/copyright) (© OpenStreetMap-höfundar, ODbL).
+
+Núvirði upphæða í pundum er reiknað með vísitölu neysluverðs Hagstofu Bretlands ([ONS, D7BT](https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7bt/mm23)) og viðmiðunargengi [Seðlabanka Evrópu](https://data.ecb.europa.eu) (`scripts/value_today.py`).
+
+Handunnar heimildir hverrar plötu eru í `manual.yml`, hver með sinni vefslóð, og vísað er í þær við hverja fullyrðingu.
 
 ## Uppruni gagna
 
