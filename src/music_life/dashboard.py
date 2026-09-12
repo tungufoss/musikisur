@@ -862,16 +862,10 @@ def artist_timeline(artist_slug: str) -> str:
     )
     # The film and TV lane makes the track taller than the stylesheet's default.
     height = f' style="height:{TIMELINE_LANES["screen"] + SCREEN_HEIGHT}px"' if "screen" in lanes else ""
-    # Copy or download the timeline with its legend as a PNG (_timeline-export.html); the title
-    # only shows in the image, so a shared picture says whose timeline it is.
-    tools = (f'<div class="tl-tools" data-target="tl-{artist_slug}" data-file="{artist_slug}-timalina">'
-             '<button type="button" class="tl-copy"><i class="fa-solid fa-copy"></i> Afrita mynd</button>'
-             '<button type="button" class="tl-download"><i class="fa-solid fa-download"></i> Sækja PNG</button>'
-             '<span class="tl-tools-status" aria-live="polite"></span></div>')
-    timeline = (f'{tools}<div class="tl-figure" id="tl-{artist_slug}">'
-                f'<div class="tl-export-title">{html.escape(found[1])} · tímalína · MÚSÍKISUR</div>'
-                f'<div class="timeline"><div class="tl-labels"{height}>{labels}</div>'
-                f'<div class="tl-track"{height}>{"".join(parts)}</div></div>{legend}</div>')
+    # A title on the figure itself, so a screenshot says whose timeline it is.
+    title = f'<div class="tl-title">{html.escape(found[1])} · tímalína · MÚSÍKISUR</div>'
+    timeline = (f'{title}<div class="timeline"><div class="tl-labels"{height}>{labels}</div>'
+                f'<div class="tl-track"{height}>{"".join(parts)}</div></div>{legend}')
 
     table = ""
     if albums or band_albums:

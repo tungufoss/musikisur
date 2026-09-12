@@ -191,27 +191,13 @@
 .tl-hist-band { background: #6f42c1; }
 .tl-hist-others { background: #fd7e14; }
 
-/* Timeline tools (copy or download as PNG, _timeline-export.html). The title shows only in the image. */
-.tl-tools {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 0.25rem;
-  font-size: 0.8rem;
-}
-.tl-tools button {
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  padding: 0.15rem 0.55rem;
-  background: #fff;
+/* Title on the timeline figure, so a screenshot says whose timeline it is. */
+.tl-title {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: #495057;
 }
-.tl-tools button:hover { background: #f1f3f5; }
-.tl-tools-status { color: #6c757d; }
-.tl-figure { background: #fff; padding: 0.25rem 0.5rem; }
-.tl-export-title { display: none; margin-bottom: 0.5rem; font-weight: 600; }
-.tl-exporting .tl-export-title { display: block; }
 
 /* Film and TV lane: cumulative titles that use the songs (IMDb). */
 .tl-screen { position: absolute; left: 0; width: 100%; overflow: visible; }
